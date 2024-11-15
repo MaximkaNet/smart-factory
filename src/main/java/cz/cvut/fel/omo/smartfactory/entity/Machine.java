@@ -9,8 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Machine {
-    @Id
-    @GeneratedValue
-    private Long id;
+public class Machine extends AbstractManufacturingEntity{
+
 }
