@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: SmartFactory
+  datasource:
+    url: jdbc:postgresql://localhost:5432/smart_factory
+    username: factory
+    password: factory
+  jpa:
+    generate-ddl: true
+    show-sql: false
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+  jackson:
+    default-property-inclusion: non_null
+server:
+  port: 8080
+  servlet:
+    context-path: /
