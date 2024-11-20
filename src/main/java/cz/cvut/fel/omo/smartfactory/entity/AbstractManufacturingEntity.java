@@ -1,5 +1,8 @@
 package cz.cvut.fel.omo.smartfactory.entity;
 
+import cz.cvut.fel.omo.smartfactory.state.ManufacturingEntityState;
+import cz.cvut.fel.omo.smartfactory.state.ReadyState;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -9,10 +12,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
-@Inheritance
 public abstract class AbstractManufacturingEntity {
-    @Id
-    @GeneratedValue
-    private Long id;
+
+    private double electricityConsumption;
+    private double oilConsumption;
+    private double materialConsumption;
+    private double usage;
+
+    private ManufacturingEntityState state = new ReadyState();
 }
