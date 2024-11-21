@@ -8,20 +8,30 @@ import lombok.Setter;
 @Setter
 public class Repairman extends Person {
     private boolean isAvailable;
+    private Integer willBeFinishedOnTact;
+    private AbstractManufacturingEntity repairingEntity;
 
     public Repairman(String firstName, String lastName, String email) {
         super(firstName, lastName, email);
     }
 
-    public void repair(AbstractManufacturingEntity abstractManufacturingEntity) {
-        // TODO: implement repairing just a simulation right now
+    public void startRepair(AbstractManufacturingEntity abstractManufacturingEntity) {
         // TODO: create RepairStartedEvent
-        try {
-            Thread.sleep(1000);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        willBeFinishedOnTact = currentTact + 3;
+        repairingEntity = abstractManufacturingEntity;
+    }
+
+    public void finishRepair(){
         // TODO: create RepairFinishedEvent
+        System.out.println("Repairman finished");
+    }
+
+    @Override
+    public void onNewTact(int currentTact){
+        super.onNewTact(currentTact);
+        if (currentTact >= willBeFinishedOnTact) {
+            finishRepair();
+        }
     }
 
     @Override
