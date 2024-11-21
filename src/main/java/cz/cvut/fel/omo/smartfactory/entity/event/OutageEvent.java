@@ -3,8 +3,6 @@ package cz.cvut.fel.omo.smartfactory.entity.event;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.Repairman;
 
-import java.util.Optional;
-
 public class OutageEvent extends Event implements Comparable<OutageEvent> {
     public OutageEvent(Integer priority) {
         super(priority);
@@ -16,7 +14,7 @@ public class OutageEvent extends Event implements Comparable<OutageEvent> {
             return false;
         }
         Repairman repairman = (Repairman) person;
-        repairman.repair(abstractManufacturingEntity);
+        repairman.startRepair(abstractManufacturingEntity);
         System.out.println("Repairman: " + person + " repaired(checked): " + this);
         isChecked = true;
         return true;
