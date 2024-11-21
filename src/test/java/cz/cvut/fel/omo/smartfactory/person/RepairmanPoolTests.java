@@ -55,17 +55,25 @@ public class RepairmanPoolTests {
     // TODO: it is not testing anything, this is just for me to see if working correctly
     @Test
     public void workIsScheduledBetweenRepairmen() {
-        OutageEvent e1 = new OutageEvent(2);
-        OutageEvent e2 = new OutageEvent(3);
-        OutageEvent e3 = new OutageEvent(1);
-        OutageEvent e4 = new OutageEvent(0);
-        OutageEvent e5 = new OutageEvent(0);
-
-        repairmanPool.addOutageEvent(e1);
-        repairmanPool.addOutageEvent(e2);
-        repairmanPool.addOutageEvent(e3);
-        repairmanPool.addOutageEvent(e4);
-        repairmanPool.addOutageEvent(e5);
+        repairmanPool.addOutageEvent(new OutageEvent(1));
+        repairmanPool.addOutageEvent(new OutageEvent(2));
+        repairmanPool.addOutageEvent(new OutageEvent(3));
+        repairmanPool.addOutageEvent(new OutageEvent(4));
+        repairmanPool.addOutageEvent(new OutageEvent(4));
+        repairmanPool.addOutageEvent(new OutageEvent(4));
+        repairmanPool.addOutageEvent(new OutageEvent(3));
+        repairmanPool.addOutageEvent(new OutageEvent(3));
+        repairmanPool.addOutageEvent(new OutageEvent(0));
+        repairmanPool.addOutageEvent(new OutageEvent(1));
+        repairmanPool.addOutageEvent(new OutageEvent(1));
+        repairmanPool.addOutageEvent(new OutageEvent(2));
+        repairmanPool.addOutageEvent(new OutageEvent(5));
+        repairmanPool.addOutageEvent(new OutageEvent(5));
+        repairmanPool.addOutageEvent(new OutageEvent(5));
+        repairmanPool.addOutageEvent(new OutageEvent(4));
+        repairmanPool.addOutageEvent(new OutageEvent(3));
+        repairmanPool.addOutageEvent(new OutageEvent(2));
+        repairmanPool.addOutageEvent(new OutageEvent(1));
 
         repairmanPool.executeRepairs();
     }
