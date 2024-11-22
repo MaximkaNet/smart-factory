@@ -13,6 +13,7 @@ import java.util.PriorityQueue;
 public class RepairmanPool {
     PriorityQueue<OutageEvent> outageEventsQueue;
     private List<Repairman> repairmenList;
+    private boolean isRunning;
 
     public RepairmanPool(List<Repairman> repairmenList) {
         this.repairmenList = repairmenList;
@@ -24,6 +25,9 @@ public class RepairmanPool {
             return;
         }
         outageEventsQueue.add(outageEvent);
+        if (isRunning) {
+            executeRepairs();
+        }
     }
 
     public synchronized Optional<OutageEvent> getMostUrgentEvent() {
@@ -34,12 +38,13 @@ public class RepairmanPool {
     }
 
     public void executeRepairs() {
+        isRunning = true;
         while (!outageEventsQueue.isEmpty()) {
             repairmenList.parallelStream()
                     .filter(Repairman::isAvailable)
                     .forEach(repairman -> {
                         Optional<OutageEvent> nextEvent = getMostUrgentEvent();
-                        nextEvent.ifPresent(outageEvent -> outageEvent.check(repairman));
+                        nextEvent.ifPresent(outageEvent -> outageEvent.repair(repairman));
                     });
         }
     }
