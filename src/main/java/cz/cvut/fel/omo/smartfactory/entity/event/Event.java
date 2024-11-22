@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
 
 @Getter
 @Setter
-abstract public class Event {
+abstract public class Event implements Comparable<Event> {
     protected Integer priority;
     protected ZonedDateTime generatedAt;
     protected AbstractManufacturingEntity abstractManufacturingEntity;
@@ -20,5 +20,19 @@ abstract public class Event {
         this.priority = priority;
     }
 
+    @Override
+    public int compareTo(Event o) {
+        int priorityComparison = Integer.compare(o.getPriority(), this.priority);
+        if (priorityComparison != 0) {
+            return priorityComparison;
+        }
+        return generatedAt.compareTo(o.getGeneratedAt());
+    }
+
     abstract public boolean check(Person person);
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{priority=" + priority + ", generatedAt=" + generatedAt + ", isChecked=" + isChecked + "}";
+    }
 }
