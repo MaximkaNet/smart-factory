@@ -1,16 +1,19 @@
 package cz.cvut.fel.omo.smartfactory.factory;
 
-import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
+import cz.cvut.fel.omo.smartfactory.entity.Machine;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.factory.FactoryBuilder;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.Repairman;
+import cz.cvut.fel.omo.smartfactory.entity.report.OuttagesReport;
 import org.junit.jupiter.api.Test;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -24,26 +27,23 @@ public class FactoryTests {
 
         FactoryBuilder builder = new FactoryBuilder("factory 1");
         Factory factory = builder.setTactInMilliseconds(500).setPeople(people).build();
+
         factory.startFactory();
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        OutageEvent e1 = new OutageEvent(2);
-        OutageEvent e2 = new OutageEvent(3);
-        OutageEvent e3 = new OutageEvent(1);
-        OutageEvent e4 = new OutageEvent(0);
-        OutageEvent e5 = new OutageEvent(0);
-
         System.out.println("adding events");
-        factory.getRepairmanPool().addOutageEvent(e1);
-        factory.getRepairmanPool().addOutageEvent(e2);
-        factory.getRepairmanPool().addOutageEvent(e3);
-        factory.getRepairmanPool().addOutageEvent(e4);
-        factory.getRepairmanPool().addOutageEvent(e5);
+        Machine m1 = new Machine();
+        Machine m2 = new Machine();
+        factory.getEventFacade().addOutageEvent(2, m1);
+        factory.getEventFacade().addOutageEvent(3, m2);
+        factory.getEventFacade().addOutageEvent(1, m1);
+        factory.getEventFacade().addOutageEvent(0, m1);
+        factory.getEventFacade().addOutageEvent(0, m2);
 
         try {
             Thread.sleep(5000);
@@ -54,5 +54,10 @@ public class FactoryTests {
         assertTrue(factory.stopFactory());
         assertFalse(factory.stopFactory());
         assertFalse(factory.isRunning());
+
+        OuttagesReport outagesReport = new OuttagesReport(ZonedDateTime.now().minusMinutes(1), ZonedDateTime.now(), factory);
+        System.out.println(outagesReport);
+        assertEquals(m1, outagesReport.getOutageSourcesSorted().get(0));
+        assertEquals(m2, outagesReport.getOutageSourcesSorted().get(1));
     }
 }
