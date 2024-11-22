@@ -44,6 +44,8 @@ public class FactoryBuilder {
         Factory factory = new Factory(name);
         factory.setTactLengthMilliseconds(tactInMilliseconds);
         factory.setPeople(people);
+        // set factory attribute on person class
+        people.forEach(person -> person.setFactory(factory));
         factory.setTactSubscribers(tactSubscribers);
         factory.setRepairmanPool(repairmanPool);
         return factory;
