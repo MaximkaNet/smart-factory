@@ -5,7 +5,7 @@ import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.factory.FactoryBuilder;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.Repairman;
-import cz.cvut.fel.omo.smartfactory.entity.report.OuttagesReport;
+import cz.cvut.fel.omo.smartfactory.entity.report.OutagesReport;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
@@ -55,7 +55,7 @@ public class FactoryTests {
         assertFalse(factory.stopFactory());
         assertFalse(factory.isRunning());
 
-        OuttagesReport outagesReport = new OuttagesReport(ZonedDateTime.now().minusMinutes(1), ZonedDateTime.now(), factory);
+        OutagesReport outagesReport = new OutagesReport(ZonedDateTime.now().minusMinutes(1), ZonedDateTime.now(), factory);
         System.out.println(outagesReport);
         assertEquals(m1, outagesReport.getOutageSourcesSorted().get(0));
         assertEquals(m2, outagesReport.getOutageSourcesSorted().get(1));
