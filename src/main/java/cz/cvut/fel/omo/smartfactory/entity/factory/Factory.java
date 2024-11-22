@@ -1,7 +1,7 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
+import cz.cvut.fel.omo.smartfactory.entity.event.EventFacade;
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
-import cz.cvut.fel.omo.smartfactory.entity.person.Director;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
 import cz.cvut.fel.omo.smartfactory.entity.report.Report;
@@ -22,9 +22,11 @@ public class Factory {
     private List<Person> people;
     private RepairmanPool repairmanPool;
     private List<TactSubscriber> tactSubscribers = new ArrayList<>();
+    private EventFacade eventFacade;
 
     public Factory(String name) {
         this.name = name;
+        eventFacade = new EventFacade(this);
     }
 
     public void startFactory() {
@@ -58,5 +60,14 @@ public class Factory {
         }
         isRunning = false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{"
+                + "name=" + name
+                + ", isRunning=" + isRunning
+                + ", tactLengthMilliseconds=" + tactLengthMilliseconds
+                + ", currentTact=" + currentTact + "}";
     }
 }
