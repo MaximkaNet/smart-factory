@@ -3,6 +3,7 @@ package cz.cvut.fel.omo.smartfactory.entity.person;
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
 import cz.cvut.fel.omo.smartfactory.entity.person.personState.IdleState;
 import cz.cvut.fel.omo.smartfactory.entity.person.personState.PersonState;
+import cz.cvut.fel.omo.smartfactory.entity.person.personState.WorkingState;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +20,7 @@ abstract public class Person implements TactSubscriber {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.state = new IdleState(this);
+        this.state = new WorkingState(this);
         currentTact = 0;
     }
 
