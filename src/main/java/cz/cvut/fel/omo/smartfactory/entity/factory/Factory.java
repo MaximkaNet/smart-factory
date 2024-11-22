@@ -1,6 +1,8 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
+import cz.cvut.fel.omo.smartfactory.entity.person.Director;
+import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
 import cz.cvut.fel.omo.smartfactory.entity.report.Report;
 import lombok.Getter;
@@ -13,20 +15,25 @@ import java.util.List;
 @Setter
 public class Factory {
     private String name;
-    private RepairmanPool repairmanPool;
     private List<Report> reports;
     private Integer tactLengthMilliseconds = 500;
     private Integer currentTact = 1;
     private boolean isRunning = false;
+    private List<Person> people;
+    private RepairmanPool repairmanPool;
     private List<TactSubscriber> tactSubscribers = new ArrayList<>();
+
+    public Factory(String name) {
+        this.name = name;
+    }
 
     public void startFactory() {
         isRunning = true;
         new Thread(() -> {
+            runStartingTasks();
             while (isRunning) {
-                System.out.println("Tack " + currentTact + " started");
+                System.out.println("Tact " + currentTact + " started");
                 runTact();
-                // waiting for new tact
                 try {
                     Thread.sleep(tactLengthMilliseconds);
                 } catch (InterruptedException e) {
@@ -35,6 +42,10 @@ public class Factory {
                 currentTact++;
             }
         }).start();
+    }
+
+    private void runStartingTasks() {
+        repairmanPool.executeRepairs();
     }
 
     private void runTact() {
