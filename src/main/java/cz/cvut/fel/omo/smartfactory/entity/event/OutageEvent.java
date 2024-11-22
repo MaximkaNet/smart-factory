@@ -8,14 +8,20 @@ public class OutageEvent extends Event implements Comparable<OutageEvent> {
         super(priority);
     }
 
+    public void repair(Person person) {
+        if (person.getClass() != Repairman.class){
+            return;
+        }
+        Repairman repairman = (Repairman) person;
+        repairman.startRepair(this);
+    }
+
     @Override
     public boolean check(Person person) {
         if (person.getClass() != Repairman.class){
             return false;
         }
-        Repairman repairman = (Repairman) person;
-        repairman.startRepair(abstractManufacturingEntity);
-        System.out.println("Repairman: " + person + " repaired(checked): " + this);
+        System.out.println("Repairman: " + person + " checked: " + this);
         isChecked = true;
         return true;
     }
