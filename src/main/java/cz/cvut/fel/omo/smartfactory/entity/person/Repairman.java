@@ -18,14 +18,14 @@ public class Repairman extends Person {
     }
 
     public synchronized void startRepair(OutageEvent outageEvent) {
-        // TODO: create RepairStartedEvent
+        factory.getEventFacade().addRepairStartedEvent(outageEvent);
         isAvailable = false;
         willBeFinishedOnTact = currentTact + repairLengthInTact;
         this.outageEvent = outageEvent;
     }
 
     public void finishRepair() {
-        // TODO: create RepairFinishedEvent
+        factory.getEventFacade().addRepairFinishedEvent(outageEvent);
         System.out.println("Repairman finished");
         outageEvent.check(this);
         isAvailable = true;
@@ -45,6 +45,7 @@ public class Repairman extends Person {
 
     @Override
     public String toString() {
-        return "Repairman{" + super.toString() + ", isAvailable=" + isAvailable + '}';
+        return super.toString().replace("}", "") +
+                ", isAvailable=" + isAvailable + "}";
     }
 }
