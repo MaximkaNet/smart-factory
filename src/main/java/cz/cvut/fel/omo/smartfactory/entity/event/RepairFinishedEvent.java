@@ -1,10 +1,15 @@
 package cz.cvut.fel.omo.smartfactory.entity.event;
 
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
+import lombok.Getter;
 
+@Getter
 public class RepairFinishedEvent extends Event{
-    public RepairFinishedEvent(Integer priority) {
+    private OutageEvent outageEvent;
+
+    public RepairFinishedEvent(Integer priority, OutageEvent event) {
         super(priority);
+        this.outageEvent = event;
     }
 
     @Override
