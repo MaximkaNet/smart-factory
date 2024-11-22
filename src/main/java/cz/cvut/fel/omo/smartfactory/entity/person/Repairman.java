@@ -1,35 +1,44 @@
 package cz.cvut.fel.omo.smartfactory.entity.person;
 
-import cz.cvut.fel.omo.smartfactory.entity.AbstractManufacturingEntity;
+import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
+import cz.cvut.fel.omo.smartfactory.entity.person.personState.IdleState;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class Repairman extends Person {
-    private boolean isAvailable;
-    private Integer willBeFinishedOnTact;
-    private AbstractManufacturingEntity repairingEntity;
+    private Integer willBeFinishedOnTact = -1;
+    private Integer repairLengthInTact = 3;
+    private OutageEvent outageEvent;
+    private boolean isAvailable = true;
 
     public Repairman(String firstName, String lastName, String email) {
         super(firstName, lastName, email);
     }
 
-    public void startRepair(AbstractManufacturingEntity abstractManufacturingEntity) {
+    public synchronized void startRepair(OutageEvent outageEvent) {
         // TODO: create RepairStartedEvent
-        willBeFinishedOnTact = currentTact + 3;
-        repairingEntity = abstractManufacturingEntity;
+        isAvailable = false;
+        willBeFinishedOnTact = currentTact + repairLengthInTact;
+        this.outageEvent = outageEvent;
     }
 
-    public void finishRepair(){
+    public void finishRepair() {
         // TODO: create RepairFinishedEvent
         System.out.println("Repairman finished");
+        outageEvent.check(this);
+        isAvailable = true;
     }
 
     @Override
-    public void onNewTact(int currentTact){
+    public void onNewTact(int currentTact) {
         super.onNewTact(currentTact);
+        if (state.getClass() == IdleState.class || willBeFinishedOnTact == -1) {
+            return;
+        }
         if (currentTact >= willBeFinishedOnTact) {
+            willBeFinishedOnTact = -1;
             finishRepair();
         }
     }
