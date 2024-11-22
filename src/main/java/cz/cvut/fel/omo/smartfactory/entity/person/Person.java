@@ -1,7 +1,7 @@
 package cz.cvut.fel.omo.smartfactory.entity.person;
 
+import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
-import cz.cvut.fel.omo.smartfactory.entity.person.personState.IdleState;
 import cz.cvut.fel.omo.smartfactory.entity.person.personState.PersonState;
 import cz.cvut.fel.omo.smartfactory.entity.person.personState.WorkingState;
 import lombok.Getter;
@@ -15,6 +15,7 @@ abstract public class Person implements TactSubscriber {
     protected String email;
     protected PersonState state;
     protected Integer currentTact;
+    protected Factory factory;
 
     public Person(String firstName, String lastName, String email) {
         this.firstName = firstName;
@@ -26,7 +27,7 @@ abstract public class Person implements TactSubscriber {
 
     @Override
     public String toString() {
-        return "Person{" + "firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", state=" + state + '}';
+        return this.getClass().getSimpleName() + "{" + "firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", state=" + state + '}';
     }
 
     @Override
