@@ -14,6 +14,7 @@ abstract public class Event implements Comparable<Event> {
     protected ZonedDateTime generatedAt;
     protected AbstractManufacturingEntity abstractManufacturingEntity;
     protected boolean isChecked = false;
+    protected Person checkedBy;
 
     public Event(Integer priority) {
         this.generatedAt = ZonedDateTime.now();

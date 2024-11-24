@@ -10,11 +10,13 @@ public class RepairFinishedEvent extends Event{
     public RepairFinishedEvent(Integer priority, OutageEvent event) {
         super(priority);
         this.outageEvent = event;
+        this.abstractManufacturingEntity = outageEvent.getAbstractManufacturingEntity();
     }
 
     @Override
     public boolean check(Person person) {
         System.out.println("Person: " + person + " has checked repair finished on: ...");
+        setCheckedBy(person);
         setChecked(true);
         return true;
     }

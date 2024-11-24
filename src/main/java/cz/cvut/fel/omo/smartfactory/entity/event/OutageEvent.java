@@ -24,6 +24,7 @@ public class OutageEvent extends Event {
             return false;
         }
         System.out.println("Repairman: " + person + " checked: " + this);
+        setCheckedBy(person);
         isChecked = true;
         return true;
     }
