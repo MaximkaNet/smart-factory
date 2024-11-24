@@ -5,6 +5,7 @@ import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.factory.FactoryBuilder;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.Repairman;
+import cz.cvut.fel.omo.smartfactory.entity.report.EventReport;
 import cz.cvut.fel.omo.smartfactory.entity.report.OutagesReport;
 import org.junit.jupiter.api.Test;
 
@@ -59,5 +60,8 @@ public class FactoryTests {
         System.out.println(outagesReport);
         assertEquals(m1, outagesReport.getOutageSourcesSorted().get(0));
         assertEquals(m2, outagesReport.getOutageSourcesSorted().get(1));
+
+        EventReport eventReport = new EventReport(ZonedDateTime.now().minusMinutes(1), ZonedDateTime.now(), factory);
+        System.out.println(eventReport);
     }
 }
