@@ -23,7 +23,7 @@ public class OutagesReport extends Report {
     List<AbstractManufacturingEntity> outageSourcesSorted;
 
     public OutagesReport(ZonedDateTime from, ZonedDateTime to, Factory factory) {
-        super(factory);
+        super(from, to, factory);
 
         List<OutageEvent> outageEventsList = factory.getEventFacade().getOutageEventsFromToSorted(from, to);
         List<RepairFinishedEvent> repairFinishedEventsList = factory.getEventFacade().getRepairFinishedEventsFromToSorted(from, to);
