@@ -32,7 +32,6 @@ public class Factory {
     public void startFactory() {
         isRunning = true;
         new Thread(() -> {
-            runStartingTasks();
             while (isRunning) {
                 System.out.println("Tact " + currentTact + " started");
                 runTact();
@@ -46,12 +45,9 @@ public class Factory {
         }).start();
     }
 
-    private void runStartingTasks() {
-        repairmanPool.executeRepairs();
-    }
-
     private void runTact() {
         tactSubscribers.forEach(subscriber -> subscriber.onNewTact(currentTact));
+        repairmanPool.executeRepairs();
     }
 
     public boolean stopFactory() {
