@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class Material {
     private Long id;
+    private String name;
 }

@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class Product {
     private Long id;
+//    private List<Sequenceable> sequence;
 }
