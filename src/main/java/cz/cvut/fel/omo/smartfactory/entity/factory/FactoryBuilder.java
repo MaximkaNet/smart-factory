@@ -1,12 +1,15 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
+import cz.cvut.fel.omo.smartfactory.entity.event.Eventable;
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.Repairman;
 import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class FactoryBuilder {
@@ -15,6 +18,7 @@ public class FactoryBuilder {
     private RepairmanPool repairmanPool;
     private List<Person> people = new ArrayList<>();
     private List<TactSubscriber> tactSubscribers = new ArrayList<>();
+    private HashMap<Class<?>, List<Eventable>> eventables = new HashMap<>();
 
     public FactoryBuilder(String name) {
         this.name = name;
@@ -40,6 +44,19 @@ public class FactoryBuilder {
         return this;
     }
 
+    public FactoryBuilder addEventableForEvent(Class<?> eventClass, Eventable eventable){
+        eventables.computeIfAbsent(eventClass, k -> new ArrayList<>()).add(eventable);
+        return this;
+    }
+
+    public FactoryBuilder addEventablesForEvent(Map<Class<?>, List<Eventable>> eventablesMap) {
+        if (eventables == null) {
+            return this;
+        }
+        eventables.putAll(eventablesMap);
+        return this;
+    }
+
     public Factory build() {
         Factory factory = new Factory(name);
         factory.setTactLengthMilliseconds(tactInMilliseconds);
@@ -48,6 +65,8 @@ public class FactoryBuilder {
         people.forEach(person -> person.setFactory(factory));
         factory.setTactSubscribers(tactSubscribers);
         factory.setRepairmanPool(repairmanPool);
+        // set eventables in factory facade
+        factory.getEventFacade().registerAllForEventType(eventables);
         return factory;
     }
 }
