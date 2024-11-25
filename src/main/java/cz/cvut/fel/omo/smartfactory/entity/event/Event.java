@@ -12,13 +12,14 @@ import java.time.ZonedDateTime;
 abstract public class Event implements Comparable<Event> {
     protected Integer priority;
     protected ZonedDateTime generatedAt;
-    protected AbstractManufacturingEntity abstractManufacturingEntity;
     protected boolean isChecked = false;
     protected Person checkedBy;
+    protected Eventable sender;
 
-    public Event(Integer priority) {
+    public Event(Integer priority, Eventable sender) {
         this.generatedAt = ZonedDateTime.now();
         this.priority = priority;
+        this.sender = sender;
     }
 
     @Override
@@ -34,6 +35,18 @@ abstract public class Event implements Comparable<Event> {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "{priority=" + priority + ", generatedAt=" + generatedAt + ", isChecked=" + isChecked + "}";
+        return this.getClass().getSimpleName()
+                + "{priority=" + priority
+                + ", generatedAt=" + generatedAt
+                + ", isChecked=" + isChecked
+                + ", checkedBy=" + checkedBy
+                + ", sender=" + sender
+                + "}";
     }
 }
+
+// functional req:
+// Komunikace mezi stroji, roboty a lidmi probíhá pomocí eventů.
+// Event může dostat 1 až N entit (člověk, stroj, robot),
+// které jsou na daný druh eventu zaregistrované.
+// Eventy je potřeba odbavit.
