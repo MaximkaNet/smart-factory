@@ -1,5 +1,7 @@
 package cz.cvut.fel.omo.smartfactory.entity.person;
 
+import cz.cvut.fel.omo.smartfactory.entity.event.Event;
+import cz.cvut.fel.omo.smartfactory.entity.event.Eventable;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
 import cz.cvut.fel.omo.smartfactory.entity.person.personState.PersonState;
@@ -9,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-abstract public class Person implements TactSubscriber {
+abstract public class Person implements TactSubscriber, Eventable {
     protected String firstName;
     protected String lastName;
     protected String email;
@@ -33,5 +35,10 @@ abstract public class Person implements TactSubscriber {
     @Override
     public void onNewTact(int currentTact) {
         this.currentTact = currentTact;
+    }
+
+    @Override
+    public void receiveEvent(Event event) {
+        System.out.println("Person received: " + event);
     }
 }
