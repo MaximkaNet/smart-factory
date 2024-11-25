@@ -3,10 +3,14 @@ package cz.cvut.fel.omo.smartfactory.entity.event;
 import cz.cvut.fel.omo.smartfactory.entity.AbstractManufacturingEntity;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.Repairman;
+import lombok.Getter;
 
+@Getter
 public class OutageEvent extends Event {
+    AbstractManufacturingEntity abstractManufacturingEntity;
+
     public OutageEvent(Integer priority, AbstractManufacturingEntity abstractManufacturingEntity) {
-        super(priority);
+        super(priority, abstractManufacturingEntity);
         this.abstractManufacturingEntity = abstractManufacturingEntity;
     }
 
