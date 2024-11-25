@@ -1,15 +1,17 @@
 package cz.cvut.fel.omo.smartfactory.entity.event;
 
+import cz.cvut.fel.omo.smartfactory.entity.AbstractManufacturingEntity;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import lombok.Getter;
 
 @Getter
 public class RepairFinishedEvent extends Event{
     private OutageEvent outageEvent;
+    AbstractManufacturingEntity abstractManufacturingEntity;
 
-    public RepairFinishedEvent(Integer priority, OutageEvent event) {
-        super(priority);
-        this.outageEvent = event;
+    public RepairFinishedEvent(Integer priority, Eventable sender, OutageEvent outageEvent) {
+        super(priority, sender);
+        this.outageEvent = outageEvent;
         this.abstractManufacturingEntity = outageEvent.getAbstractManufacturingEntity();
     }
 

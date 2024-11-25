@@ -18,14 +18,14 @@ public class Repairman extends Person {
     }
 
     public synchronized void startRepair(OutageEvent outageEvent) {
-        factory.getEventFacade().addRepairStartedEvent(outageEvent);
+        factory.getEventFacade().addRepairStartedEvent(this, outageEvent);
         isAvailable = false;
         willBeFinishedOnTact = currentTact + repairLengthInTact;
         this.outageEvent = outageEvent;
     }
 
     public void finishRepair() {
-        factory.getEventFacade().addRepairFinishedEvent(outageEvent);
+        factory.getEventFacade().addRepairFinishedEvent(this, outageEvent);
         System.out.println("Repairman finished");
         outageEvent.check(this);
         isAvailable = true;
