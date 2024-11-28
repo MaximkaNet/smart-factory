@@ -3,24 +3,39 @@ package cz.cvut.fel.omo.smartfactory.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Setter
 public class Series {
-    private Long id;
-    private int number;
-    private int amount;
-    private List<Product> products;
+    /**
+     * The unique id of the series
+     */
+    private final String id;
 
-    public Series(int seriesNumber, int amount) {
-        this.number = seriesNumber;
-        this.amount = amount;
-        products = new ArrayList<>();
+    /**
+     * The 'template' of product
+     */
+    private final Product product;
+
+    /**
+     * Number of products must be produced
+     */
+    private final int count;
+
+    /**
+     * Actual number of produced products
+     */
+    private int produced = 0;
+
+    public Series(String id, Product product, int count) {
+        this.id = id;
+        this.product = product;
+        this.count = count;
     }
 
-    public void addProduct(Product manufacturedProduct) {
-        products.add(manufacturedProduct);
+    /**
+     * Increment produced counter
+     */
+    public void newProducedProduct() {
+        produced++;
     }
 }
