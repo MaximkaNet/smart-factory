@@ -35,7 +35,7 @@ public class RepairmanPool {
     }
 
     public void executeRepairs() {
-        repairmenList.parallelStream()
+        repairmenList.stream()
                 .filter(Repairman::isAvailable)
                 .forEach(repairman -> {
                     Optional<OutageEvent> nextEvent = getMostUrgentEvent();
