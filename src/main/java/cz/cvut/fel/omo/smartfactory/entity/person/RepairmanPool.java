@@ -1,45 +1,73 @@
 package cz.cvut.fel.omo.smartfactory.entity.person;
 
-import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
+import cz.cvut.fel.omo.smartfactory.entity.AbstractManufacturingEntity;
+import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
+import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
+import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
+import cz.cvut.fel.omo.smartfactory.entity.person.state.repairman.RepairmanState;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.PriorityQueue;
 
 @Getter
 @Setter
-public class RepairmanPool {
-    LinkedBlockingQueue<OutageEvent> outageEventsQueue;
-    private List<Repairman> repairmenList;
-    private boolean isRunning;
+public class RepairmanPool implements FactoryEventListener {
 
-    public RepairmanPool(List<Repairman> repairmenList) {
-        this.repairmenList = repairmenList;
-        this.outageEventsQueue = new LinkedBlockingQueue<>();
+    /**
+     * Outage events
+     */
+    private PriorityQueue<FactoryEvent> outageEvents = new PriorityQueue<>();
+
+    /**
+     * Repairman list
+     */
+    private List<Repairman> repairmanList;
+
+    private final Factory factory;
+
+    public RepairmanPool(Factory factory, List<Repairman> repairmanList) {
+        this.factory = factory;
+        this.repairmanList = repairmanList;
     }
 
-    public void addOutageEvent(OutageEvent outageEvent) {
-        if (outageEventsQueue.contains(outageEvent)) {
-            return;
+    /**
+     * Get available repairman
+     */
+    public Repairman getAvailableRepairman() {
+        for (Repairman repairman : repairmanList) {
+            if (repairman.isAvailable()) {
+                return repairman;
+            }
         }
-        outageEventsQueue.add(outageEvent);
+        return null;
     }
 
-    public synchronized Optional<OutageEvent> getMostUrgentEvent() {
-        if (outageEventsQueue.isEmpty()) {
-            return Optional.empty();
+    /**
+     * Main repairman pool method
+     */
+    public void update() {
+        if (!outageEvents.isEmpty()) {
+            // Get most urgent event
+            Repairman repairman = getAvailableRepairman();
+            if (repairman != null) {
+                FactoryEvent event = outageEvents.poll();
+                AbstractManufacturingEntity entity = factory.getManufacturingEntity(event.getTargetId());
+                repairman.setTarget(entity);
+            }
         }
-        return Optional.ofNullable(outageEventsQueue.poll());
+        // Play with repairman state
+        for (Repairman repairman : repairmanList) {
+            RepairmanState state = repairman.getState();
+            // Call state methods
+            state.startRepair();
+            state.processRepair();
+            state.finishRepair();
+        }
     }
 
-    public void executeRepairs() {
-        repairmenList.stream()
-                .filter(Repairman::isAvailable)
-                .forEach(repairman -> {
-                    Optional<OutageEvent> nextEvent = getMostUrgentEvent();
-                    nextEvent.ifPresent(outageEvent -> outageEvent.repair(repairman));
-                });
+    public void onEvent(FactoryEvent event) {
+        outageEvents.add(event);
     }
 }

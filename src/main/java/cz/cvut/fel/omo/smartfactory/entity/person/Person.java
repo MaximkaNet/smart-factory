@@ -1,44 +1,25 @@
 package cz.cvut.fel.omo.smartfactory.entity.person;
 
-import cz.cvut.fel.omo.smartfactory.entity.event.Event;
-import cz.cvut.fel.omo.smartfactory.entity.event.Eventable;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
-import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
-import cz.cvut.fel.omo.smartfactory.entity.person.personState.PersonState;
-import cz.cvut.fel.omo.smartfactory.entity.person.personState.WorkingState;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-abstract public class Person implements TactSubscriber, Eventable {
+abstract public class Person {
     protected String firstName;
     protected String lastName;
-    protected String email;
-    protected PersonState state;
-    protected Integer currentTact;
-    protected Factory factory;
 
-    public Person(String firstName, String lastName, String email) {
+    protected final Factory factory;
+
+    public Person(Factory factory, String firstName, String lastName) {
+        this.factory = factory;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
-        this.state = new WorkingState(this);
-        currentTact = 0;
     }
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "{" + "firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", state=" + state + '}';
-    }
-
-    @Override
-    public void onNewTact(int currentTact) {
-        this.currentTact = currentTact;
-    }
-
-    @Override
-    public void receiveEvent(Event event) {
-        System.out.println("Person received: " + event);
+        return this.getClass().getSimpleName() + "{" + "firstName=" + firstName + ", lastName=" + lastName + '}';
     }
 }
