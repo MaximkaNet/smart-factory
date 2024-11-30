@@ -1,7 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.factory;
 
 import cz.cvut.fel.omo.smartfactory.entity.Machine;
-import cz.cvut.fel.omo.smartfactory.entity.event.Eventable;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.factory.FactoryBuilder;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;

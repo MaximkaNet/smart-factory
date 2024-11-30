@@ -5,11 +5,11 @@ import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import lombok.Getter;
 
 @Getter
-public class RepairStartedEvent extends Event{
+public class RepairStartedEvent extends FactoryEvent {
     private OutageEvent outageEvent;
     AbstractManufacturingEntity abstractManufacturingEntity;
 
-    public RepairStartedEvent(Integer priority, Eventable sender, OutageEvent outageEvent) {
+    public RepairStartedEvent(Integer priority, FactoryEventListener sender, OutageEvent outageEvent) {
         super(priority, sender);
         this.outageEvent = outageEvent;
         this.abstractManufacturingEntity = outageEvent.getAbstractManufacturingEntity();

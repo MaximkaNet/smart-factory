@@ -6,7 +6,7 @@ import cz.cvut.fel.omo.smartfactory.entity.person.Repairman;
 import lombok.Getter;
 
 @Getter
-public class OutageEvent extends Event {
+public class OutageEvent extends FactoryEvent {
     AbstractManufacturingEntity abstractManufacturingEntity;
 
     public OutageEvent(Integer priority, AbstractManufacturingEntity abstractManufacturingEntity) {

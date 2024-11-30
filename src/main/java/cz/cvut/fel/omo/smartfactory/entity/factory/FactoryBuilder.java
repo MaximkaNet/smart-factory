@@ -3,7 +3,7 @@ package cz.cvut.fel.omo.smartfactory.entity.factory;
 import cz.cvut.fel.omo.smartfactory.entity.Machine;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.Robot;
-import cz.cvut.fel.omo.smartfactory.entity.event.Eventable;
+import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.Repairman;
@@ -24,7 +24,7 @@ public class FactoryBuilder {
     private List<Robot> robots;
     private List<ProductionLine> productionLines = new ArrayList<>();
     private List<TactSubscriber> tactSubscribers = new ArrayList<>();
-    private HashMap<Class<?>, List<Eventable>> eventables = new HashMap<>();
+    private HashMap<Class<?>, List<FactoryEventListener>> eventables = new HashMap<>();
 
     public FactoryBuilder(String name) {
         this.name = name;
@@ -65,12 +65,12 @@ public class FactoryBuilder {
         return this;
     }
 
-    public FactoryBuilder addEventableForEvent(Class<?> eventClass, Eventable eventable){
+    public FactoryBuilder addEventableForEvent(Class<?> eventClass, FactoryEventListener eventable){
         eventables.computeIfAbsent(eventClass, k -> new ArrayList<>()).add(eventable);
         return this;
     }
 
-    public FactoryBuilder addEventablesForEvent(Map<Class<?>, List<Eventable>> eventablesMap) {
+    public FactoryBuilder addEventablesForEvent(Map<Class<?>, List<FactoryEventListener>> eventablesMap) {
         if (eventables == null) {
             return this;
         }
