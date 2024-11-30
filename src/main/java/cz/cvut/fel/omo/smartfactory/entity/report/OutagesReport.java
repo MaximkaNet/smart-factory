@@ -23,7 +23,7 @@ public class OutagesReport extends Report {
     List<AbstractManufacturingEntity> outageSourcesSorted;
 
     public OutagesReport(ZonedDateTime from, ZonedDateTime to, Factory factory) {
-        super(from, to, factory);
+        super(factory, from, to);
 
         List<OutageEvent> outageEventsList = factory.getEventManager().getOutageEventsFromToSorted(from, to);
         List<RepairFinishedEvent> repairFinishedEventsList = factory.getEventManager().getRepairFinishedEventsFromToSorted(from, to);
@@ -127,5 +127,10 @@ public class OutagesReport extends Report {
                 .map(Object::toString)
                 .collect(Collectors.joining(System.lineSeparator()))
                 + System.lineSeparator() + "}";
+    }
+
+    @Override
+    public String exportJson() {
+        return "";
     }
 }

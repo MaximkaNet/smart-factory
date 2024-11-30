@@ -7,6 +7,11 @@ import java.time.ZonedDateTime;
 public class FactoryConfigurationReport extends Report{
 
     public FactoryConfigurationReport(ZonedDateTime from, ZonedDateTime to, Factory factory) {
-        super(from, to, factory);
+        super(factory, from, to);
+    }
+
+    @Override
+    public String exportJson() {
+        return "";
     }
 }

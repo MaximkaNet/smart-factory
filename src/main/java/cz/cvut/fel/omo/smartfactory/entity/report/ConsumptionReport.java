@@ -6,6 +6,11 @@ import java.time.ZonedDateTime;
 public class ConsumptionReport extends Report{
 
     public ConsumptionReport(ZonedDateTime from, ZonedDateTime to, Factory factory) {
-        super(from, to, factory);
+        super(factory, from, to);
+    }
+
+    @Override
+    public String exportJson() {
+        return "";
     }
 }
