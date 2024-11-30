@@ -1,6 +1,8 @@
 package cz.cvut.fel.omo.smartfactory.entity.person;
 
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
+import cz.cvut.fel.omo.smartfactory.entity.event.RepairFinishedEvent;
+import cz.cvut.fel.omo.smartfactory.entity.event.RepairStartedEvent;
 import cz.cvut.fel.omo.smartfactory.entity.person.personState.IdleState;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,14 +20,14 @@ public class Repairman extends Person {
     }
 
     public synchronized void startRepair(OutageEvent outageEvent) {
-        factory.getEventFacade().addRepairStartedEvent(this, outageEvent);
+        factory.getEventManager().notifyListeners(new RepairStartedEvent(outageEvent.getPriority(), this, outageEvent));
         isAvailable = false;
         willBeFinishedOnTact = currentTact + repairLengthInTact;
         this.outageEvent = outageEvent;
     }
 
     public void finishRepair() {
-        factory.getEventFacade().addRepairFinishedEvent(this, outageEvent);
+        factory.getEventManager().notifyListeners(new RepairFinishedEvent(outageEvent.getPriority(), this, outageEvent));
         System.out.println("Repairman finished");
         outageEvent.check(this);
         isAvailable = true;
