@@ -3,9 +3,6 @@ package cz.cvut.fel.omo.smartfactory.entity.person;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.RepairFinishedEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.RepairStartedEvent;
-import cz.cvut.fel.omo.smartfactory.entity.person.personState.IdleState;
-import cz.cvut.fel.omo.smartfactory.entity.person.personState.ReadyState;
-import cz.cvut.fel.omo.smartfactory.entity.person.personState.WorkingState;
 import lombok.Getter;
 import lombok.Setter;
 
