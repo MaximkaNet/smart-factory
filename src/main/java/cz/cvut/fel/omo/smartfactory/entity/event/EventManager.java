@@ -1,8 +1,7 @@
 package cz.cvut.fel.omo.smartfactory.entity.event;
 
-import cz.cvut.fel.omo.smartfactory.entity.AbstractManufacturingEntity;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
-import cz.cvut.fel.omo.smartfactory.entity.person.Repairman;
+import lombok.Getter;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -11,79 +10,79 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+@Getter
 public class EventManager {
-    private final List<OutageEvent> outageEvents = new ArrayList<>();
-    private final List<RepairFinishedEvent> repairFinishedEvents = new ArrayList<>();
-    private final List<RepairStartedEvent> repairStartedEvents = new ArrayList<>();
-    private final Map<Class<?>, List<FactoryEventListener>> eventTypeListenersMap = new HashMap<>();
+    private final Map<Class<? extends FactoryEvent>, List<FactoryEventListener>> eventTypeListenersMap = new HashMap<>();
+    private final List<FactoryEvent> eventHistory = new ArrayList<>();
     private Factory factory;
+
 
     public EventManager(Factory factory) {
         this.factory = factory;
     }
 
-    public void registerAllForEventType(Map<Class<?>, List<FactoryEventListener>> eventTypeListenersMap) {
+    /**
+     * Notify listeners
+     *
+     * @param event Factory event
+     */
+    public void notifyListeners(FactoryEvent event) {
+        // Notify all registered listeners
+        eventTypeListenersMap.getOrDefault(event.getClass(), new ArrayList<>()).forEach((listener) -> listener.receiveEvent(event));
+        // Add event to history
+        eventHistory.add(event);
+    }
+
+    public void registerAllForEventType(Map<Class<? extends FactoryEvent>, List<FactoryEventListener>> eventTypeListenersMap) {
         eventTypeListenersMap.forEach((eventType, newListeners) ->
                 this.eventTypeListenersMap.computeIfAbsent(eventType, k -> new ArrayList<>()).addAll(newListeners));
+    }
+
+    public void registerForEventType(Class<? extends FactoryEvent> eventClass, FactoryEventListener listener) {
+        eventTypeListenersMap.computeIfAbsent(eventClass, key -> new ArrayList<>()).add(listener);
     }
 
     private List<FactoryEventListener> getListenersForEventType(Class<?> eventType) {
         return eventTypeListenersMap.getOrDefault(eventType, Collections.emptyList());
     }
 
-    public void addOutageEvent(Integer priority, AbstractManufacturingEntity abstractManufacturingEntity) {
-        OutageEvent event = new OutageEvent(priority, abstractManufacturingEntity);
-        outageEvents.add(event);
-        factory.getRepairmanPool().addOutageEvent(event);
-        getListenersForEventType(OutageEvent.class).forEach(listener -> listener.receiveEvent(event));
-    }
-
-    public void addRepairFinishedEvent(Repairman repairman, OutageEvent outageEvent) {
-        RepairFinishedEvent repairFinishedEvent = new RepairFinishedEvent(outageEvent.getPriority(), repairman, outageEvent);
-        repairFinishedEvents.add(repairFinishedEvent);
-        getListenersForEventType(RepairFinishedEvent.class).forEach(listener -> listener.receiveEvent(repairFinishedEvent));
-    }
-
-    public void addRepairStartedEvent(Repairman repairman, OutageEvent outageEvent) {
-        RepairStartedEvent repairStartedEvent = new RepairStartedEvent(outageEvent.getPriority(), repairman, outageEvent);
-        repairStartedEvents.add(repairStartedEvent);
-        getListenersForEventType(RepairStartedEvent.class).forEach(listener -> listener.receiveEvent(repairStartedEvent));
-    }
-
-    // ----------------------------------------------------- GETTING EVENTS -----------------------------------------------------
-    public List<FactoryEvent> getSortedEvents() {
-        return Stream.of(outageEvents, repairFinishedEvents, repairStartedEvents)
-                .flatMap(List::stream)
+    // ----------------------------------------------------- ADVANCED GETTERS FOR STATISTICS -----------------------------------------------------
+    public List<FactoryEvent> getAllEventsSorted() {
+        return eventHistory.stream()
                 .sorted()
                 .collect(Collectors.toList());
     }
 
     public List<FactoryEvent> getEventsFromToSorted(ZonedDateTime from, ZonedDateTime to) {
-        return Stream.of(outageEvents, repairFinishedEvents, repairStartedEvents)
-                .flatMap(List::stream)
+        return eventHistory.stream()
                 .filter(event -> event.getGeneratedAt().isAfter(from) && event.generatedAt.isBefore(to))
                 .sorted()
                 .collect(Collectors.toList());
     }
 
     public List<OutageEvent> getOutageEventsFromToSorted(ZonedDateTime from, ZonedDateTime to) {
-        return outageEvents.stream()
+        return eventHistory.stream()
+                .filter(event -> event instanceof OutageEvent)
+                .map(event -> (OutageEvent) event)
                 .filter(outageEvent -> outageEvent.getGeneratedAt().isAfter(from) && outageEvent.generatedAt.isBefore(to))
                 .sorted()
                 .collect(Collectors.toList());
     }
 
     public List<RepairFinishedEvent> getRepairFinishedEventsFromToSorted(ZonedDateTime from, ZonedDateTime to) {
-        return repairFinishedEvents.stream()
+        return eventHistory.stream()
+                .filter(event -> event instanceof RepairFinishedEvent)
+                .map(event -> (RepairFinishedEvent) event)
                 .filter(outageEvent -> outageEvent.getGeneratedAt().isAfter(from) && outageEvent.generatedAt.isBefore(to))
                 .sorted()
                 .collect(Collectors.toList());
     }
 
     public List<RepairStartedEvent> getRepairStartedEventsFromToSorted(ZonedDateTime from, ZonedDateTime to) {
-        return repairStartedEvents.stream()
+        return eventHistory.stream()
+                .filter(event -> event instanceof RepairStartedEvent)
+                .map(event -> (RepairStartedEvent) event)
                 .filter(outageEvent -> outageEvent.getGeneratedAt().isAfter(from) && outageEvent.generatedAt.isBefore(to))
                 .sorted()
                 .collect(Collectors.toList());
