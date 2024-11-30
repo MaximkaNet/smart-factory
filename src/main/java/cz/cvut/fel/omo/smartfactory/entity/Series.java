@@ -3,6 +3,9 @@ package cz.cvut.fel.omo.smartfactory.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 public class Series {
@@ -14,7 +17,9 @@ public class Series {
     /**
      * The 'template' of product
      */
-    private final Product product;
+    private final Product template;
+
+//    private final List<String> sequence;
 
     /**
      * Number of products must be produced
@@ -22,20 +27,43 @@ public class Series {
     private final int count;
 
     /**
-     * Actual number of produced products
+     * Number of products that on production line
      */
-    private int produced = 0;
+    private int inProgress = 0;
+
+    /**
+     * Completed products
+     */
+    private List<Product> completedProducts = new ArrayList<>();
 
     public Series(String id, Product product, int count) {
         this.id = id;
-        this.product = product;
+        this.template = product;
         this.count = count;
     }
 
     /**
-     * Increment produced counter
+     * Returns true if series has available templates
      */
-    public void newProducedProduct() {
-        produced++;
+    public boolean hasTemplates() {
+        return completedProducts.size() + inProgress < count;
+    }
+
+    /**
+     * Get product template
+     */
+    public Product getTemplate() {
+        inProgress++;
+        return template.copy();
+    }
+
+    /**
+     * Add completed product to series
+     *
+     * @param product completed product
+     */
+    public void addCompletedProduct(Product product) {
+        inProgress--;
+        completedProducts.add(product);
     }
 }
