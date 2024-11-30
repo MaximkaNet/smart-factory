@@ -2,18 +2,32 @@ package cz.cvut.fel.omo.smartfactory.entity.person.personState;
 
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 
-public class WorkingState extends PersonState{
+public class WorkingState extends PersonState {
     public WorkingState(Person person) {
         this.person = person;
     }
 
     @Override
-    public PersonState work() {
-        return this;
+    public void work() {
     }
 
     @Override
-    public PersonState stopWorking() {
-        return new IdleState(person);
+    public void ready() {
+        person.setState(new ReadyState(person));
+    }
+
+    @Override
+    public void stopWorking() {
+        person.setState(new IdleState(person));
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return false;
+    }
+
+    @Override
+    public boolean isExecuting() {
+        return true;
     }
 }
