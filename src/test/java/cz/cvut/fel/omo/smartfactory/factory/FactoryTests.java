@@ -38,15 +38,7 @@ public class FactoryTests {
                 .addEventableForEvent(OutageEvent.class, director)
                 .build();
 
-        factory.startFactory();
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        System.out.println("adding events");
         Machine m1 = new Machine();
         Machine m2 = new Machine();
         factory.getEventFacade().addOutageEvent(2, m1);
@@ -55,16 +47,9 @@ public class FactoryTests {
         factory.getEventFacade().addOutageEvent(0, m1);
         factory.getEventFacade().addOutageEvent(0, m2);
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        factory.simulate(5);
 
-        assertTrue(factory.stopFactory());
-        assertFalse(factory.stopFactory());
         assertFalse(factory.isRunning());
-
         OutagesReport outagesReport = new OutagesReport(ZonedDateTime.now().minusMinutes(1), ZonedDateTime.now(), factory);
         System.out.println(outagesReport);
         assertEquals(m1, outagesReport.getOutageSourcesSorted().get(0));
