@@ -2,6 +2,7 @@ package cz.cvut.fel.omo.smartfactory.entity;
 
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventType;
+import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,13 +19,14 @@ public class Robot extends AbstractManufacturingEntity {
         // process healthy
         // If repair necessary generate alert event
 
-        FactoryEvent event = new FactoryEvent(FactoryEventType.ALERT, "Need repair", 123);
-        event.setTargetId(this.getId());
+        FactoryEvent event = new OutageEvent(123, this);
+//        event.setTargetId(this.getId());
 
         if (factory == null) {
             throw new RuntimeException("Robot " + getId() + " is not connect to factory");
         }
-        factory.generateEvent(event);
+//        factory.generateEvent(event);
+        factory.getEventManager().notifyListeners(event);
     }
 
     @Override
