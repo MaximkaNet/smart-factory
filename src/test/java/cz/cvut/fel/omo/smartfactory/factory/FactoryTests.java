@@ -39,13 +39,13 @@ public class FactoryTests {
 
         Machine m1 = new Machine();
         Machine m2 = new Machine();
-        factory.getEventFacade().addOutageEvent(2, m1);
-        factory.getEventFacade().addOutageEvent(3, m2);
-        factory.getEventFacade().addOutageEvent(1, m1);
-        factory.getEventFacade().addOutageEvent(0, m1);
-        factory.getEventFacade().addOutageEvent(0, m2);
+        factory.getEventManager().notifyListeners(new OutageEvent(2, m1));
+        factory.getEventManager().notifyListeners(new OutageEvent(3, m2));
+        factory.getEventManager().notifyListeners(new OutageEvent(1, m1));
+        factory.getEventManager().notifyListeners(new OutageEvent(0, m1));
+        factory.getEventManager().notifyListeners(new OutageEvent(0, m2));
 
-        factory.simulate(5);
+        factory.simulate(10);
 
         assertFalse(factory.isRunning());
         OutagesReport outagesReport = new OutagesReport(ZonedDateTime.now().minusMinutes(1), ZonedDateTime.now(), factory);
