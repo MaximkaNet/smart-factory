@@ -13,14 +13,16 @@ abstract public class Report {
     protected ZonedDateTime from;
     protected ZonedDateTime to;
 
-    public Report(ZonedDateTime from, ZonedDateTime to, Factory factory) {
+    public Report(Factory factory, ZonedDateTime from, ZonedDateTime to) {
         this.factory = factory;
         this.from = from;
         this.to = to;
     }
 
-    @Override
-    public String toString() {
-        return this.getClass().getSimpleName() + ", factory=" + factory + "]";
-    }
+    /**
+     * Export report to json
+     */
+    public abstract String exportJson();
+
+    
 }
