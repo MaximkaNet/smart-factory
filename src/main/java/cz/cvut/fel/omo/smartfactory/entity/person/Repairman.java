@@ -10,8 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Repairman extends Person {
-    private Integer willBeFinishedOnTact = -1;
-    private Integer repairLengthInTact = 3;
+    private final float repairPerTick = 10.0f;
+//    private Integer willBeFinishedOnTact = -1;
+//    private Integer repairLengthInTact = 3;
     private OutageEvent outageEvent;
     private boolean isAvailable = true;
 
