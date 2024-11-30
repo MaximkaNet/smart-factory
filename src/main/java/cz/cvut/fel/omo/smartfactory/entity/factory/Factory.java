@@ -3,7 +3,7 @@ package cz.cvut.fel.omo.smartfactory.entity.factory;
 import cz.cvut.fel.omo.smartfactory.entity.Machine;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.Robot;
-import cz.cvut.fel.omo.smartfactory.entity.event.EventFacade;
+import cz.cvut.fel.omo.smartfactory.entity.event.EventManager;
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
@@ -30,7 +30,7 @@ public class Factory {
     private List<Machine> machines;
     private RepairmanPool repairmanPool;
     private List<TactSubscriber> tactSubscribers = new ArrayList<>();
-    private EventFacade eventFacade;
+    private EventManager eventFacade;
 
     public Factory(String name, int tactLengthMilliseconds, List<Person> people, List<Machine> machines, List<Robot> robots, List<ProductionLine> productionLines) {
         this.name = name;
@@ -39,7 +39,7 @@ public class Factory {
         this.robots = robots;
         this.machines = machines;
         this.people = people;
-        eventFacade = new EventFacade(this);
+        eventFacade = new EventManager(this);
     }
 
     /**
