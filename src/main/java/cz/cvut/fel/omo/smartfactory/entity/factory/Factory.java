@@ -59,7 +59,7 @@ public class Factory {
         }
 
         // I have added sleeping here
-        // will be removed and is here to observe factory working
+        // will be removed and is here only to observe factory working
         try {
             Thread.sleep(tactLengthMilliseconds);
         } catch (InterruptedException e) {
