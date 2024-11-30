@@ -6,13 +6,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FactoryEvent implements Comparable<FactoryEvent> {
-    private final String type;
+    private final FactoryEventType type;
     private final String message;
     private int priority;
     private final long timestamp;
     private String targetId = null;
 
-    public FactoryEvent(String type, String message, long timestamp) {
+    public FactoryEvent(FactoryEventType type, String message, long timestamp) {
         this.type = type;
         this.message = message;
         this.timestamp = timestamp;

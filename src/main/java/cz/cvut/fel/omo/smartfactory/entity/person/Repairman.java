@@ -38,7 +38,7 @@ public class Repairman extends Person {
      */
     public void startRepair() {
         if (target == null) return;
-        FactoryEvent event = new FactoryEvent(FactoryEventType.REPAIR_STARTED.toString(), "Repair started", 1);
+        FactoryEvent event = new FactoryEvent(FactoryEventType.REPAIR_STARTED, "Repairs started", 1);
         factory.getEventManager().notifyListeners(event);
         isAvailable = false;
     }
@@ -63,7 +63,7 @@ public class Repairman extends Person {
      */
     public void finishRepair() {
         if (target == null) return;
-        FactoryEvent event = new FactoryEvent(FactoryEventType.REPAIR_COMPLETED.toString(), "Repair completed", 1);
+        FactoryEvent event = new FactoryEvent(FactoryEventType.REPAIR_COMPLETED, "Repairs completed", 1);
         factory.getEventManager().notifyListeners(event);
         isAvailable = true;
     }

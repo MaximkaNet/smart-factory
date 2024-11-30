@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FactoryEventManager {
-    private final Map<String, List<FactoryEventListener>> listeners = new HashMap<>();
+    private final Map<FactoryEventType, List<FactoryEventListener>> listeners = new HashMap<>();
 
     @Getter
     private final List<FactoryEvent> eventHistory = new ArrayList<>();
@@ -16,7 +16,7 @@ public class FactoryEventManager {
     /**
      * Register listener
      */
-    public void registerListener(String eventType, FactoryEventListener listener) {
+    public void registerListener(FactoryEventType eventType, FactoryEventListener listener) {
         listeners.computeIfAbsent(eventType, k -> new ArrayList<>());
         listeners.get(eventType).add(listener);
     }
@@ -24,7 +24,7 @@ public class FactoryEventManager {
     /**
      * Unregister listener
      */
-    public void unregisterListener(String eventType, FactoryEventListener listener) {
+    public void unregisterListener(FactoryEventType eventType, FactoryEventListener listener) {
         listeners.computeIfAbsent(eventType, k -> new ArrayList<>());
         listeners.get(eventType).remove(listener);
     }
