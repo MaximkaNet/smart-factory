@@ -1,5 +1,8 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
+import cz.cvut.fel.omo.smartfactory.entity.Machine;
+import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
+import cz.cvut.fel.omo.smartfactory.entity.Robot;
 import cz.cvut.fel.omo.smartfactory.entity.event.Eventable;
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
@@ -17,6 +20,9 @@ public class FactoryBuilder {
     private Integer tactInMilliseconds;
     private RepairmanPool repairmanPool;
     private List<Person> people = new ArrayList<>();
+    private List<Machine> machines;
+    private List<Robot> robots;
+    private List<ProductionLine> productionLines = new ArrayList<>();
     private List<TactSubscriber> tactSubscribers = new ArrayList<>();
     private HashMap<Class<?>, List<Eventable>> eventables = new HashMap<>();
 
@@ -44,6 +50,21 @@ public class FactoryBuilder {
         return this;
     }
 
+    public FactoryBuilder setProductionLines(List<ProductionLine> productionLines) {
+        this.productionLines = productionLines;
+        return this;
+    }
+
+    public FactoryBuilder setMachines(List<Machine> machines) {
+        this.machines = machines;
+        return this;
+    }
+
+    public FactoryBuilder setRobots(List<Robot> robots) {
+        this.robots = robots;
+        return this;
+    }
+
     public FactoryBuilder addEventableForEvent(Class<?> eventClass, Eventable eventable){
         eventables.computeIfAbsent(eventClass, k -> new ArrayList<>()).add(eventable);
         return this;
@@ -58,9 +79,7 @@ public class FactoryBuilder {
     }
 
     public Factory build() {
-        Factory factory = new Factory(name);
-        factory.setTactLengthMilliseconds(tactInMilliseconds);
-        factory.setPeople(people);
+        Factory factory = new Factory(name, tactInMilliseconds, people, machines, robots, productionLines);
         // set factory attribute on person class
         people.forEach(person -> person.setFactory(factory));
         factory.setTactSubscribers(tactSubscribers);
