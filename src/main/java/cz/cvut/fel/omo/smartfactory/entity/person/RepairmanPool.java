@@ -1,73 +1,56 @@
 package cz.cvut.fel.omo.smartfactory.entity.person;
 
-import cz.cvut.fel.omo.smartfactory.entity.AbstractManufacturingEntity;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
-import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
-import cz.cvut.fel.omo.smartfactory.entity.person.state.repairman.RepairmanState;
+import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.PriorityQueue;
+import java.util.Optional;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Getter
 @Setter
 public class RepairmanPool implements FactoryEventListener {
+    LinkedBlockingQueue<OutageEvent> outageEventsQueue;
+    private List<Repairman> repairmenList;
+    private boolean isRunning;
 
-    /**
-     * Outage events
-     */
-    private PriorityQueue<FactoryEvent> outageEvents = new PriorityQueue<>();
-
-    /**
-     * Repairman list
-     */
-    private List<Repairman> repairmanList;
-
-    private final Factory factory;
-
-    public RepairmanPool(Factory factory, List<Repairman> repairmanList) {
-        this.factory = factory;
-        this.repairmanList = repairmanList;
+    public RepairmanPool(List<Repairman> repairmenList) {
+        this.repairmenList = repairmenList;
+        this.outageEventsQueue = new LinkedBlockingQueue<>();
     }
 
-    /**
-     * Get available repairman
-     */
-    public Repairman getAvailableRepairman() {
-        for (Repairman repairman : repairmanList) {
-            if (repairman.isAvailable()) {
-                return repairman;
-            }
+    public void addOutageEvent(OutageEvent outageEvent) {
+        if (outageEventsQueue.contains(outageEvent)) {
+            return;
         }
-        return null;
+        outageEventsQueue.add(outageEvent);
     }
 
-    /**
-     * Main repairman pool method
-     */
-    public void update() {
-        if (!outageEvents.isEmpty()) {
-            // Get most urgent event
-            Repairman repairman = getAvailableRepairman();
-            if (repairman != null) {
-                FactoryEvent event = outageEvents.poll();
-                AbstractManufacturingEntity entity = factory.getManufacturingEntity(event.getTargetId());
-                repairman.setTarget(entity);
-            }
+    public synchronized Optional<OutageEvent> getMostUrgentEvent() {
+        if (outageEventsQueue.isEmpty()) {
+            return Optional.empty();
         }
-        // Play with repairman state
-        for (Repairman repairman : repairmanList) {
-            RepairmanState state = repairman.getState();
-            // Call state methods
-            state.startRepair();
-            state.processRepair();
-            state.finishRepair();
-        }
+        return Optional.ofNullable(outageEventsQueue.poll());
     }
 
-    public void onEvent(FactoryEvent event) {
-        outageEvents.add(event);
+    public void executeRepairs() {
+        repairmenList.stream()
+                .filter(Repairman::isAvailable)
+                .forEach(repairman -> {
+                    Optional<OutageEvent> nextEvent = getMostUrgentEvent();
+                    nextEvent.ifPresent(outageEvent -> outageEvent.repair(repairman));
+                });
+    }
+
+    @Override
+    public void receiveEvent(FactoryEvent event) {
+        if (event instanceof OutageEvent) {
+            addOutageEvent((OutageEvent) event);
+        } else {
+            throw new IllegalArgumentException("Unsupported event type: " + event.getClass());
+        }
     }
 }
