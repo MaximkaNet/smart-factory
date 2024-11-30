@@ -1,6 +1,5 @@
 package cz.cvut.fel.omo.smartfactory.entity.event;
 
-import cz.cvut.fel.omo.smartfactory.entity.AbstractManufacturingEntity;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,21 +8,21 @@ import java.time.ZonedDateTime;
 
 @Getter
 @Setter
-abstract public class Event implements Comparable<Event> {
+abstract public class FactoryEvent implements Comparable<FactoryEvent> {
     protected Integer priority;
     protected ZonedDateTime generatedAt;
     protected boolean isChecked = false;
     protected Person checkedBy;
-    protected Eventable sender;
+    protected FactoryEventListener sender;
 
-    public Event(Integer priority, Eventable sender) {
+    public FactoryEvent(Integer priority, FactoryEventListener sender) {
         this.generatedAt = ZonedDateTime.now();
         this.priority = priority;
         this.sender = sender;
     }
 
     @Override
-    public int compareTo(Event o) {
+    public int compareTo(FactoryEvent o) {
         int priorityComparison = Integer.compare(o.getPriority(), this.priority);
         if (priorityComparison != 0) {
             return priorityComparison;

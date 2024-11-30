@@ -17,19 +17,19 @@ public class EventFacade {
     private final List<OutageEvent> outageEvents = new ArrayList<>();
     private final List<RepairFinishedEvent> repairFinishedEvents = new ArrayList<>();
     private final List<RepairStartedEvent> repairStartedEvents = new ArrayList<>();
-    private final Map<Class<?>, List<Eventable>> eventTypeListenersMap = new HashMap<>();
+    private final Map<Class<?>, List<FactoryEventListener>> eventTypeListenersMap = new HashMap<>();
     private Factory factory;
 
     public EventFacade(Factory factory) {
         this.factory = factory;
     }
 
-    public void registerAllForEventType(Map<Class<?>, List<Eventable>> eventTypeListenersMap) {
+    public void registerAllForEventType(Map<Class<?>, List<FactoryEventListener>> eventTypeListenersMap) {
         eventTypeListenersMap.forEach((eventType, newListeners) ->
                 this.eventTypeListenersMap.computeIfAbsent(eventType, k -> new ArrayList<>()).addAll(newListeners));
     }
 
-    private List<Eventable> getListenersForEventType(Class<?> eventType) {
+    private List<FactoryEventListener> getListenersForEventType(Class<?> eventType) {
         return eventTypeListenersMap.getOrDefault(eventType, Collections.emptyList());
     }
 
@@ -53,14 +53,14 @@ public class EventFacade {
     }
 
     // ----------------------------------------------------- GETTING EVENTS -----------------------------------------------------
-    public List<Event> getSortedEvents() {
+    public List<FactoryEvent> getSortedEvents() {
         return Stream.of(outageEvents, repairFinishedEvents, repairStartedEvents)
                 .flatMap(List::stream)
                 .sorted()
                 .collect(Collectors.toList());
     }
 
-    public List<Event> getEventsFromToSorted(ZonedDateTime from, ZonedDateTime to) {
+    public List<FactoryEvent> getEventsFromToSorted(ZonedDateTime from, ZonedDateTime to) {
         return Stream.of(outageEvents, repairFinishedEvents, repairStartedEvents)
                 .flatMap(List::stream)
                 .filter(event -> event.getGeneratedAt().isAfter(from) && event.generatedAt.isBefore(to))
