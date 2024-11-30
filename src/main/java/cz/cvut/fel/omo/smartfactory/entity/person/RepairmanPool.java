@@ -1,5 +1,7 @@
 package cz.cvut.fel.omo.smartfactory.entity.person;
 
+import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
+import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 @Getter
 @Setter
-public class RepairmanPool {
+public class RepairmanPool implements FactoryEventListener {
     LinkedBlockingQueue<OutageEvent> outageEventsQueue;
     private List<Repairman> repairmenList;
     private boolean isRunning;
@@ -41,5 +43,14 @@ public class RepairmanPool {
                     Optional<OutageEvent> nextEvent = getMostUrgentEvent();
                     nextEvent.ifPresent(outageEvent -> outageEvent.repair(repairman));
                 });
+    }
+
+    @Override
+    public void receiveEvent(FactoryEvent event) {
+        if (event instanceof OutageEvent) {
+            addOutageEvent((OutageEvent) event);
+        } else {
+            throw new IllegalArgumentException("Unsupported event type: " + event.getClass());
+        }
     }
 }
