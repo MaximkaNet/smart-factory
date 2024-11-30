@@ -4,50 +4,59 @@ import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.RepairFinishedEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.RepairStartedEvent;
 import cz.cvut.fel.omo.smartfactory.entity.person.personState.IdleState;
+import cz.cvut.fel.omo.smartfactory.entity.person.personState.ReadyState;
+import cz.cvut.fel.omo.smartfactory.entity.person.personState.WorkingState;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class Repairman extends Person {
-    private Integer willBeFinishedOnTact = -1;
-    private Integer repairLengthInTact = 3;
+    private final Float repairPerTick = 0.2f;
     private OutageEvent outageEvent;
-    private boolean isAvailable = true;
 
     public Repairman(String firstName, String lastName, String email) {
         super(firstName, lastName, email);
     }
 
     public synchronized void startRepair(OutageEvent outageEvent) {
-        factory.getEventManager().notifyListeners(new RepairStartedEvent(outageEvent.getPriority(), this, outageEvent));
-        isAvailable = false;
-        willBeFinishedOnTact = currentTact + repairLengthInTact;
+        state.work();
         this.outageEvent = outageEvent;
+        factory.getEventManager().notifyListeners(new RepairStartedEvent(outageEvent.getPriority(), this, outageEvent));
     }
 
     public void finishRepair() {
         factory.getEventManager().notifyListeners(new RepairFinishedEvent(outageEvent.getPriority(), this, outageEvent));
         System.out.println("Repairman finished");
         outageEvent.check(this);
-        isAvailable = true;
+        state.ready();
     }
 
     @Override
     public void onNewTact(int currentTact) {
         super.onNewTact(currentTact);
-        if (state.getClass() == IdleState.class || willBeFinishedOnTact == -1) {
+
+        // checking only for working repairmen
+        if (!state.isExecuting()){
             return;
         }
-        if (currentTact >= willBeFinishedOnTact) {
-            willBeFinishedOnTact = -1;
+
+        float currentHealth = outageEvent.getAbstractManufacturingEntity().getHealth() + repairPerTick;
+
+        if (currentHealth > outageEvent.getAbstractManufacturingEntity().getHealthy()) {
+            currentHealth = outageEvent.getAbstractManufacturingEntity().getHealthy();
+        }
+        outageEvent.getAbstractManufacturingEntity().setHealth(currentHealth);
+
+        if (isRepairCompleted()) {
             finishRepair();
         }
     }
 
-    @Override
-    public String toString() {
-        return super.toString().replace("}", "") +
-                ", isAvailable=" + isAvailable + "}";
+    /**
+     * Returns true if target recovered
+     */
+    public boolean isRepairCompleted() {
+        return outageEvent.getAbstractManufacturingEntity().getHealth() >= outageEvent.getAbstractManufacturingEntity().getHealthy();
     }
 }

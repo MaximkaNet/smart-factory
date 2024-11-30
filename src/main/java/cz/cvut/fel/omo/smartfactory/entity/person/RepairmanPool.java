@@ -8,18 +8,18 @@ import lombok.Setter;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.PriorityQueue;
 
 @Getter
 @Setter
 public class RepairmanPool implements FactoryEventListener {
-    LinkedBlockingQueue<OutageEvent> outageEventsQueue;
+    PriorityQueue<OutageEvent> outageEventsQueue;
     private List<Repairman> repairmenList;
     private boolean isRunning;
 
     public RepairmanPool(List<Repairman> repairmenList) {
         this.repairmenList = repairmenList;
-        this.outageEventsQueue = new LinkedBlockingQueue<>();
+        this.outageEventsQueue = new PriorityQueue<>();
     }
 
     public void addOutageEvent(OutageEvent outageEvent) {
@@ -38,7 +38,7 @@ public class RepairmanPool implements FactoryEventListener {
 
     public void executeRepairs() {
         repairmenList.stream()
-                .filter(Repairman::isAvailable)
+                .filter(repairman -> repairman.getState().isAvailable())
                 .forEach(repairman -> {
                     Optional<OutageEvent> nextEvent = getMostUrgentEvent();
                     nextEvent.ifPresent(outageEvent -> outageEvent.repair(repairman));

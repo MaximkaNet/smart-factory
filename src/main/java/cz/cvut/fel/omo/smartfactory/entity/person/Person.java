@@ -5,7 +5,7 @@ import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
 import cz.cvut.fel.omo.smartfactory.entity.person.personState.PersonState;
-import cz.cvut.fel.omo.smartfactory.entity.person.personState.WorkingState;
+import cz.cvut.fel.omo.smartfactory.entity.person.personState.ReadyState;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,7 +23,7 @@ abstract public class Person implements TactSubscriber, FactoryEventListener {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.state = new WorkingState(this);
+        this.state = new ReadyState(this);
         currentTact = 0;
     }
 
