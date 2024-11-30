@@ -18,7 +18,7 @@ public class EventReport extends Report{
     Map<Optional<Person>, List<FactoryEvent>> eventCheckerMap;
 
     public EventReport(ZonedDateTime from, ZonedDateTime to, Factory factory) {
-        super(from, to, factory);
+        super(factory, from, to);
 
         this.events = factory.getEventManager().getEventsFromToSorted(from, to);
 
@@ -38,5 +38,10 @@ public class EventReport extends Report{
                 + ", eventTypeMap=" + eventTypeMap + System.lineSeparator()
                 + ", eventSourceMap=" + eventSourceMap + System.lineSeparator()
                 + ", eventCheckerMap=" + eventCheckerMap + System.lineSeparator();
+    }
+
+    @Override
+    public String exportJson() {
+        return "";
     }
 }
