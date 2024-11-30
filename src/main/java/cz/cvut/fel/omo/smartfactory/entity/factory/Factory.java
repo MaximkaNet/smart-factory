@@ -30,7 +30,7 @@ public class Factory {
     private List<Machine> machines;
     private RepairmanPool repairmanPool;
     private List<TactSubscriber> tactSubscribers = new ArrayList<>();
-    private EventManager eventFacade;
+    private EventManager eventManager;
 
     public Factory(String name, int tactLengthMilliseconds, List<Person> people, List<Machine> machines, List<Robot> robots, List<ProductionLine> productionLines) {
         this.name = name;
@@ -39,7 +39,7 @@ public class Factory {
         this.robots = robots;
         this.machines = machines;
         this.people = people;
-        eventFacade = new EventManager(this);
+        eventManager = new EventManager(this);
     }
 
     /**

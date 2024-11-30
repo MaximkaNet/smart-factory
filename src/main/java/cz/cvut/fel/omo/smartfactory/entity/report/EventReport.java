@@ -20,7 +20,7 @@ public class EventReport extends Report{
     public EventReport(ZonedDateTime from, ZonedDateTime to, Factory factory) {
         super(from, to, factory);
 
-        this.events = factory.getEventFacade().getEventsFromToSorted(from, to);
+        this.events = factory.getEventManager().getEventsFromToSorted(from, to);
 
         this.eventTypeMap = events.stream()
                 .collect(Collectors.groupingBy(FactoryEvent::getClass));
