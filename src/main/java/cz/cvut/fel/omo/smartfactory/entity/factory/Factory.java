@@ -1,7 +1,11 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
-import cz.cvut.fel.omo.smartfactory.entity.event.EventFacade;
-import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
+import cz.cvut.fel.omo.smartfactory.entity.AbstractManufacturingEntity;
+import cz.cvut.fel.omo.smartfactory.entity.Machine;
+import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
+import cz.cvut.fel.omo.smartfactory.entity.Robot;
+import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
+import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventManager;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
 import cz.cvut.fel.omo.smartfactory.entity.report.Report;
@@ -14,56 +18,104 @@ import java.util.List;
 @Getter
 @Setter
 public class Factory {
-    private String name;
-    private List<Report> reports;
-    private Integer tactLengthMilliseconds = 500;
-    private Integer currentTact = 1;
-    private boolean isRunning = false;
-    private List<Person> people;
+    private final String name;
+    private final List<Report> reports = new ArrayList<>();
+    private final int tickMs;
+
+    private final List<ProductionLine> lines;
+    private final List<Robot> robots;
+    private final List<Machine> machines;
+    private final List<Person> people;
     private RepairmanPool repairmanPool;
-    private List<TactSubscriber> tactSubscribers = new ArrayList<>();
-    private EventFacade eventFacade;
 
-    public Factory(String name) {
+    /**
+     * Event manager
+     */
+    private FactoryEventManager eventManager = new FactoryEventManager();
+
+
+    public Factory(String name,
+                   int tickMs,
+                   List<Person> people,
+                   List<Machine> machines,
+                   List<Robot> robots,
+                   List<ProductionLine> productionLines
+    ) {
         this.name = name;
-        eventFacade = new EventFacade(this);
+        this.tickMs = tickMs;
+        this.lines = productionLines;
+        this.robots = robots;
+        this.machines = machines;
+        this.people = people;
     }
 
-    public void startFactory() {
-        isRunning = true;
-        new Thread(() -> {
-            while (isRunning) {
-                System.out.println("Tact " + currentTact + " started");
-                runTact();
-                try {
-                    Thread.sleep(tactLengthMilliseconds);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                currentTact++;
-            }
-        }).start();
+    /**
+     * Factory builder
+     *
+     * @return Factory builder
+     */
+    public static FactoryBuilder builder() {
+        return new FactoryBuilder();
     }
 
-    private void runTact() {
-        tactSubscribers.forEach(subscriber -> subscriber.onNewTact(currentTact));
-        repairmanPool.executeRepairs();
-    }
-
-    public boolean stopFactory() {
-        if (!isRunning) {
-            return false;
+    /**
+     * Main simulation method
+     */
+    public void simulate() {
+        //
+        for (ProductionLine productionLine : lines) {
+            productionLine.process();
         }
-        isRunning = false;
-        return true;
     }
 
-    @Override
-    public String toString() {
-        return this.getClass().getSimpleName() + "{"
-                + "name=" + name
-                + ", isRunning=" + isRunning
-                + ", tactLengthMilliseconds=" + tactLengthMilliseconds
-                + ", currentTact=" + currentTact + "}";
+    public void simulate(int ticks) {
+        for (int i = 0; i < ticks; i++) {
+            simulate();
+        }
     }
+
+    /**
+     * Create outage report
+     *
+     * @return stringify report
+     */
+    public String createOutageReport() {
+        return "";
+    }
+
+    /**
+     * This method will be used in memento pattern
+     *
+     * @param date restore date
+     */
+    public void restore(String date) {
+
+    }
+
+    /**
+     * Conduct an inspection of the factory
+     */
+    public void inspect() {
+
+    }
+
+    /**
+     * Get manufacturing entity (machine or robot) by id
+     */
+    public AbstractManufacturingEntity getManufacturingEntity(String id) {
+        // check id prefix
+        // find entity
+        // return manufacturing entity
+        return null;
+    }
+
+    /**
+     * Generate event
+     *
+     * @param event Factory event
+     */
+    public void generateEvent(FactoryEvent event) {
+        eventManager.notifyListeners(event);
+    }
+
 }
