@@ -1,78 +1,48 @@
 package cz.cvut.fel.omo.smartfactory.entity.person;
 
-import cz.cvut.fel.omo.smartfactory.entity.AbstractManufacturingEntity;
-import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
-import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventType;
-import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
-import cz.cvut.fel.omo.smartfactory.entity.person.state.repairman.RepairmanState;
+import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
+import cz.cvut.fel.omo.smartfactory.entity.event.RepairFinishedEvent;
+import cz.cvut.fel.omo.smartfactory.entity.event.RepairStartedEvent;
+import cz.cvut.fel.omo.smartfactory.entity.person.personState.IdleState;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class Repairman extends Person {
-
-    /**
-     * Available flag
-     */
+    private Integer willBeFinishedOnTact = -1;
+    private Integer repairLengthInTact = 3;
+    private OutageEvent outageEvent;
     private boolean isAvailable = true;
 
-    /**
-     * Target entity for repair
-     */
-    private AbstractManufacturingEntity target = null;
-
-    /**
-     * Repair points
-     */
-    private final float repairPerTick = 10.0f;
-
-    private RepairmanState state;
-
-    public Repairman(Factory factory, String firstName, String lastName) {
-        super(factory, firstName, lastName);
+    public Repairman(String firstName, String lastName, String email) {
+        super(firstName, lastName, email);
     }
 
-    /**
-     * Start repair
-     */
-    public void startRepair() {
-        if (target == null) return;
-        FactoryEvent event = new FactoryEvent(FactoryEventType.REPAIR_STARTED, "Repairs started", 1);
-        factory.getEventManager().notifyListeners(event);
+    public synchronized void startRepair(OutageEvent outageEvent) {
+        factory.getEventManager().notifyListeners(new RepairStartedEvent(outageEvent.getPriority(), this, outageEvent));
         isAvailable = false;
+        willBeFinishedOnTact = currentTact + repairLengthInTact;
+        this.outageEvent = outageEvent;
     }
 
-    /**
-     * Process repair
-     */
-    public void processRepair() {
-        if (target == null) return;
-        float currentHealth = target.getHealth();
-
-        currentHealth += repairPerTick;
-
-        if (currentHealth > target.getHealthy()) {
-            currentHealth = target.getHealthy();
-        }
-        target.setHealth(currentHealth);
-    }
-
-    /**
-     * Send event message
-     */
     public void finishRepair() {
-        if (target == null) return;
-        FactoryEvent event = new FactoryEvent(FactoryEventType.REPAIR_COMPLETED, "Repairs completed", 1);
-        factory.getEventManager().notifyListeners(event);
+        factory.getEventManager().notifyListeners(new RepairFinishedEvent(outageEvent.getPriority(), this, outageEvent));
+        System.out.println("Repairman finished");
+        outageEvent.check(this);
         isAvailable = true;
     }
 
-    /**
-     * Returns true if target recovered
-     */
-    public boolean isRepairCompleted() {
-        return target.getHealth() >= target.getHealthy();
+    @Override
+    public void onNewTact(int currentTact) {
+        super.onNewTact(currentTact);
+        if (state.getClass() == IdleState.class || willBeFinishedOnTact == -1) {
+            return;
+        }
+        if (currentTact >= willBeFinishedOnTact) {
+            willBeFinishedOnTact = -1;
+            finishRepair();
+        }
     }
 
     @Override
