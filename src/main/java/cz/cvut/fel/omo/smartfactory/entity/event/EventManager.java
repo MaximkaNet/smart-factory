@@ -13,14 +13,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class EventFacade {
+public class EventManager {
     private final List<OutageEvent> outageEvents = new ArrayList<>();
     private final List<RepairFinishedEvent> repairFinishedEvents = new ArrayList<>();
     private final List<RepairStartedEvent> repairStartedEvents = new ArrayList<>();
     private final Map<Class<?>, List<FactoryEventListener>> eventTypeListenersMap = new HashMap<>();
     private Factory factory;
 
-    public EventFacade(Factory factory) {
+    public EventManager(Factory factory) {
         this.factory = factory;
     }
 
