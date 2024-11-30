@@ -1,5 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.entity;
 
+import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,63 +13,57 @@ public class ProductionLine {
      * The unique id
      */
     private final String id;
-
-    /**
-     * Production line priority
-     */
-    private int priority;
-
     /**
      * The production units such as person, machine, robot
      */
     private final List<ProductionUnit> productionUnits;
-
+    /**
+     * The factory
+     */
+    private final Factory factory;
+    /**
+     * Production line priority
+     */
+    private int priority;
     /**
      * Current configuration (chain of responsibility)
      */
     private ProductionUnit firstProductionUnit;
-
     /**
      * Production state
      */
     private boolean producing = false;
-
     /**
      * The current produce series
      */
     private Series currentSeries = null;
 
-    public ProductionLine(String id, int priority, List<ProductionUnit> productionUnits) {
+    public ProductionLine(Factory factory, String id, int priority, List<ProductionUnit> productionUnits) {
+        this.factory = factory;
         this.id = id;
         this.priority = priority;
         this.productionUnits = productionUnits;
     }
 
     /**
-     * Manufacture series (Set a series of products as soon as the line finishes producing the previous series)
+     * Initialize series of products
+     *
+     * @param template Product template
+     * @param id       The series id
+     * @param count    Number of products
      */
-    public void applySeries(Series series) {
-        if (producing || currentSeries.getProduced() != currentSeries.getCount()) {
-            throw new RuntimeException("Cannot replace the current series during production");
-        }
+    public void initSeries(Product template, String id, int count) {
+//        if (isProducing()) {
+//            throw new RuntimeException("Production line process on series");
+//        }
+//        // Check series id
+//        if (factory.isSeriesExist(id)) {
+//            // Send message ...
+//            return;
+//        }
 
-        List<String> sequence = series.getProduct().getSequence();
-        ProductionUnit current = firstProductionUnit;
-        for (String unitId : sequence) {
-            ProductionUnit unit = productionUnits.stream().findFirst()
-                    .orElseThrow(() -> new RuntimeException(
-                            "Production unit " + unitId + " is not presented on the line " + id)
-                    );
-
-            if (firstProductionUnit == null) {
-                firstProductionUnit = unit;
-                current = unit;
-                continue;
-            }
-
-            current.setNext(unit);
-            current = unit;
-        }
+        // Check product sequence
+        // If sequence not compatible, reconfigure her
     }
 
     /**
@@ -77,24 +72,21 @@ public class ProductionLine {
      * the robot or machine, which will be waiting for repair)
      */
     public synchronized void process() {
-        if (currentSeries == null) {
-            // Send message ...
-            throw new RuntimeException("Nothing to produce on the line " + id);
-        }
-        if (firstProductionUnit == null) {
-            // Send message using event system ...
-            throw new RuntimeException("No production units available to produce the series");
-        }
-
-        // call chain of responsibility
-        firstProductionUnit.process(currentSeries.getProduct());
-        // add produced product to current series of products
-        currentSeries.newProducedProduct();
-
-        if (currentSeries.getProduced() == currentSeries.getCount()) {
-            // Send message to event system ...
-            producing = false;
-        }
+//        if (currentSeries.isCompleted()) {
+//            // Generate event
+//            // add series to factory
+//        }
+//        if (currentSeries.hasTemplates()) {
+//            Product template = currentSeries.getTemplate();
+//            sequence.add(template);
+//        }
+//
+//        sequence.update();
+//
+//        if (sequence.hasCompletedProduct()) {
+//            Product product = sequence.getCompletedProduct();
+//            currentSeries.addCompletedProduct(product);
+//        }
     }
 
     /**
