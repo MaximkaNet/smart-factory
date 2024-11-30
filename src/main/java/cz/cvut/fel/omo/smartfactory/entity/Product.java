@@ -3,8 +3,6 @@ package cz.cvut.fel.omo.smartfactory.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 public class Product {
@@ -13,12 +11,16 @@ public class Product {
      */
     private String name;
 
-    /**
-     * The sorted list of ProductionUnit ids
-     */
-    private List<String> sequence;
+//    /**
+//     * The sorted list of ProductionUnit ids
+//     */
+//    private List<String> sequence;
 
     public Product(String name) {
         this.name = name;
+    }
+
+    public Product copy() {
+        return new Product(name);
     }
 }
