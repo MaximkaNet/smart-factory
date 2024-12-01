@@ -1,10 +1,10 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
-import cz.cvut.fel.omo.smartfactory.entity.Machine;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
-import cz.cvut.fel.omo.smartfactory.entity.Robot;
 import cz.cvut.fel.omo.smartfactory.entity.event.EventManager;
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
+import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
+import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Robot;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
 import cz.cvut.fel.omo.smartfactory.entity.report.OutagesReport;
@@ -55,7 +55,8 @@ public class Factory {
         repairmanPool.executeRepairs();
         // production lines
         for (ProductionLine productionLine : productionLines) {
-            productionLine.process();
+            // TODO: cannot be compiled, process not implemented
+//            productionLine.process();
         }
 
         // I have added sleeping here
