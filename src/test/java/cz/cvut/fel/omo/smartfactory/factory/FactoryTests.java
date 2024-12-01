@@ -36,10 +36,15 @@ public class FactoryTests {
                 .build();
 
         Machine m1 = new Machine("M1", 1.5f, 1);
+        m1.setHealth(0);
         Machine m2 = new Machine("M2", 1.5f, 1);
+        m2.setHealth(0);
         Machine m3 = new Machine("M2", 2.5f, 1);
+        m3.setHealth(0);
         Machine m4 = new Machine("M2", 1.5f, 1);
+        m4.setHealth(0);
         Machine m5 = new Machine("M2", 1.5f, 1);
+        m5.setHealth(0);
         factory.getEventManager().notifyListeners(new OutageEvent(2, m1));
         factory.getEventManager().notifyListeners(new OutageEvent(3, m2));
         factory.getEventManager().notifyListeners(new OutageEvent(1, m3));

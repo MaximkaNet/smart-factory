@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Repairman extends Person {
-    private final Float repairPerTick = 0.2f;
+    private final Float repairPerTick = 0.5f;
     private OutageEvent outageEvent;
 
     public Repairman(String firstName, String lastName, String email) {
