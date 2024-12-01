@@ -9,8 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public final class Robot extends AbstractFactoryEquipment {
-    public Robot(String id, float pricePerUsage) {
-        super(id, pricePerUsage);
+    public Robot(String id, float pricePerUsage, float healthy) {
+        super(id, pricePerUsage, healthy);
     }
 
     @Override
