@@ -1,7 +1,7 @@
 package cz.cvut.fel.omo.smartfactory.entity.report;
 
+import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
-import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 
@@ -11,10 +11,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class EventReport extends Report{
+public class EventReport extends Report {
     List<FactoryEvent> events;
     Map<Class<?>, List<FactoryEvent>> eventTypeMap;
-    Map<FactoryEventListener, List<FactoryEvent>> eventSourceMap;
+    Map<ProductionUnit, List<FactoryEvent>> eventSourceMap;
     Map<Optional<Person>, List<FactoryEvent>> eventCheckerMap;
 
     public EventReport(ZonedDateTime from, ZonedDateTime to, Factory factory) {

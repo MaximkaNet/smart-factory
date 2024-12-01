@@ -1,5 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.entity.event;
 
+import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,9 +14,9 @@ abstract public class FactoryEvent implements Comparable<FactoryEvent> {
     protected ZonedDateTime generatedAt;
     protected boolean isChecked = false;
     protected Person checkedBy;
-    protected FactoryEventListener sender;
+    protected ProductionUnit sender;
 
-    public FactoryEvent(Integer priority, FactoryEventListener sender) {
+    public FactoryEvent(Integer priority, ProductionUnit sender) {
         this.generatedAt = ZonedDateTime.now();
         this.priority = priority;
         this.sender = sender;
