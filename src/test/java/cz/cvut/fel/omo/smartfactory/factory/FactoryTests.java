@@ -30,11 +30,12 @@ public class FactoryTests {
 
         FactoryBuilder builder = new FactoryBuilder("factory 1");
         Factory factory = builder
-                .setTactInMilliseconds(200)
+                .setTactInMilliseconds(500)
                 .setPeople(people)
                 .addEventableForEvent(OutageEvent.class, director)
                 .build();
 
+        // TODO: healthy should be set to a nonzero positive value
         Machine m1 = new Machine("M1", 1.5f);
         Machine m2 = new Machine("M2", 1.5f);
         Machine m3 = new Machine("M2", 2.5f);
