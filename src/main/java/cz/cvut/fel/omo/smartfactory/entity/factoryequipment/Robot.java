@@ -1,4 +1,4 @@
-package cz.cvut.fel.omo.smartfactory.entity;
+package cz.cvut.fel.omo.smartfactory.entity.factoryequipment;
 
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventType;
@@ -8,10 +8,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Robot extends AbstractFactoryEquipment {
-
-    protected Robot(String id, Consumption consumption, Price prices) {
-        super(id, consumption, prices);
+public final class Robot extends AbstractFactoryEquipment {
+    public Robot(String id, float pricePerUsage) {
+        super(id, pricePerUsage);
     }
 
     @Override

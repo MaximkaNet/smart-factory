@@ -1,6 +1,12 @@
-package cz.cvut.fel.omo.smartfactory.entity;
+package cz.cvut.fel.omo.smartfactory.entity.factoryequipment;
 
+import cz.cvut.fel.omo.smartfactory.entity.Product;
+import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
+import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
+import cz.cvut.fel.omo.smartfactory.entity.storage.consumer.ElectricityConsumer;
+import cz.cvut.fel.omo.smartfactory.entity.storage.consumer.MaterialConsumer;
+import cz.cvut.fel.omo.smartfactory.entity.storage.consumer.OilConsumer;
 import cz.cvut.fel.omo.smartfactory.state.factoryequipment.FactoryEquipmentState;
 import cz.cvut.fel.omo.smartfactory.state.factoryequipment.ReadyState;
 import lombok.Getter;
@@ -20,15 +26,11 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit {
 
     protected boolean finished = false;
 
-    /**
-     * Consumption
-     */
-    private final Consumption consumption;
+    private ElectricityConsumer electricityConsumer;
+    private OilConsumer oilConsumer;
+    private MaterialConsumer materialConsumer;
 
-    /**
-     * Prices for consumption and usage
-     */
-    private final Price prices;
+    private final float pricePerUsage;
 
     /**
      * Number of usage (or just processed products)
@@ -51,11 +53,9 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit {
      */
     private FactoryEquipmentState state = new ReadyState(this);
 
-    protected AbstractFactoryEquipment(String id, Consumption consumption, Price prices) {
-        this.factory = productionLine.getFactory();
+    protected AbstractFactoryEquipment(String id, float pricePerUsage) {
         this.id = id;
-        this.consumption = consumption;
-        this.prices = prices;
+        this.pricePerUsage = pricePerUsage;
     }
 
     public void setNext(ProductionUnit unit) {
@@ -85,85 +85,5 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit {
         state.accept(product);
         state.process();
         return processNext(state.pop());
-    }
-
-    public float getTotalElectricityConsumption() {
-        return 0;
-    }
-
-    public float getTotalOilConsumption() {
-        return 0;
-    }
-
-    public int getTotalMaterialConsumption() {
-        return 0;
-    }
-
-    public float getTotalElectricityPrice() {
-        return 0;
-    }
-
-    public float getTotalOilPrice() {
-        return 0;
-    }
-
-    public float getTotalMaterialPrice() {
-        return 0;
-    }
-
-    public float getTotalUsagePrice() {
-        return 0;
-    }
-
-    //    @Override
-//    public void receiveEvent(Event event) {
-//        System.out.println("received: " + event);
-//    }
-
-    /**
-     * Consumption per tick
-     */
-    @Getter
-    protected static class Consumption {
-        private final float electricity;
-        private final float oil;
-        private final int material;
-
-        private float electricityConsumption = 0;
-        private float oilConsumption = 0;
-        private float materialConsumption = 0;
-
-        public Consumption(float electricity, float oil, int material) {
-            this.electricity = electricity;
-            this.oil = oil;
-            this.material = material;
-        }
-
-        public void updateElectricity(float fine) {
-            electricityConsumption += electricity + fine;
-        }
-
-        public void updateOil(float fine) {
-            oilConsumption += oil + fine;
-        }
-
-        public void updateMaterial() {
-            materialConsumption += material;
-        }
-    }
-
-    /**
-     * Prices per tick
-     */
-    protected static class Price {
-        protected final float electricity;
-        protected final float oil;
-        protected final float perUsage;
-
-        public Price(float electricity, float oil, float perUsage) {
-            this.electricity = electricity;
-            this.oil = oil;
-            this.perUsage = perUsage;
-        }
     }
 }
