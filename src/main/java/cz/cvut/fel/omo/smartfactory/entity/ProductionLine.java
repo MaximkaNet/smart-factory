@@ -1,6 +1,8 @@
 package cz.cvut.fel.omo.smartfactory.entity;
 
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
+import cz.cvut.fel.omo.smartfactory.state.productionline.ProductionLineState;
+import cz.cvut.fel.omo.smartfactory.state.productionline.ReadyState;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,14 +22,9 @@ public class ProductionLine {
     private int priority;
 
     /**
-     * The production units such as person, machine, robot
-     */
-    private final List<ProductionUnit> productionUnits;
-
-    /**
      * Current configuration (chain of responsibility)
      */
-    private ProductionUnit firstProductionUnit;
+    private ProductionUnit productionUnitChain;
 
     /**
      * Production state
@@ -42,34 +39,35 @@ public class ProductionLine {
     /**
      * The factory
      */
-    private final Factory factory;
+    private Factory factory;
 
-    public ProductionLine(Factory factory, String id, int priority, List<ProductionUnit> productionUnits) {
-        this.factory = factory;
+    private ProductionLineState state = new ReadyState(this);
+
+    public ProductionLine(String id, int priority) {
         this.id = id;
         this.priority = priority;
-        this.productionUnits = productionUnits;
     }
 
     /**
      * Initialize series of products
-     *
-     * @param template Product template
-     * @param id       The series id
-     * @param count    Number of products
      */
-    public void initSeries(Product template, String id, int count) {
-//        if (isProducing()) {
-//            throw new RuntimeException("Production line process on series");
-//        }
-//        // Check series id
-//        if (factory.isSeriesExist(id)) {
-//            // Send message ...
-//            return;
-//        }
+    public boolean applySeries(Series series) {
+        // validate chain of production units
+        if (isValidChain(series.getProduct().getSequence())) {
+            currentSeries = series;
+            return true;
+        }
+        // Line reconfiguration:
+        // send request to factory for reconfiguration
+        return false;
+    }
 
-        // Check product sequence
-        // If sequence not compatible, reconfigure her
+    /**
+     * Returns true if production unit chain equals chainForCheck
+     */
+    private boolean isValidChain(List<String> chainForCheck) {
+        // do stuff
+        return false;
     }
 
     /**
@@ -77,22 +75,12 @@ public class ProductionLine {
      * Can run in worker thread (the process may stop due to a malfunction of
      * the robot or machine, which will be waiting for repair)
      */
-    public synchronized void process() {
-//        if (currentSeries.isCompleted()) {
-//            // Generate event
-//            // add series to factory
-//        }
-//        if (currentSeries.hasTemplates()) {
-//            Product template = currentSeries.getTemplate();
-//            sequence.add(template);
-//        }
-//
-//        sequence.update();
-//
-//        if (sequence.hasCompletedProduct()) {
-//            Product product = sequence.getCompletedProduct();
-//            currentSeries.addCompletedProduct(product);
-//        }
+    public void update() {
+        if (productionUnitChain == null) {
+            return;
+        }
+        Product completedProduct = productionUnitChain.processNext(currentSeries.getProduct());
+        currentSeries.addCompletedProduct(completedProduct);
     }
 
     /**
