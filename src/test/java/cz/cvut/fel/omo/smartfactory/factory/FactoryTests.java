@@ -35,12 +35,11 @@ public class FactoryTests {
                 .addEventableForEvent(OutageEvent.class, director)
                 .build();
 
-        // TODO: healthy should be set to a nonzero positive value
-        Machine m1 = new Machine("M1", 1.5f);
-        Machine m2 = new Machine("M2", 1.5f);
-        Machine m3 = new Machine("M2", 2.5f);
-        Machine m4 = new Machine("M2", 1.5f);
-        Machine m5 = new Machine("M2", 1.5f);
+        Machine m1 = new Machine("M1", 1.5f, 1);
+        Machine m2 = new Machine("M2", 1.5f, 1);
+        Machine m3 = new Machine("M2", 2.5f, 1);
+        Machine m4 = new Machine("M2", 1.5f, 1);
+        Machine m5 = new Machine("M2", 1.5f, 1);
         factory.getEventManager().notifyListeners(new OutageEvent(2, m1));
         factory.getEventManager().notifyListeners(new OutageEvent(3, m2));
         factory.getEventManager().notifyListeners(new OutageEvent(1, m3));
