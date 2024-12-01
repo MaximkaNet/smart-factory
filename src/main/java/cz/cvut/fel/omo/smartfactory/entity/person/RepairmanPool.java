@@ -13,7 +13,7 @@ import java.util.PriorityQueue;
 @Getter
 @Setter
 public class RepairmanPool implements FactoryEventListener {
-    PriorityQueue<OutageEvent> outageEventsQueue;
+    private PriorityQueue<OutageEvent> outageEventsQueue;
     private List<Repairman> repairmenList;
     private boolean isRunning;
 
