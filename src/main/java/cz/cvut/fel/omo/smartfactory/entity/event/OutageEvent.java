@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class OutageEvent extends FactoryEvent {
-    AbstractManufacturingEntity abstractManufacturingEntity;
+    private AbstractManufacturingEntity abstractManufacturingEntity;
 
     public OutageEvent(Integer priority, AbstractManufacturingEntity abstractManufacturingEntity) {
         super(priority, abstractManufacturingEntity);

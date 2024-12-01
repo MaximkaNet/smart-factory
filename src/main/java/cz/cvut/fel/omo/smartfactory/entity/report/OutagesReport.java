@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 
 @Getter
 public class OutagesReport extends Report {
-    Duration shortestOutageTime;
-    Duration longestOutageTime;
-    Duration avgOutageTime;
-    Duration avgWaitingTime;
-    List<AbstractManufacturingEntity> outageSourcesSorted;
+    private Duration shortestOutageTime;
+    private Duration longestOutageTime;
+    private Duration avgOutageTime;
+    private Duration avgWaitingTime;
+    private List<AbstractManufacturingEntity> outageSourcesSorted;
 
     public OutagesReport(ZonedDateTime from, ZonedDateTime to, Factory factory) {
         super(from, to, factory);

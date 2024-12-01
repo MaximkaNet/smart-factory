@@ -4,6 +4,7 @@ import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
+import lombok.Getter;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -11,11 +12,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Getter
 public class EventReport extends Report{
-    List<FactoryEvent> events;
-    Map<Class<?>, List<FactoryEvent>> eventTypeMap;
-    Map<FactoryEventListener, List<FactoryEvent>> eventSourceMap;
-    Map<Optional<Person>, List<FactoryEvent>> eventCheckerMap;
+    private List<FactoryEvent> events;
+    private Map<Class<?>, List<FactoryEvent>> eventTypeMap;
+    private Map<FactoryEventListener, List<FactoryEvent>> eventSourceMap;
+    private Map<Optional<Person>, List<FactoryEvent>> eventCheckerMap;
 
     public EventReport(ZonedDateTime from, ZonedDateTime to, Factory factory) {
         super(from, to, factory);
