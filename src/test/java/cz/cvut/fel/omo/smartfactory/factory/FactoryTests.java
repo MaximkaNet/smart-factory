@@ -3,6 +3,7 @@ package cz.cvut.fel.omo.smartfactory.factory;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.factory.FactoryBuilder;
+import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
 import cz.cvut.fel.omo.smartfactory.entity.person.Director;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.Repairman;
@@ -29,22 +30,22 @@ public class FactoryTests {
 
         FactoryBuilder builder = new FactoryBuilder("factory 1");
         Factory factory = builder
-                .setTactInMilliseconds(200)
+                .setTactInMilliseconds(1000)
                 .setPeople(people)
                 .addEventableForEvent(OutageEvent.class, director)
                 .build();
 
         // TODO: when AbstractManufacturing..., Machine, Robot classes will be implemented the test should run correctly
-//        Machine m1 = new Machine("M1");
-//        Machine m2 = new Machine("M2");
-//        Machine m3 = new Machine("M2");
-//        Machine m4 = new Machine("M2");
-//        Machine m5 = new Machine("M2");
-//        factory.getEventManager().notifyListeners(new OutageEvent(2, m1));
-//        factory.getEventManager().notifyListeners(new OutageEvent(3, m2));
-//        factory.getEventManager().notifyListeners(new OutageEvent(1, m3));
-//        factory.getEventManager().notifyListeners(new OutageEvent(0, m4));
-//        factory.getEventManager().notifyListeners(new OutageEvent(0, m5));
+        Machine m1 = new Machine("M1", 1.5f);
+        Machine m2 = new Machine("M2", 1.5f);
+        Machine m3 = new Machine("M2", 2.5f);
+        Machine m4 = new Machine("M2", 1.5f);
+        Machine m5 = new Machine("M2", 1.5f);
+        factory.getEventManager().notifyListeners(new OutageEvent(2, m1));
+        factory.getEventManager().notifyListeners(new OutageEvent(3, m2));
+        factory.getEventManager().notifyListeners(new OutageEvent(1, m3));
+        factory.getEventManager().notifyListeners(new OutageEvent(0, m4));
+        factory.getEventManager().notifyListeners(new OutageEvent(0, m5));
 
         factory.simulate(15);
 
