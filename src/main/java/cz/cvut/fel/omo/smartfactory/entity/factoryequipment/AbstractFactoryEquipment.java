@@ -56,8 +56,8 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit {
     protected AbstractFactoryEquipment(String id, float pricePerUsage, float healthy) {
         this.id = id;
         this.pricePerUsage = pricePerUsage;
-        this.healthy = health;
         this.health = healthy;
+        this.healthy = healthy;
     }
 
     public void setNext(ProductionUnit unit) {
