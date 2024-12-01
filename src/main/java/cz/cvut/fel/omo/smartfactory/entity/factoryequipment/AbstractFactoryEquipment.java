@@ -1,16 +1,24 @@
 package cz.cvut.fel.omo.smartfactory.entity;
 
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
+import cz.cvut.fel.omo.smartfactory.state.factoryequipment.FactoryEquipmentState;
+import cz.cvut.fel.omo.smartfactory.state.factoryequipment.ReadyState;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 @Setter
-public abstract class AbstractManufacturingEntity implements ProductionUnit {
+public abstract class AbstractFactoryEquipment implements ProductionUnit {
     /**
      * The entity id
      */
     private final String id;
+
+    private Product subject = null;
+
+    protected boolean finished = false;
 
     /**
      * Consumption
@@ -38,13 +46,45 @@ public abstract class AbstractManufacturingEntity implements ProductionUnit {
     protected Factory factory;
     protected ProductionLine productionLine;
 
-//    private ManufacturingEntityState state = new ReadyState();
+    /**
+     * Manufacturing entity state
+     */
+    private FactoryEquipmentState state = new ReadyState(this);
 
-    protected AbstractManufacturingEntity(String id, Consumption consumption, Price prices) {
+    protected AbstractFactoryEquipment(String id, Consumption consumption, Price prices) {
         this.factory = productionLine.getFactory();
         this.id = id;
         this.consumption = consumption;
         this.prices = prices;
+    }
+
+    public void setNext(ProductionUnit unit) {
+        next = Objects.requireNonNull(unit);
+    }
+
+    public boolean accept(Product product) {
+        if (product == null || subject != null) {
+            return false;
+        }
+        subject = product;
+        return true;
+    }
+
+    public abstract void process();
+
+    public Product pop() {
+        Product product = subject;
+        subject = null;
+        return product;
+    }
+
+    public Product processNext(Product product) {
+        if (next == null) {
+            return product;
+        }
+        state.accept(product);
+        state.process();
+        return processNext(state.pop());
     }
 
     public float getTotalElectricityConsumption() {

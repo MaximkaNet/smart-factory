@@ -8,13 +8,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Robot extends AbstractManufacturingEntity {
+public class Robot extends AbstractFactoryEquipment {
 
     protected Robot(String id, Consumption consumption, Price prices) {
         super(id, consumption, prices);
     }
 
-    public void update() {
+    @Override
+    public void process() {
         // process consumption
         // process healthy
         // If repair necessary generate alert event
@@ -27,10 +28,5 @@ public class Robot extends AbstractManufacturingEntity {
         }
 //        factory.generateEvent(event);
         factory.getEventManager().notifyListeners(event);
-    }
-
-    @Override
-    public void process(Product product) {
-
     }
 }

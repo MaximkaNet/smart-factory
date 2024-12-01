@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Machine extends AbstractManufacturingEntity {
+public class Machine extends AbstractFactoryEquipment {
 
 }
