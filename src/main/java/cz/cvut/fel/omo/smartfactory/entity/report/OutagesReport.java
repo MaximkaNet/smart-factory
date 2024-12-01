@@ -1,10 +1,10 @@
 package cz.cvut.fel.omo.smartfactory.entity.report;
 
-import cz.cvut.fel.omo.smartfactory.entity.AbstractManufacturingEntity;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.RepairFinishedEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.RepairStartedEvent;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
+import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.AbstractFactoryEquipment;
 import lombok.Getter;
 
 import java.time.Duration;
@@ -20,7 +20,7 @@ public class OutagesReport extends Report {
     Duration longestOutageTime;
     Duration avgOutageTime;
     Duration avgWaitingTime;
-    List<AbstractManufacturingEntity> outageSourcesSorted;
+    List<AbstractFactoryEquipment> outageSourcesSorted;
 
     public OutagesReport(ZonedDateTime from, ZonedDateTime to, Factory factory) {
         super(factory, from, to);
