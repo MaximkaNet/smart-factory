@@ -26,7 +26,7 @@ public class Main {
 //        }
 
         // Create report
-        String jsonReport = factory.createOutageReport();
+//        String jsonReport = factory.createOutageReport();
 
         // Restore factory
         factory.restore("29-11-2024 09:00");
@@ -46,9 +46,9 @@ public class Main {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        byte[] configData = Files.readAllBytes(Path.of(config));
+//        byte[] configData = Files.readAllBytes(Path.of(config));
 
-        JsonNode node = mapper.readTree(configData);
+//        JsonNode node = mapper.readTree(configData);
 
 //        node.
 //        return new Factory("Test");
