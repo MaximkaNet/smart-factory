@@ -19,11 +19,11 @@ public class Repairman extends Person {
     public synchronized void startRepair(OutageEvent outageEvent) {
         state.work();
         this.outageEvent = outageEvent;
-        factory.getEventManager().notifyListeners(new RepairStartedEvent(outageEvent.getPriority(), this, outageEvent));
+        factory.getEventManager().notifyListeners(new RepairStartedEvent(outageEvent.getPriority(), outageEvent.getAbstractManufacturingEntity(), outageEvent));
     }
 
     public void finishRepair() {
-        factory.getEventManager().notifyListeners(new RepairFinishedEvent(outageEvent.getPriority(), this, outageEvent));
+        factory.getEventManager().notifyListeners(new RepairFinishedEvent(outageEvent.getPriority(), outageEvent.getAbstractManufacturingEntity(), outageEvent));
         System.out.println("Repairman finished");
         outageEvent.check(this);
         state.ready();
