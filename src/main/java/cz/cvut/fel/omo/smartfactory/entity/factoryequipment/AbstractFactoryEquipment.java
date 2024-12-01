@@ -42,8 +42,8 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit {
      */
     private ProductionUnit next = null;
 
-    private final float healthy = 0;
-    private float health = 0;
+    private final float healthy;
+    private float health;
 
     protected Factory factory;
     protected ProductionLine productionLine;
@@ -53,9 +53,11 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit {
      */
     private FactoryEquipmentState state = new ReadyState(this);
 
-    protected AbstractFactoryEquipment(String id, float pricePerUsage) {
+    protected AbstractFactoryEquipment(String id, float pricePerUsage, float healthy) {
         this.id = id;
         this.pricePerUsage = pricePerUsage;
+        this.healthy = health;
+        this.health = healthy;
     }
 
     public void setNext(ProductionUnit unit) {
