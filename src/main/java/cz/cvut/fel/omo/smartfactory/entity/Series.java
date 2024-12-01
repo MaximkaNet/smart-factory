@@ -17,9 +17,7 @@ public class Series {
     /**
      * The 'template' of product
      */
-    private final Product template;
-
-//    private final List<String> sequence;
+    private final Product product;
 
     /**
      * Number of products must be produced
@@ -38,7 +36,7 @@ public class Series {
 
     public Series(String id, Product product, int count) {
         this.id = id;
-        this.template = product;
+        this.product = product;
         this.count = count;
     }
 
@@ -54,7 +52,14 @@ public class Series {
      */
     public Product getTemplate() {
         inProgress++;
-        return template.copy();
+        return product.createTemplate();
+    }
+
+    /**
+     * Returns true if series is complete
+     */
+    public boolean isDone() {
+        return count == completedProducts.size();
     }
 
     /**
