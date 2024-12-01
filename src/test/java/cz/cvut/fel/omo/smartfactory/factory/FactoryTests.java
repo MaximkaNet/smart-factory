@@ -30,12 +30,11 @@ public class FactoryTests {
 
         FactoryBuilder builder = new FactoryBuilder("factory 1");
         Factory factory = builder
-                .setTactInMilliseconds(1000)
+                .setTactInMilliseconds(200)
                 .setPeople(people)
                 .addEventableForEvent(OutageEvent.class, director)
                 .build();
 
-        // TODO: when AbstractManufacturing..., Machine, Robot classes will be implemented the test should run correctly
         Machine m1 = new Machine("M1", 1.5f);
         Machine m2 = new Machine("M2", 1.5f);
         Machine m3 = new Machine("M2", 2.5f);
