@@ -1,5 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
+import cz.cvut.fel.omo.smartfactory.builder.Builder;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class FactoryBuilder {
+public class FactoryBuilder implements Builder<Factory> {
     private String name;
     private Integer tactInMilliseconds;
     private RepairmanPool repairmanPool;
@@ -80,6 +81,7 @@ public class FactoryBuilder {
         return this;
     }
 
+    @Override
     public Factory build() {
         Factory factory = new Factory(name, tactInMilliseconds, people, machines, robots, productionLines);
         // set factory attribute on person class
