@@ -25,9 +25,9 @@ public class OutagesReport extends Report {
     public OutagesReport(ZonedDateTime from, ZonedDateTime to, Factory factory) {
         super(factory, from, to);
 
-        List<OutageEvent> outageEventsList = factory.getEventManager().getOutageEventsFromToSorted(from, to);
-        List<RepairFinishedEvent> repairFinishedEventsList = factory.getEventManager().getRepairFinishedEventsFromToSorted(from, to);
-        List<RepairStartedEvent> repairStartedEventsList = factory.getEventManager().getRepairStartedEventsFromToSorted(from, to);
+        List<OutageEvent> outageEventsList = factory.getEventFacade().getOutageEventsFromToSorted(from, to);
+        List<RepairFinishedEvent> repairFinishedEventsList = factory.getEventFacade().getRepairFinishedEventsFromToSorted(from, to);
+        List<RepairStartedEvent> repairStartedEventsList = factory.getEventFacade().getRepairStartedEventsFromToSorted(from, to);
 
         // shortest OutageTime
         calcShortestOutageTime(repairFinishedEventsList);
