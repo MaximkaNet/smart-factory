@@ -24,7 +24,7 @@ public class FactoryTests {
         Repairman r1 = new Repairman("1st firstName", "1st lastName", "1st email");
         Repairman r2 = new Repairman("2nd firstName", "2nd lastName", "2nd email");
         Repairman r3 = new Repairman("3rd firstName", "3rd lastName", "3rd email");
-        r3.getState().stopWorking();
+        r3.getState().stopWorking(); // one repairman is not working
         Director director = new Director("Director", "testing", "email@director.som");
         List<Person> people = new ArrayList<>(Arrays.asList(r1, r2, r3));
 
