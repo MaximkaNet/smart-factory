@@ -3,6 +3,7 @@ package cz.cvut.fel.omo.smartfactory.entity.person;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
+import cz.cvut.fel.omo.smartfactory.entity.factory.Behavioral;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +13,7 @@ import java.util.PriorityQueue;
 
 @Getter
 @Setter
-public class RepairmanPool implements FactoryEventListener {
+public class RepairmanPool implements FactoryEventListener, Behavioral {
     private PriorityQueue<OutageEvent> outageEventsQueue;
     private List<Repairman> repairmenList;
     private boolean isRunning;
@@ -23,9 +24,6 @@ public class RepairmanPool implements FactoryEventListener {
     }
 
     public void addOutageEvent(OutageEvent outageEvent) {
-        if (outageEventsQueue.contains(outageEvent)) {
-            return;
-        }
         outageEventsQueue.add(outageEvent);
     }
 
@@ -36,12 +34,13 @@ public class RepairmanPool implements FactoryEventListener {
         return Optional.ofNullable(outageEventsQueue.poll());
     }
 
-    public void executeRepairs() {
+    @Override
+    public void update(long deltaTime) {
         repairmenList.stream()
                 .filter(repairman -> repairman.getState().isAvailable())
                 .forEach(repairman -> {
                     Optional<OutageEvent> nextEvent = getMostUrgentEvent();
-                    nextEvent.ifPresent(outageEvent -> outageEvent.repair(repairman));
+                    nextEvent.ifPresent(repairman::startRepair);
                 });
     }
 
