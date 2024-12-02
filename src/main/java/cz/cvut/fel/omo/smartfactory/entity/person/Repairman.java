@@ -25,25 +25,19 @@ public class Repairman extends Person {
     public void finishRepair() {
         factory.getEventManager().notifyListeners(new RepairFinishedEvent(outageEvent.getPriority(), outageEvent.getAbstractManufacturingEntity(), outageEvent));
         System.out.println("Repairman finished");
-        outageEvent.check(this);
         state.ready();
     }
 
     @Override
-    public void onNewTact(int currentTact) {
-        super.onNewTact(currentTact);
-
+    public void update(long deltaTime) {
         // checking only for working repairmen
-        if (!state.isExecuting()){
+        if (!state.isExecuting()) {
             return;
         }
 
-        float currentHealth = outageEvent.getAbstractManufacturingEntity().getHealth() + repairPerTick;
-
-        if (currentHealth > outageEvent.getAbstractManufacturingEntity().getHealthy()) {
-            currentHealth = outageEvent.getAbstractManufacturingEntity().getHealthy();
-        }
-        outageEvent.getAbstractManufacturingEntity().setHealth(currentHealth);
+        float newHealth = outageEvent.getAbstractManufacturingEntity().getHealth() + repairPerTick;
+        float cappedHealth = Math.min(newHealth, outageEvent.getAbstractManufacturingEntity().getHealthy());
+        outageEvent.getAbstractManufacturingEntity().setHealth(cappedHealth);
 
         if (isRepairCompleted()) {
             finishRepair();
