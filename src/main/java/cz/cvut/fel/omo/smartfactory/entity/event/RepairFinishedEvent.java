@@ -15,12 +15,4 @@ public class RepairFinishedEvent extends FactoryEvent {
         this.outageEvent = outageEvent;
         this.abstractManufacturingEntity = outageEvent.getAbstractManufacturingEntity();
     }
-
-    @Override
-    public boolean check(Person person) {
-        System.out.println("Person: " + person + " has checked repair finished on: ...");
-        setCheckedBy(person);
-        setChecked(true);
-        return true;
-    }
 }

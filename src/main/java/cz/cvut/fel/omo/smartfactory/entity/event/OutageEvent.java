@@ -22,15 +22,4 @@ public class OutageEvent extends FactoryEvent {
         Repairman repairman = (Repairman) person;
         repairman.startRepair(this);
     }
-
-    @Override
-    public boolean check(Person person) {
-        if (person.getClass() != Repairman.class) {
-            return false;
-        }
-        System.out.println("Repairman: " + person + " checked: " + this);
-        setCheckedBy(person);
-        isChecked = true;
-        return true;
-    }
 }
