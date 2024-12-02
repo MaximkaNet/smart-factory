@@ -2,7 +2,6 @@ package cz.cvut.fel.omo.smartfactory.entity.event;
 
 import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.AbstractFactoryEquipment;
-import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import lombok.Getter;
 
 @Getter

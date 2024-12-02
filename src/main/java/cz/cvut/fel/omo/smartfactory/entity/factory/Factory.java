@@ -21,7 +21,7 @@ import java.util.List;
 public class Factory {
     private String name;
     private List<Report> reports;
-    private Integer tactLengthMilliseconds = 500;
+    private Integer tactLengthMilliseconds;
     private Integer currentTact = 0;
     private boolean isRunning = false;
     private List<Person> people;
