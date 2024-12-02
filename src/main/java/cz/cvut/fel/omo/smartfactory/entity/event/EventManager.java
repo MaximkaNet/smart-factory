@@ -5,7 +5,6 @@ import lombok.Getter;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,19 +33,17 @@ public class EventManager {
         eventHistory.add(event);
     }
 
-    public void registerAllForEventType(Map<Class<? extends FactoryEvent>, List<FactoryEventListener>> eventTypeListenersMap) {
-        eventTypeListenersMap.forEach((eventType, newListeners) ->
-                this.eventTypeListenersMap.computeIfAbsent(eventType, k -> new ArrayList<>()).addAll(newListeners));
+    public void registerListeners(Class<? extends FactoryEvent> type, List<FactoryEventListener> eventTypeListenersMap) {
+        for (FactoryEventListener listener : eventTypeListenersMap) {
+            registerListener(type, listener);
+        }
     }
 
-    public void registerForEventType(Class<? extends FactoryEvent> eventClass, FactoryEventListener listener) {
+    public void registerListener(Class<? extends FactoryEvent> eventClass, FactoryEventListener listener) {
         eventTypeListenersMap.computeIfAbsent(eventClass, key -> new ArrayList<>()).add(listener);
     }
 
-    private List<FactoryEventListener> getListenersForEventType(Class<?> eventType) {
-        return eventTypeListenersMap.getOrDefault(eventType, Collections.emptyList());
-    }
-
+    // TODO: move to facade
     // ----------------------------------------------------- ADVANCED GETTERS FOR STATISTICS -----------------------------------------------------
     public List<FactoryEvent> getAllEventsSorted() {
         return eventHistory.stream()
