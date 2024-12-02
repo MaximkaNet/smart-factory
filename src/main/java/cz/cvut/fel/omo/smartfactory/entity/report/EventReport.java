@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class EventReport extends Report {
     List<FactoryEvent> events;
-    Map<Class<?>, List<FactoryEvent>> eventTypeMap;
+    Map<Class<? extends FactoryEvent>, List<FactoryEvent>> eventTypeMap;
     Map<ProductionUnit, List<FactoryEvent>> eventSourceMap;
     Map<Optional<Person>, List<FactoryEvent>> eventCheckerMap;
 
