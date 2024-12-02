@@ -2,10 +2,10 @@ package cz.cvut.fel.omo.smartfactory.entity.factory;
 
 import cz.cvut.fel.omo.smartfactory.builder.Builder;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
+import cz.cvut.fel.omo.smartfactory.entity.event.EventFacade;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
-import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Robot;
@@ -26,7 +26,7 @@ public class FactoryBuilder implements Builder<Factory> {
     private List<Machine> machines;
     private List<Robot> robots;
     private List<ProductionLine> productionLines = new ArrayList<>();
-    private List<TactSubscriber> tactSubscribers = new ArrayList<>();
+    private List<Behavioral> tactSubscribers = new ArrayList<>();
     private HashMap<Class<? extends FactoryEvent>, List<FactoryEventListener>> eventables = new HashMap<>();
 
     public FactoryBuilder(String name) {
@@ -86,11 +86,13 @@ public class FactoryBuilder implements Builder<Factory> {
         Factory factory = new Factory(name, tactInMilliseconds, people, machines, robots, productionLines);
         // set factory attribute on person class
         people.forEach(person -> person.setFactory(factory));
-        factory.setTactSubscribers(tactSubscribers);
+        factory.setBehavioralsList(tactSubscribers);
         factory.setRepairmanPool(repairmanPool);
         // set eventables in factory facade
-        factory.getEventManager().registerAllForEventType(eventables);
-        factory.getEventManager().registerForEventType(OutageEvent.class, repairmanPool);
+        factory.getEventManager().registerListenersMap(eventables);
+        factory.getEventManager().registerListener(OutageEvent.class, repairmanPool);
+        factory.getBehavioralsList().add(repairmanPool);
+        factory.setEventFacade(new EventFacade(factory.getEventManager()));
         return factory;
     }
 }
