@@ -13,13 +13,4 @@ public class OutageEvent extends FactoryEvent {
         super(priority, abstractManufacturingEntity);
         this.abstractManufacturingEntity = abstractManufacturingEntity;
     }
-
-    // TODO: change location of the repair method to somewhere else
-    public void repair(Person person) {
-        if (person.getClass() != Repairman.class) {
-            return;
-        }
-        Repairman repairman = (Repairman) person;
-        repairman.startRepair(this);
-    }
 }
