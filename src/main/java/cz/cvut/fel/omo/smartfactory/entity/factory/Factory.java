@@ -1,8 +1,8 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
+import cz.cvut.fel.omo.smartfactory.entity.event.EventFacade;
 import cz.cvut.fel.omo.smartfactory.entity.event.EventManager;
-import cz.cvut.fel.omo.smartfactory.entity.factory.factoryObserver.TactSubscriber;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Robot;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
@@ -29,8 +29,9 @@ public class Factory {
     private List<Robot> robots;
     private List<Machine> machines;
     private RepairmanPool repairmanPool;
-    private List<TactSubscriber> tactSubscribers = new ArrayList<>();
+    private List<Behavioral> behavioralsList = new ArrayList<>();
     private EventManager eventManager;
+    private EventFacade eventFacade;
 
     public Factory(String name, int tactLengthMilliseconds, List<Person> people, List<Machine> machines, List<Robot> robots, List<ProductionLine> productionLines) {
         this.name = name;
@@ -50,9 +51,7 @@ public class Factory {
         System.out.println("tact: " + currentTact);
         // run everything that needs to be run on one tact
         // send message about new tact for each tact subscriber
-        tactSubscribers.forEach(subscriber -> subscriber.onNewTact(currentTact));
-        // execute next tact in repairmanPool
-        repairmanPool.executeRepairs();
+        behavioralsList.forEach(subscriber -> subscriber.update(currentTact));
         // production lines
         for (ProductionLine productionLine : productionLines) {
             // TODO: cannot be compiled, process not implemented
