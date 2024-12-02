@@ -17,14 +17,6 @@ public class RepairStartedEvent extends FactoryEvent {
     }
 
     @Override
-    public boolean check(Person person) {
-        System.out.println("Person: " + person + " has checked repair started on: ...");
-        setCheckedBy(person);
-        setChecked(true);
-        return true;
-    }
-
-    @Override
     public String toString() {
         return super.toString().replace("}", "") +
                 ", outageEvent=" + outageEvent + "}";

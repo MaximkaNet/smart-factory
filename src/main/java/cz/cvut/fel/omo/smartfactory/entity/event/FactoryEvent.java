@@ -31,8 +31,6 @@ abstract public class FactoryEvent implements Comparable<FactoryEvent> {
         return generatedAt.compareTo(o.getGeneratedAt());
     }
 
-    abstract public boolean check(Person person);
-
     @Override
     public String toString() {
         return this.getClass().getSimpleName()
