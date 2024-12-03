@@ -3,12 +3,14 @@ package cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
+import lombok.Getter;
 
 import java.util.Iterator;
 
 public class FactoryTreeIterator implements Iterator<ProductionUnit> {
     private Factory factory;
     private ProductionLine productionLine;
+    @Getter
     private ProductionUnit current;
 
     public FactoryTreeIterator(Factory factory, ProductionLine productionLine, ProductionUnit current) {
@@ -24,6 +26,7 @@ public class FactoryTreeIterator implements Iterator<ProductionUnit> {
     public boolean hasNext() {
         return false;
 
+        // TODO
 //        if (current.getNext() != null) {
 //            return true;
 //        }
@@ -35,6 +38,7 @@ public class FactoryTreeIterator implements Iterator<ProductionUnit> {
     public ProductionUnit next() {
         return null;
 
+        // TODO
 //        if (current.getNext() != null) {
 //            return current.getNext();
 //        }
