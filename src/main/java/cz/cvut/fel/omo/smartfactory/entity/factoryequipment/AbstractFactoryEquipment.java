@@ -22,7 +22,12 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit, Behavi
     /**
      * The entity id
      */
-    protected final String id;
+    protected final String discriminator;
+
+    /**
+     * string name
+     */
+    String name;
 
     /**
      * Price per usage
@@ -85,8 +90,9 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit, Behavi
      */
     protected FactoryEquipmentState state = new ReadyState(this);
 
-    protected AbstractFactoryEquipment(String id, float pricePerUsage, float maximumHealth) {
-        this.id = id;
+    protected AbstractFactoryEquipment(String id, String name, float pricePerUsage, float maximumHealth) {
+        this.discriminator = id;
+        this.name = name;
         this.pricePerUsage = pricePerUsage;
         this.actualHealth = maximumHealth;
         this.maximumHealth = maximumHealth;
