@@ -29,7 +29,7 @@ public class Factory {
     /**
      * Tick length
      */
-    private Integer tactLengthMilliseconds;
+    private Integer tickLengthMillis;
 
     /**
      * All reports
@@ -87,15 +87,12 @@ public class Factory {
      */
     private List<Behavioral> behavioralsList = new ArrayList<>();
 
-    public Factory(String name, int tactLengthMilliseconds, List<Person> people, List<Machine> machines, List<Robot> robots, List<ProductionLine> productionLines) {
+    public Factory(String name, int tactLengthMilliseconds) {
         this.name = name;
-        this.tactLengthMilliseconds = tactLengthMilliseconds;
-        this.productionLines = productionLines;
-        this.robots = robots;
-        this.machines = machines;
-        this.people = people;
+        this.tickLengthMillis = tactLengthMilliseconds;
         this.eventManager = new EventManager(this);
         this.orderManager = new OrderManager(this);
+        this.eventFacade = new EventFacade(this.eventManager);
     }
 
     /**
@@ -114,7 +111,7 @@ public class Factory {
     public synchronized void simulate() {
         // run everything that needs to be run on one tact
         // send message about new tact for each tact subscriber
-        behavioralsList.forEach(subscriber -> subscriber.update(tactLengthMilliseconds));
+        behavioralsList.forEach(subscriber -> subscriber.update(tickLengthMillis));
     }
 
     /**
@@ -136,8 +133,9 @@ public class Factory {
      */
     public void simulateRealtime(int ticks) throws InterruptedException {
         for (int i = 0; i < ticks; i++) {
+            System.out.println("tact: " + i);
             simulate();
-            Thread.sleep(tactLengthMilliseconds);
+            Thread.sleep(tickLengthMillis);
         }
     }
 
@@ -179,7 +177,7 @@ public class Factory {
     public String toString() {
         return this.getClass().getSimpleName() + "{"
                 + "name=" + name
-                + ", tactLengthMilliseconds=" + tactLengthMilliseconds
+                + ", tactLengthMilliseconds=" + tickLengthMillis
                 + ", currentTact=" + currentTact + "}";
     }
 }
