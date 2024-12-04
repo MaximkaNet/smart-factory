@@ -15,7 +15,7 @@ public class FactoryTreeIterator implements Iterator<ProductionUnit> {
 
     public FactoryTreeIterator(Factory factory) {
         this.factory = factory;
-        this.productionLine = factory.getProductionLines().getFirst();
+        this.productionLine = factory.getProductionLines().get(0);
         this.current = productionLine.getProductionUnitChain();
     }
 
