@@ -13,10 +13,10 @@ public class FactoryPriorityIterator implements Iterator<ProductionUnit> {
     @Getter
     private ProductionUnit current;
 
-    public FactoryPriorityIterator(Factory factory, ProductionLine productionLine, ProductionUnit current) {
+    public FactoryPriorityIterator(Factory factory) {
         this.factory = factory;
-        this.productionLine = productionLine;
-        this.current = current;
+        this.productionLine = factory.getProductionLines().get(0);
+        this.current = productionLine.getProductionUnitChain();
     }
 
     @Override
