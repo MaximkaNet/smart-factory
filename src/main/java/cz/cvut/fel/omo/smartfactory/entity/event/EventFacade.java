@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class EventFacade {
-    private EventManager eventManager;
+    private final EventManager eventManager;
 
     public EventFacade(EventManager eventManager) {
         this.eventManager = eventManager;
