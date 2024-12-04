@@ -18,7 +18,11 @@ import cz.cvut.fel.omo.smartfactory.entity.report.Report;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -34,7 +38,12 @@ public class Factory {
     /**
      * Tick length
      */
-    private Integer tickLengthMillis;
+    private long tickLengthMillis;
+
+    /**
+     * Foundation date
+     */
+    private final Instant foundationDate;
 
     /**
      * All reports
@@ -44,7 +53,7 @@ public class Factory {
     /**
      * Current tick
      */
-    private Integer currentTact = 0;
+    private long currentTick = 0;
 
     /**
      * People
@@ -92,12 +101,20 @@ public class Factory {
      */
     private List<Behavioral> behavioralsList = new ArrayList<>();
 
-    public Factory(String name, int tactLengthMilliseconds) {
+    public Factory(String name, int tickLengthMillis, Instant foundationDate) {
         this.name = name;
-        this.tickLengthMillis = tactLengthMilliseconds;
+        this.foundationDate = foundationDate;
+        this.tickLengthMillis = tickLengthMillis;
         this.eventManager = new EventManager(this);
         this.seriesManager = new SeriesManager(this);
         this.eventFacade = new EventFacade(this.eventManager);
+    }
+
+    /**
+     * Returns instant of simulation time
+     */
+    public Instant now() {
+        return foundationDate.plusMillis(currentTick * tickLengthMillis);
     }
 
     /**
@@ -114,6 +131,9 @@ public class Factory {
      * Simulate one iteration
      */
     public synchronized void simulate() {
+        currentTick++;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
+        System.out.println("Tact: " + currentTick + " at " + LocalDateTime.ofInstant(now(), ZoneId.systemDefault()).format(formatter));
         // run everything that needs to be run on one tact
         // send message about new tact for each tact subscriber
         behavioralsList.forEach(subscriber -> subscriber.update(tickLengthMillis));
@@ -125,8 +145,7 @@ public class Factory {
      * @param ticks Number of iterations
      */
     public synchronized void simulate(int ticks) {
-        for (int i = 0; i < ticks; i++) {
-            System.out.println("tact: " + i);
+        for (long i = 0; i < ticks; i++) {
             simulate();
         }
     }
@@ -137,8 +156,7 @@ public class Factory {
      * @param ticks number of simulations
      */
     public void simulateRealtime(int ticks) throws InterruptedException {
-        for (int i = 0; i < ticks; i++) {
-            System.out.println("tact: " + i);
+        for (long i = 0; i < ticks; i++) {
             simulate();
             Thread.sleep(tickLengthMillis);
         }
@@ -209,6 +227,6 @@ public class Factory {
         return this.getClass().getSimpleName() + "{"
                 + "name=" + name
                 + ", tactLengthMilliseconds=" + tickLengthMillis
-                + ", currentTact=" + currentTact + "}";
+                + ", currentTact=" + currentTick + "}";
     }
 }
