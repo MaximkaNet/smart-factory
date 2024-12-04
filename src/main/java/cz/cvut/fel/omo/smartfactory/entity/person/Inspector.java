@@ -28,8 +28,7 @@ public class Inspector extends Person implements FactoryVisitor {
             return;
         }
 
-        // TODO: ProductionUnit has to implement the accept method for the visitor
-//        iterator.getCurrent().accept(this);
+        iterator.getCurrent().accept(this);
 
         if (iterator.hasNext()) {
             iterator.next();
