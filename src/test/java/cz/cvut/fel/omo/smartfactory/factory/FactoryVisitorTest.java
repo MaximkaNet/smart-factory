@@ -38,10 +38,9 @@ public class FactoryVisitorTest {
                 .filter(person -> person instanceof Worker)
                 .map(person -> (Worker) person)
                 .collect(Collectors.toList());
-
-        // getting director and inspector
-        director = factory.getPeople().stream().filter(person -> person instanceof Director).map(person -> (Director) person).collect(Collectors.toList()).get(0);
-        inspector = factory.getPeople().stream().filter(person -> person instanceof Inspector).map(person -> (Inspector) person).collect(Collectors.toList()).get(0);
+        
+        director = factory.getFirstAvailableDirector();
+        inspector = factory.getFirstAvailableInspector();
         Worker worker1 = workers.get(0);
         Worker worker2 = workers.get(1);
         Worker worker3 = workers.get(2);
