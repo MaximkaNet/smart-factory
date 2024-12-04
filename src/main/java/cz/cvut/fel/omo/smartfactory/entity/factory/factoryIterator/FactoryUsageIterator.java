@@ -8,18 +8,19 @@ import lombok.Getter;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class FactoryTreeIterator implements Iterator<ProductionUnit> {
+public class FactoryUsageIterator implements Iterator<ProductionUnit> {
     private Factory factory;
     private ProductionLine productionLine;
     @Getter
     private ProductionUnit current;
 
-    public FactoryTreeIterator(Factory factory) {
+    public FactoryUsageIterator(Factory factory) {
         this.factory = factory;
         this.productionLine = factory.getProductionLines().get(0);
         this.current = productionLine.getProductionUnitChain();
     }
 
+    // TODO: hasNext and next has to be update to iterate based on priority
     @Override
     public boolean hasNext() {
         if (current.getNext() != null) {
@@ -44,9 +45,3 @@ public class FactoryTreeIterator implements Iterator<ProductionUnit> {
         return current;
     }
 }
-
-// ----------------------------- NOTES -----------------------------
-// stromové hierarchie entit:
-//                           továrna
-//                                  ->* linka
-//                                           -> *(stroj|robot|člověk nebo výrobek)
