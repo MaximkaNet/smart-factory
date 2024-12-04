@@ -19,7 +19,7 @@ public final class Robot extends AbstractFactoryEquipment {
         // process healthy
         // If repair necessary generate alert event
 
-        FactoryEvent event = new OutageEvent(123, this);
+        FactoryEvent event = new OutageEvent(123, this, factory.now());
 //        event.setTargetId(this.getId());
 
         if (factory == null) {

@@ -5,19 +5,19 @@ import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
 abstract public class FactoryEvent implements Comparable<FactoryEvent> {
     protected Integer priority;
-    protected ZonedDateTime generatedAt;
+    protected final Instant generatedAt;
     protected boolean isChecked = false;
     protected Person checkedBy;
-    protected ProductionUnit sender;
+    protected final ProductionUnit sender;
 
-    public FactoryEvent(Integer priority, ProductionUnit sender) {
-        this.generatedAt = ZonedDateTime.now();
+    public FactoryEvent(Integer priority, ProductionUnit sender, Instant time) {
+        this.generatedAt = time;
         this.priority = priority;
         this.sender = sender;
     }
