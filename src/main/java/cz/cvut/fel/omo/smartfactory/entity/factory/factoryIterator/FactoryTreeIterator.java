@@ -26,7 +26,7 @@ public class FactoryTreeIterator implements Iterator<ProductionUnit> {
             return true;
         }
         int nextProductionUnitIndex = factory.getProductionLines().indexOf(productionLine) + 1;
-        return nextProductionUnitIndex >= factory.getProductionLines().size();
+        return nextProductionUnitIndex < factory.getProductionLines().size();
     }
 
     @Override
