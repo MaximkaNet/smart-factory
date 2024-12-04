@@ -28,12 +28,13 @@ public class Repairman extends Person {
         state.work();
         this.outageEvent = outageEvent;
         factory.getEventManager().notifyListeners(new RepairStartedEvent(outageEvent.getPriority(), outageEvent.getAbstractManufacturingEntity(), outageEvent));
+        System.out.println("Repairman started");
     }
 
     public void finishRepair() {
         factory.getEventManager().notifyListeners(new RepairFinishedEvent(outageEvent.getPriority(), outageEvent.getAbstractManufacturingEntity(), outageEvent));
-        System.out.println("Repairman finished");
         state.ready();
+        System.out.println("Repairman finished");
     }
 
     @Override
