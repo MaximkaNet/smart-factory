@@ -50,4 +50,9 @@ public class Worker extends Person implements ProductionUnit {
     public void update(long deltaTime) {
 
     }
+
+    @Override
+    public void accept(FactoryVisitor visitor) {
+        visitor.visit(this);
+    }
 }

@@ -1,5 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.entity.factoryequipment;
 
+import cz.cvut.fel.omo.smartfactory.entity.person.FactoryVisitor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,5 +29,10 @@ public final class Machine extends AbstractFactoryEquipment {
 
             // Send event
         }
+    }
+
+    @Override
+    public void accept(FactoryVisitor visitor) {
+        visitor.visit(this);
     }
 }
