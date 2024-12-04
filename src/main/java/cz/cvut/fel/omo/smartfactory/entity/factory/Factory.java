@@ -9,6 +9,8 @@ import cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator.FactoryTreeIt
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator.FactoryUsageIterator;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Robot;
+import cz.cvut.fel.omo.smartfactory.entity.person.Director;
+import cz.cvut.fel.omo.smartfactory.entity.person.Inspector;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
 import cz.cvut.fel.omo.smartfactory.entity.report.OutagesReport;
@@ -19,6 +21,7 @@ import lombok.Setter;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Getter
 @Setter
@@ -165,6 +168,24 @@ public class Factory {
 
     public FactoryUsageIterator getFactoryUsageIterator() {
         return new FactoryUsageIterator(this);
+    }
+
+    public Director getFirstAvailableDirector() {
+        return people.stream()
+                .filter(person -> person instanceof Director)
+                .filter(person -> person.getState().isAvailable())
+                .map(person -> (Director) person)
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("No available Director found"));
+    }
+
+    public Inspector getFirstAvailableInspector() {
+        return people.stream()
+                .filter(person -> person instanceof Inspector)
+                .filter(person -> person.getState().isAvailable())
+                .map(person -> (Inspector) person)
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("No available Inspector found"));
     }
 
     /**
