@@ -1,18 +1,18 @@
 package cz.cvut.fel.omo.smartfactory.entity.person;
 
 import cz.cvut.fel.omo.smartfactory.entity.Product;
-import cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator.FactoryPriorityIterator;
+import cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator.FactoryUsageIterator;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Robot;
 
 public class Inspector extends Person implements FactoryVisitor {
-    private FactoryPriorityIterator iterator;
+    private FactoryUsageIterator iterator;
 
     public Inspector(String firstName, String lastName, String email) {
         super(firstName, lastName, email);
     }
 
-    public void startVisit(FactoryPriorityIterator iterator) {
+    public void startVisit(FactoryUsageIterator iterator) {
         if (state.isAvailable()) {
             state.work();
         } else {
@@ -28,11 +28,13 @@ public class Inspector extends Person implements FactoryVisitor {
             return;
         }
 
-        // TODO: ProductionUnit has to implement the accept method for the visitor
-//        iterator.getCurrent().accept(this);
+        iterator.getCurrent().accept(this);
 
         if (iterator.hasNext()) {
             iterator.next();
+        } else {
+            System.out.println(this + " changed state to ready as the iteration is complete");
+            state.ready();
         }
     }
 
