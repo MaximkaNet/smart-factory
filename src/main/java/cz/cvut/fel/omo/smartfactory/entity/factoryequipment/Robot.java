@@ -2,6 +2,7 @@ package cz.cvut.fel.omo.smartfactory.entity.factoryequipment;
 
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
+import cz.cvut.fel.omo.smartfactory.entity.person.FactoryVisitor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,5 +27,10 @@ public final class Robot extends AbstractFactoryEquipment {
         }
 //        factory.generateEvent(event);
         factory.getEventManager().notifyListeners(event);
+    }
+
+    @Override
+    public void accept(FactoryVisitor visitor) {
+        visitor.visit(this);
     }
 }
