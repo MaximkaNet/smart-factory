@@ -1,8 +1,8 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
-import cz.cvut.fel.omo.smartfactory.entity.OrderManager;
 import cz.cvut.fel.omo.smartfactory.entity.Product;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
+import cz.cvut.fel.omo.smartfactory.entity.SeriesManager;
 import cz.cvut.fel.omo.smartfactory.entity.event.EventFacade;
 import cz.cvut.fel.omo.smartfactory.entity.event.EventManager;
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator.FactoryTreeIterator;
@@ -75,7 +75,7 @@ public class Factory {
     /**
      * Orders manager
      */
-    private final OrderManager orderManager;
+    private final SeriesManager seriesManager;
 
     /**
      * Production lines
@@ -96,7 +96,7 @@ public class Factory {
         this.name = name;
         this.tickLengthMillis = tactLengthMilliseconds;
         this.eventManager = new EventManager(this);
-        this.orderManager = new OrderManager(this);
+        this.seriesManager = new SeriesManager(this);
         this.eventFacade = new EventFacade(this.eventManager);
     }
 
