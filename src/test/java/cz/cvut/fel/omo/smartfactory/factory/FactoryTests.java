@@ -17,7 +17,7 @@ public class FactoryTests {
     public void createFactoryUsingFactoryBuilderAndRunIt() throws InterruptedException {
         Factory factory = Factory.builder()
                 .setName("Factory 1")
-                .setTickLength(250)
+                .setTickLength(10)
                 .setRepairmanPool(
                         RepairmanPool.builder()
                                 .addRepairman("Janko", "First", .2f)
