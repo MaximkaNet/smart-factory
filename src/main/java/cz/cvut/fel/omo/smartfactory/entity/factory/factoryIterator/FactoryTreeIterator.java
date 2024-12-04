@@ -13,13 +13,10 @@ public class FactoryTreeIterator implements Iterator<ProductionUnit> {
     @Getter
     private ProductionUnit current;
 
-    public FactoryTreeIterator(Factory factory, ProductionLine productionLine, ProductionUnit current) {
+    public FactoryTreeIterator(Factory factory) {
         this.factory = factory;
-        this.productionLine = productionLine;
-        this.current = current;
-        // TODO: check if current can have the reference to desired entities
-//        this.factory = current.getFactory();
-//        this.productionLine = current.getProductionLine;
+        this.productionLine = factory.getProductionLines().getFirst();
+        this.current = productionLine.getProductionUnitChain();
     }
 
     @Override
@@ -52,4 +49,7 @@ public class FactoryTreeIterator implements Iterator<ProductionUnit> {
 }
 
 // ----------------------------- NOTES -----------------------------
-// stromové hierarchie entit továrna ->* linka -> *(stroj|robot|člověk nebo výrobek)
+// stromové hierarchie entit:
+//                           továrna
+//                                  ->* linka
+//                                           -> *(stroj|robot|člověk nebo výrobek)
