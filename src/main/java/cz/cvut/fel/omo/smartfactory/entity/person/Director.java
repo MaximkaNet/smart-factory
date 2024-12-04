@@ -28,7 +28,6 @@ public class Director extends Person implements FactoryVisitor {
             return;
         }
 
-        // TODO: ProductionUnit has to implement the accept method for the visitor
         iterator.getCurrent().accept(this);
 
         if (iterator.hasNext()) {
