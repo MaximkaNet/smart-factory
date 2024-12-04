@@ -6,13 +6,15 @@ import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 public class Worker extends Person implements ProductionUnit {
 
     private ProductionUnit next;
+    private float cost;
 
-    public Worker(String firstName, String lastName, String email) {
-        super(firstName, lastName, email);
+    public Worker(String discriminator, String firstName, String lastName, float cost) {
+        super(discriminator, firstName, lastName);
+        this.cost = cost;
     }
 
     @Override
-    public String getId() {
+    public String getDiscriminator() {
         return "";
     }
 

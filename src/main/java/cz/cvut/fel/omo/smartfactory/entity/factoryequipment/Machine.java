@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 public final class Machine extends AbstractFactoryEquipment {
 
-    public Machine(String id, float pricePerUsage, float healthy) {
-        super(id, pricePerUsage, healthy);
+    public Machine(String id, String name, float pricePerUsage, float healthy) {
+        super(id, name, pricePerUsage, healthy);
     }
 
     @Override

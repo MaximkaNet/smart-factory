@@ -68,7 +68,7 @@ public class ProductionLine implements Behavioral {
         ProductionUnit current = productionUnitChain;
         StringBuilder actualSequence = new StringBuilder();
         while (current != null) {
-            actualSequence.append(current.getId().charAt(0));
+            actualSequence.append(current.getDiscriminator().charAt(0));
             current = current.getNext();
         }
         return chainForCheck.toUpperCase().contentEquals(actualSequence);

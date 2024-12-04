@@ -9,8 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public final class Robot extends AbstractFactoryEquipment {
-    public Robot(String id, float pricePerUsage, float healthy) {
-        super(id, pricePerUsage, healthy);
+    public Robot(String id, String name, float pricePerUsage, float healthy) {
+        super(id, name, pricePerUsage, healthy);
     }
 
     @Override
@@ -23,7 +23,7 @@ public final class Robot extends AbstractFactoryEquipment {
 //        event.setTargetId(this.getId());
 
         if (factory == null) {
-            throw new RuntimeException("Robot " + getId() + " is not connect to factory");
+            throw new RuntimeException("Robot " + this.getDiscriminator() + " is not connect to factory");
         }
 //        factory.generateEvent(event);
         factory.getEventManager().notifyListeners(event);
