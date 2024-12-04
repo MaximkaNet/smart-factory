@@ -10,12 +10,16 @@ import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
 import cz.cvut.fel.omo.smartfactory.entity.person.Worker;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FactoryBuilder implements Builder<Factory> {
     private String name = "Default Factory";
     private Integer tickLength = 500;
+    private Instant foundationDate = Instant.now();
     private RepairmanPool repairmanPool;
     private List<Person> people = new ArrayList<>();
     private List<Machine> machines = new ArrayList<>();
@@ -64,10 +68,15 @@ public class FactoryBuilder implements Builder<Factory> {
         return this;
     }
 
+    public FactoryBuilder setFoundationDate(LocalDate of) {
+        this.foundationDate = of.atStartOfDay(ZoneId.of("UTC")).toInstant();
+        return this;
+    }
+
     @Override
     public Factory build() {
 
-        Factory factory = new Factory(this.name, this.tickLength);
+        Factory factory = new Factory(this.name, this.tickLength, this.foundationDate);
 
         // link people
         people.forEach(person -> person.setFactory(factory));

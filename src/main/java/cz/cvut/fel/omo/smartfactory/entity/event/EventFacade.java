@@ -13,7 +13,7 @@ public class EventFacade {
 
     public List<FactoryEvent> getEventsFromToSorted(ZonedDateTime from, ZonedDateTime to) {
         return eventManager.getEventHistory().stream()
-                .filter(event -> event.getGeneratedAt().isAfter(from) && event.generatedAt.isBefore(to))
+                .filter(event -> event.getGeneratedAt().isAfter(from.toInstant()) && event.generatedAt.isBefore(to.toInstant()))
                 .sorted()
                 .collect(Collectors.toList());
     }
@@ -22,7 +22,7 @@ public class EventFacade {
         return eventManager.getEventHistory().stream()
                 .filter(event -> event instanceof OutageEvent)
                 .map(event -> (OutageEvent) event)
-                .filter(outageEvent -> outageEvent.getGeneratedAt().isAfter(from) && outageEvent.generatedAt.isBefore(to))
+                .filter(outageEvent -> outageEvent.getGeneratedAt().isAfter(from.toInstant()) && outageEvent.generatedAt.isBefore(to.toInstant()))
                 .sorted()
                 .collect(Collectors.toList());
     }
@@ -31,7 +31,7 @@ public class EventFacade {
         return eventManager.getEventHistory().stream()
                 .filter(event -> event instanceof RepairFinishedEvent)
                 .map(event -> (RepairFinishedEvent) event)
-                .filter(outageEvent -> outageEvent.getGeneratedAt().isAfter(from) && outageEvent.generatedAt.isBefore(to))
+                .filter(outageEvent -> outageEvent.getGeneratedAt().isAfter(from.toInstant()) && outageEvent.generatedAt.isBefore(to.toInstant()))
                 .sorted()
                 .collect(Collectors.toList());
     }
@@ -40,7 +40,7 @@ public class EventFacade {
         return eventManager.getEventHistory().stream()
                 .filter(event -> event instanceof RepairStartedEvent)
                 .map(event -> (RepairStartedEvent) event)
-                .filter(outageEvent -> outageEvent.getGeneratedAt().isAfter(from) && outageEvent.generatedAt.isBefore(to))
+                .filter(outageEvent -> outageEvent.getGeneratedAt().isAfter(from.toInstant()) && outageEvent.generatedAt.isBefore(to.toInstant()))
                 .sorted()
                 .collect(Collectors.toList());
     }
