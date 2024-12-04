@@ -14,7 +14,7 @@ public class ReadyState extends FactoryEquipmentState {
     }
 
     @Override
-    public void process() {
+    public void process(long dt) {
 
     }
 

@@ -1,16 +1,15 @@
 package cz.cvut.fel.omo.smartfactory.entity;
 
+import cz.cvut.fel.omo.smartfactory.entity.factory.Behavioral;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.state.productionline.ProductionLineState;
 import cz.cvut.fel.omo.smartfactory.state.productionline.ReadyState;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
-public class ProductionLine {
+public class ProductionLine implements Behavioral {
     /**
      * The unique id
      */
@@ -65,22 +64,14 @@ public class ProductionLine {
     /**
      * Returns true if production unit chain equals chainForCheck
      */
-    private boolean isValidChain(List<String> chainForCheck) {
-        // do stuff
-        return false;
-    }
-
-    /**
-     * Produce one product.
-     * Can run in worker thread (the process may stop due to a malfunction of
-     * the robot or machine, which will be waiting for repair)
-     */
-    public void update() {
-        if (productionUnitChain == null) {
-            return;
+    private boolean isValidChain(String chainForCheck) {
+        ProductionUnit current = productionUnitChain;
+        StringBuilder actualSequence = new StringBuilder();
+        while (current != null) {
+            actualSequence.append(current.getId().charAt(0));
+            current = current.getNext();
         }
-        Product completedProduct = productionUnitChain.processNext(currentSeries.getProduct());
-        currentSeries.addCompletedProduct(completedProduct);
+        return chainForCheck.toUpperCase().contentEquals(actualSequence);
     }
 
     /**
@@ -88,5 +79,18 @@ public class ProductionLine {
      */
     public boolean isReady() {
         return !producing;
+    }
+
+    /**
+     * Produce one product.
+     * Can run in worker thread (the process may stop due to a malfunction of
+     * the robot or machine, which will be waiting for repair)
+     */
+    public void update(long dt) {
+        if (productionUnitChain == null) {
+            return;
+        }
+        Product completedProduct = productionUnitChain.processNext(currentSeries.getProduct());
+        currentSeries.addCompletedProduct(completedProduct);
     }
 }

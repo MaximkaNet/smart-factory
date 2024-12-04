@@ -1,5 +1,7 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
+import cz.cvut.fel.omo.smartfactory.entity.OrderManager;
+import cz.cvut.fel.omo.smartfactory.entity.Product;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.event.EventFacade;
 import cz.cvut.fel.omo.smartfactory.entity.event.EventManager;
@@ -19,19 +21,71 @@ import java.util.List;
 @Getter
 @Setter
 public class Factory {
+    /**
+     * Factory name
+     */
     private String name;
-    private List<Report> reports;
+
+    /**
+     * Tick length
+     */
     private Integer tactLengthMilliseconds;
+
+    /**
+     * All reports
+     */
+    private List<Report> reports;
+
+    /**
+     * Current tick
+     */
     private Integer currentTact = 0;
-    private boolean isRunning = false;
+
+    /**
+     * People
+     */
     private List<Person> people;
-    private List<ProductionLine> productionLines;
+
+    /**
+     * Robots
+     */
     private List<Robot> robots;
+
+    /**
+     * Machines
+     */
     private List<Machine> machines;
-    private RepairmanPool repairmanPool;
-    private List<Behavioral> behavioralsList = new ArrayList<>();
+
+
+    /**
+     * Event manager
+     */
     private EventManager eventManager;
+
+    /**
+     * Event facade
+     */
     private EventFacade eventFacade;
+
+    /**
+     * Orders manager
+     */
+    private final OrderManager orderManager;
+
+    /**
+     * Production lines
+     */
+    private List<ProductionLine> productionLines;
+
+    /**
+     * Repair man pool
+     */
+    private RepairmanPool repairmanPool;
+
+    /**
+     * Behavioral list
+     */
+    private List<Behavioral> behavioralsList = new ArrayList<>();
 
     public Factory(String name, int tactLengthMilliseconds, List<Person> people, List<Machine> machines, List<Robot> robots, List<ProductionLine> productionLines) {
         this.name = name;
@@ -40,37 +94,60 @@ public class Factory {
         this.robots = robots;
         this.machines = machines;
         this.people = people;
-        eventManager = new EventManager(this);
+        this.eventManager = new EventManager(this);
+        this.orderManager = new OrderManager(this);
     }
 
     /**
-     * Main simulation method
+     * Add series of product
+     *
+     * @param product Product for producing
+     * @param count   count of products
      */
-    public void simulate() {
-        currentTact++;
-        System.out.println("tact: " + currentTact);
+    public void addSeries(Product product, int count) {
+
+    }
+
+    /**
+     * Simulate one iteration
+     */
+    public synchronized void simulate() {
         // run everything that needs to be run on one tact
         // send message about new tact for each tact subscriber
-        behavioralsList.forEach(subscriber -> subscriber.update(currentTact));
-        // production lines
-        for (ProductionLine productionLine : productionLines) {
-            // TODO: cannot be compiled, process not implemented
-//            productionLine.process();
-        }
+        behavioralsList.forEach(subscriber -> subscriber.update(tactLengthMilliseconds));
+    }
 
-        // I have added sleeping here
-        // will be removed and is here only to observe factory working
-        try {
-            Thread.sleep(tactLengthMilliseconds);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+    /**
+     * Simulate number of iterations
+     *
+     * @param ticks Number of iterations
+     */
+    public synchronized void simulate(int ticks) {
+        for (int i = 0; i < ticks; i++) {
+            System.out.println("tact: " + i);
+            simulate();
         }
     }
 
-    public void simulate(int ticks) {
+    /**
+     * Realtime simulation
+     *
+     * @param ticks number of simulations
+     */
+    public void simulateRealtime(int ticks) throws InterruptedException {
         for (int i = 0; i < ticks; i++) {
             simulate();
+            Thread.sleep(tactLengthMilliseconds);
         }
+    }
+
+    /**
+     * Get factory builder
+     *
+     * @return Factory builder
+     */
+    public static FactoryBuilder builder() {
+        return new FactoryBuilder();
     }
 
     /**
@@ -102,7 +179,6 @@ public class Factory {
     public String toString() {
         return this.getClass().getSimpleName() + "{"
                 + "name=" + name
-                + ", isRunning=" + isRunning
                 + ", tactLengthMilliseconds=" + tactLengthMilliseconds
                 + ", currentTact=" + currentTact + "}";
     }

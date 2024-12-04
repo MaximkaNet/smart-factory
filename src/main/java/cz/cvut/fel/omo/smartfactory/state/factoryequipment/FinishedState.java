@@ -9,8 +9,7 @@ public class FinishedState extends FactoryEquipmentState {
         super(context);
     }
 
-    @Override
-    public void process() {
+    public void process(long dt) {
 
     }
 

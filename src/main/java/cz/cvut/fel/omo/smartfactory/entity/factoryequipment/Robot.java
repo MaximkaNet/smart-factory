@@ -1,7 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.entity.factoryequipment;
 
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
-import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventType;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +13,7 @@ public final class Robot extends AbstractFactoryEquipment {
     }
 
     @Override
-    public void process() {
+    public void process(long dt) {
         // process consumption
         // process healthy
         // If repair necessary generate alert event
