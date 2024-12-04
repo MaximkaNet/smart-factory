@@ -1,28 +1,25 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
 import cz.cvut.fel.omo.smartfactory.builder.Builder;
-import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
-import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
-import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
+import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Robot;
+import cz.cvut.fel.omo.smartfactory.entity.person.Director;
+import cz.cvut.fel.omo.smartfactory.entity.person.Inspector;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
+import cz.cvut.fel.omo.smartfactory.entity.person.Worker;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class FactoryBuilder implements Builder<Factory> {
-    private String name;
-    private Integer tickLength;
+    private String name = "Default Factory";
+    private Integer tickLength = 500;
     private RepairmanPool repairmanPool;
     private List<Person> people = new ArrayList<>();
-    private List<Machine> machines;
-    private List<Robot> robots;
-    private List<ProductionLine> productionLines = new ArrayList<>();
-    private List<Behavioral> tactSubscribers = new ArrayList<>();
-    private HashMap<Class<? extends FactoryEvent>, List<FactoryEventListener>> eventables = new HashMap<>();
+    private List<Machine> machines = new ArrayList<>();
+    private List<Robot> robots = new ArrayList<>();
 
     public FactoryBuilder() {
     }
@@ -43,62 +40,29 @@ public class FactoryBuilder implements Builder<Factory> {
     }
 
     public FactoryBuilder addWorker(String id, String firstName, String lastName, float cost) {
-        // create worker ...
+        people.add(new Worker(id, firstName, lastName, cost));
+        return this;
+    }
+
+    public FactoryBuilder addDirector(String id, String firstName, String lastName) {
+        people.add(new Director(id, firstName, lastName));
+        return this;
+    }
+
+    public FactoryBuilder addInspector(String id, String firstName, String lastName) {
+        people.add(new Inspector(id, firstName, lastName));
         return this;
     }
 
     public FactoryBuilder addRobot(String id, String name, float cost, float health) {
-        // create robot ...
+        robots.add(new Robot(id, name, cost, health));
         return this;
     }
 
     public FactoryBuilder addMachine(String id, String name, float cost, float health) {
-        // Create machine ...
+        machines.add(new Machine(id, name, cost, health));
         return this;
     }
-
-//    public FactoryBuilder setPeople(List<Person> people) {
-//        // setting people list
-//        this.people = people;
-//        // setting tact subscribers
-//        this.tactSubscribers.addAll(people);
-//        // pooling repairmen into repairmen pool
-//        this.repairmanPool = new RepairmanPool(
-//                people.stream()
-//                        .filter(person -> person instanceof Repairman)
-//                        .map(person -> (Repairman) person)
-//                        .collect(Collectors.toList())
-//        );
-//        return this;
-//    }
-//
-//    public FactoryBuilder setProductionLines(List<ProductionLine> productionLines) {
-//        this.productionLines = productionLines;
-//        return this;
-//    }
-//
-//    public FactoryBuilder setMachines(List<Machine> machines) {
-//        this.machines = machines;
-//        return this;
-//    }
-//
-//    public FactoryBuilder setRobots(List<Robot> robots) {
-//        this.robots = robots;
-//        return this;
-//    }
-//
-//    public FactoryBuilder addEventableForEvent(Class<? extends FactoryEvent> eventClass, FactoryEventListener eventable) {
-//        eventables.computeIfAbsent(eventClass, k -> new ArrayList<>()).add(eventable);
-//        return this;
-//    }
-//
-//    public FactoryBuilder addEventablesForEvent(Map<Class<? extends FactoryEvent>, List<FactoryEventListener>> eventablesMap) {
-//        if (eventables == null) {
-//            return this;
-//        }
-//        eventables.putAll(eventablesMap);
-//        return this;
-//    }
 
     @Override
     public Factory build() {
@@ -106,24 +70,26 @@ public class FactoryBuilder implements Builder<Factory> {
         Factory factory = new Factory(this.name, this.tickLength);
 
         // link people
+        people.forEach(person -> person.setFactory(factory));
+        factory.setRepairmanPool(repairmanPool);
+        factory.setPeople(people);
+        repairmanPool.getRepairmenList().forEach(repairman -> repairman.setFactory(factory));
+
         // link robots
+        factory.setRobots(robots);
+
         // link machines
+        factory.setMachines(machines);
 
         // Link behavioral
+        people.forEach(person -> factory.getBehavioralsList().add(person));
+        robots.forEach(robot -> factory.getBehavioralsList().add(robot));
+        machines.forEach(machine -> factory.getBehavioralsList().add(machine));
+        factory.getBehavioralsList().add(repairmanPool);
+        repairmanPool.getRepairmenList().forEach(repairman -> factory.getBehavioralsList().add(repairman));
 
         // Register event listeners
-
-//        Factory factory = new Factory(name, tickLength, people, machines, robots, productionLines);
-//        // set factory attribute on person class
-//        people.forEach(person -> person.setFactory(factory));
-//        factory.setBehavioralsList(tactSubscribers);
-//        factory.setRepairmanPool(repairmanPool);
-//        // set eventables in factory facade
-//        factory.getEventManager().registerListenersMap(eventables);
-//        factory.getEventManager().registerListener(OutageEvent.class, repairmanPool);
-//        factory.getBehavioralsList().add(repairmanPool);
-//        factory.setEventFacade(new EventFacade(factory.getEventManager()));
-//        return factory;
+        factory.getEventManager().registerListener(OutageEvent.class, repairmanPool);
 
         return factory;
     }
