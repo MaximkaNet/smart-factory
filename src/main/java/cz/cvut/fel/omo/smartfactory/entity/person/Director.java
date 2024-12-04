@@ -32,6 +32,9 @@ public class Director extends Person implements FactoryVisitor {
 
         if (iterator.hasNext()) {
             iterator.next();
+        } else {
+            System.out.println(this + " changed state to ready as the iteration is complete");
+            state.ready();
         }
     }
 
