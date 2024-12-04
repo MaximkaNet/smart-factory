@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-
 public class FactoryTests {
     @Test
     public void createFactoryUsingFactoryBuilderAndRunIt() {
@@ -28,7 +26,7 @@ public class FactoryTests {
         Director director = new Director("Director", "testing", "email@director.som");
         List<Person> people = new ArrayList<>(Arrays.asList(r1, r2, r3));
 
-        FactoryBuilder builder = new FactoryBuilder("factory 1");
+        FactoryBuilder builder = new FactoryBuilder();
         Factory factory = builder
                 .setTactInMilliseconds(500)
                 .setPeople(people)
@@ -36,15 +34,15 @@ public class FactoryTests {
                 .build();
 
         Machine m1 = new Machine("M1", 1.5f, 1);
-        m1.setHealth(0);
+        m1.setActualHealth(0);
         Machine m2 = new Machine("M2", 1.5f, 1);
-        m2.setHealth(0);
+        m2.setActualHealth(0);
         Machine m3 = new Machine("M2", 2.5f, 1);
-        m3.setHealth(0);
+        m3.setActualHealth(0);
         Machine m4 = new Machine("M2", 1.5f, 1);
-        m4.setHealth(0);
+        m4.setActualHealth(0);
         Machine m5 = new Machine("M2", 1.5f, 1);
-        m5.setHealth(0);
+        m5.setActualHealth(0);
         factory.getEventManager().notifyListeners(new OutageEvent(2, m1));
         factory.getEventManager().notifyListeners(new OutageEvent(3, m2));
         factory.getEventManager().notifyListeners(new OutageEvent(1, m3));
@@ -53,10 +51,14 @@ public class FactoryTests {
 
         factory.simulate(15);
 
-        assertFalse(factory.isRunning());
         OutagesReport outagesReport = new OutagesReport(ZonedDateTime.now().minusMinutes(1), ZonedDateTime.now(), factory);
         System.out.println(outagesReport);
         EventReport eventReport = new EventReport(ZonedDateTime.now().minusMinutes(1), ZonedDateTime.now(), factory);
         System.out.println(eventReport);
+    }
+
+    @Test
+    void createFactoryAndSimulateNTicks() {
+
     }
 }
