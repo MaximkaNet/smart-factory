@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Queue;
 
 @Getter
@@ -90,9 +91,9 @@ public class SeriesManager implements Behavioral {
             stat.put(ch, ++count);
         }
 
-        int countRobots = factory.getRobots().size();
-        int countMachines = factory.getMachines().size();
-        int countWorkers = factory.getPeople().stream().filter(person -> person.getDescriminator() == "W").count();
+        long countRobots = factory.getRobots().size();
+        long countMachines = factory.getMachines().size();
+        long countWorkers = factory.getPeople().stream().filter(person -> Objects.equals(person.getDiscriminator(), "W")).count();
 
         // Check number of production units one by group (robot, machine, worker)
 
