@@ -9,11 +9,19 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Repairman extends Person {
-    private final Float repairPerTick = 0.5f;
+    /**
+     * Repair power
+     */
+    private final float power;
+
+    /**
+     * Event is being processed now
+     */
     private OutageEvent outageEvent;
 
-    public Repairman(String firstName, String lastName, String email) {
-        super(firstName, lastName, email);
+    public Repairman(String firstName, String lastName, float power) {
+        super(firstName, lastName, "");
+        this.power = power;
     }
 
     public synchronized void startRepair(OutageEvent outageEvent) {
@@ -35,7 +43,7 @@ public class Repairman extends Person {
             return;
         }
 
-        float newHealth = outageEvent.getAbstractManufacturingEntity().getActualHealth() + repairPerTick;
+        float newHealth = outageEvent.getAbstractManufacturingEntity().getActualHealth() + power;
         float cappedHealth = Math.min(newHealth, outageEvent.getAbstractManufacturingEntity().getMaximumHealth());
         outageEvent.getAbstractManufacturingEntity().setActualHealth(cappedHealth);
 

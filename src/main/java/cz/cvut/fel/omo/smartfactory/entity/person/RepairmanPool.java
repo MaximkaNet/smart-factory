@@ -1,5 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.entity.person;
 
+import cz.cvut.fel.omo.smartfactory.builder.RepairmanPoolBuilder;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
@@ -32,6 +33,15 @@ public class RepairmanPool implements FactoryEventListener, Behavioral {
             return Optional.empty();
         }
         return Optional.ofNullable(outageEventsQueue.poll());
+    }
+
+    /**
+     * Get repairman pool builder
+     *
+     * @return RepairmanPoolBuilder
+     */
+    public static RepairmanPoolBuilder builder() {
+        return new RepairmanPoolBuilder();
     }
 
     @Override
