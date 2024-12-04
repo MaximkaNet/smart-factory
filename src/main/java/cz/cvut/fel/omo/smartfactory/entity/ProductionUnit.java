@@ -10,7 +10,7 @@ public interface ProductionUnit {
     /**
      * Get id
      */
-    String getId();
+    String getDiscriminator();
 
     /**
      * Process product production
