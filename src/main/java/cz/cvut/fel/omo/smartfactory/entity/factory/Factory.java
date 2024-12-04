@@ -5,6 +5,8 @@ import cz.cvut.fel.omo.smartfactory.entity.Product;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.event.EventFacade;
 import cz.cvut.fel.omo.smartfactory.entity.event.EventManager;
+import cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator.FactoryTreeIterator;
+import cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator.FactoryUsageIterator;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Robot;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
@@ -155,6 +157,14 @@ public class Factory {
      */
     public OutagesReport createOutageReport(ZonedDateTime from, ZonedDateTime to) {
         return new OutagesReport(from, to, this);
+    }
+
+    public FactoryTreeIterator getFactoryTreeIterator() {
+        return new FactoryTreeIterator(this);
+    }
+
+    public FactoryUsageIterator getFactoryUsageIterator() {
+        return new FactoryUsageIterator(this);
     }
 
     /**
