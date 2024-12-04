@@ -35,9 +35,9 @@ public class Repairman extends Person {
             return;
         }
 
-        float newHealth = outageEvent.getAbstractManufacturingEntity().getHealth() + repairPerTick;
-        float cappedHealth = Math.min(newHealth, outageEvent.getAbstractManufacturingEntity().getHealthy());
-        outageEvent.getAbstractManufacturingEntity().setHealth(cappedHealth);
+        float newHealth = outageEvent.getAbstractManufacturingEntity().getActualHealth() + repairPerTick;
+        float cappedHealth = Math.min(newHealth, outageEvent.getAbstractManufacturingEntity().getMaximumHealth());
+        outageEvent.getAbstractManufacturingEntity().setActualHealth(cappedHealth);
 
         if (isRepairCompleted()) {
             finishRepair();
@@ -48,6 +48,6 @@ public class Repairman extends Person {
      * Returns true if target recovered
      */
     public boolean isRepairCompleted() {
-        return outageEvent.getAbstractManufacturingEntity().getHealth() >= outageEvent.getAbstractManufacturingEntity().getHealthy();
+        return outageEvent.getAbstractManufacturingEntity().getActualHealth() >= outageEvent.getAbstractManufacturingEntity().getMaximumHealth();
     }
 }

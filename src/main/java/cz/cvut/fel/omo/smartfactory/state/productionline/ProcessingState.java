@@ -16,8 +16,8 @@ public final class ProcessingState extends ProductionLineState {
     }
 
     @Override
-    public void update() {
-        context.update();
+    public void update(long dt) {
+        context.update(dt);
         if (context.getCurrentSeries().isDone()) {
             context.setProducing(false);
             context.setState(new ReadyState(context));

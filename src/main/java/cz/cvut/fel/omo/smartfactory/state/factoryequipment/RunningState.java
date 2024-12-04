@@ -10,8 +10,8 @@ public class RunningState extends FactoryEquipmentState {
     }
 
     @Override
-    public void process() {
-        context.process();
+    public void process(long dt) {
+        context.process(dt);
         if (context.isFinished()) {
             context.setState(new FinishedState(context));
         }

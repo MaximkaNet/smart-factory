@@ -6,9 +6,9 @@ import cz.cvut.fel.omo.smartfactory.entity.event.EventFacade;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
-import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Robot;
+import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.Repairman;
 import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
 
@@ -29,7 +29,10 @@ public class FactoryBuilder implements Builder<Factory> {
     private List<Behavioral> tactSubscribers = new ArrayList<>();
     private HashMap<Class<? extends FactoryEvent>, List<FactoryEventListener>> eventables = new HashMap<>();
 
-    public FactoryBuilder(String name) {
+    public FactoryBuilder() {
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -68,7 +71,7 @@ public class FactoryBuilder implements Builder<Factory> {
         return this;
     }
 
-    public FactoryBuilder addEventableForEvent(Class<? extends FactoryEvent> eventClass, FactoryEventListener eventable){
+    public FactoryBuilder addEventableForEvent(Class<? extends FactoryEvent> eventClass, FactoryEventListener eventable) {
         eventables.computeIfAbsent(eventClass, k -> new ArrayList<>()).add(eventable);
         return this;
     }

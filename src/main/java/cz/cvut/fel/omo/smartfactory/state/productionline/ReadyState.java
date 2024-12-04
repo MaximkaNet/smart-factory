@@ -19,7 +19,7 @@ public final class ReadyState extends ProductionLineState {
     }
 
     @Override
-    public void update() {
-
+    public void update(long dt) {
+        // nothing ...
     }
 }

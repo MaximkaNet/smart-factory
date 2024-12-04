@@ -3,9 +3,6 @@ package cz.cvut.fel.omo.smartfactory.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Setter
 public class Product {
@@ -15,9 +12,11 @@ public class Product {
     private String name;
 
     /**
-     * The list of ProductionUnit ids
+     * The list of ProductionUnit's
+     * <p>
+     * For example: RMRMRRMMWRWRW where R any robot, M any machine, W any worker
      */
-    private List<String> sequence = new ArrayList<>();
+    private String sequence = "";
 
     public Product(String name) {
         this.name = name;
