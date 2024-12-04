@@ -3,6 +3,7 @@ package cz.cvut.fel.omo.smartfactory.entity.factoryequipment;
 import cz.cvut.fel.omo.smartfactory.entity.Product;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
+import cz.cvut.fel.omo.smartfactory.entity.factory.Behavioral;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.storage.consumer.ElectricityConsumer;
 import cz.cvut.fel.omo.smartfactory.entity.storage.consumer.MaterialConsumer;
@@ -12,56 +13,83 @@ import cz.cvut.fel.omo.smartfactory.state.factoryequipment.ReadyState;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Objects;
-
+/**
+ * Abstract factory equipment
+ */
 @Getter
 @Setter
-public abstract class AbstractFactoryEquipment implements ProductionUnit {
+public abstract class AbstractFactoryEquipment implements ProductionUnit, Behavioral {
     /**
      * The entity id
      */
-    private final String id;
+    protected final String id;
 
-    private Product subject = null;
+    /**
+     * Price per usage
+     */
+    protected final float pricePerUsage;
 
+    /**
+     * Maximum health
+     */
+    protected final float maximumHealth;
+
+    /**
+     * Current product
+     */
+    protected Product subject = null;
+
+    /**
+     * Product state
+     */
     protected boolean finished = false;
 
-    private ElectricityConsumer electricityConsumer;
-    private OilConsumer oilConsumer;
-    private MaterialConsumer materialConsumer;
+    /**
+     * Electricity consumer
+     */
+    protected ElectricityConsumer electricityConsumer;
 
-    private final float pricePerUsage;
+    /**
+     * Oil consumer
+     */
+    protected OilConsumer oilConsumer;
+
+    /**
+     * Material consumer
+     */
+    protected MaterialConsumer materialConsumer;
 
     /**
      * Number of usage (or just processed products)
      */
-    private int numberOfUsage = 0;
+    protected float usageTime = 0.0f;
 
     /**
      * Next production unit on the line
      */
-    private ProductionUnit next = null;
+    protected ProductionUnit next = null;
 
-    private final float healthy;
-    private float health;
+    /**
+     * Actual health
+     */
+    protected float actualHealth;
 
+    /**
+     * Factory reference
+     */
     protected Factory factory;
     protected ProductionLine productionLine;
 
     /**
      * Manufacturing entity state
      */
-    private FactoryEquipmentState state = new ReadyState(this);
+    protected FactoryEquipmentState state = new ReadyState(this);
 
-    protected AbstractFactoryEquipment(String id, float pricePerUsage, float healthy) {
+    protected AbstractFactoryEquipment(String id, float pricePerUsage, float maximumHealth) {
         this.id = id;
         this.pricePerUsage = pricePerUsage;
-        this.health = healthy;
-        this.healthy = healthy;
-    }
-
-    public void setNext(ProductionUnit unit) {
-        next = Objects.requireNonNull(unit);
+        this.actualHealth = maximumHealth;
+        this.maximumHealth = maximumHealth;
     }
 
     public boolean accept(Product product) {
@@ -72,7 +100,11 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit {
         return true;
     }
 
-    public abstract void process();
+    public abstract void process(long deltaTime);
+
+    public void update(long deltaTime) {
+        state.process(deltaTime);
+    }
 
     public Product pop() {
         Product product = subject;
@@ -85,7 +117,6 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit {
             return product;
         }
         state.accept(product);
-        state.process();
         return processNext(state.pop());
     }
 }

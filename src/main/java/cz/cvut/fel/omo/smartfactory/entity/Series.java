@@ -51,6 +51,9 @@ public class Series {
      * Get product template
      */
     public Product getTemplate() {
+        if (!hasTemplates()) {
+            return null;
+        }
         inProgress++;
         return product.createTemplate();
     }

@@ -6,7 +6,7 @@ public interface ProductionUnitState {
     /**
      * Process product production
      */
-    void process();
+    void process(long dt);
 
     /**
      * Accept product for processing
