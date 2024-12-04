@@ -12,5 +12,5 @@ public abstract class ProductionLineState {
 
     public abstract boolean applySeries(Series series);
 
-    public abstract void update();
+    public abstract void update(long dt);
 }

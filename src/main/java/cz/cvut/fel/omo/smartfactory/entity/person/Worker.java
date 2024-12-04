@@ -4,6 +4,9 @@ import cz.cvut.fel.omo.smartfactory.entity.Product;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 
 public class Worker extends Person implements ProductionUnit {
+
+    private ProductionUnit next;
+
     public Worker(String firstName, String lastName, String email) {
         super(firstName, lastName, email);
     }
@@ -14,7 +17,7 @@ public class Worker extends Person implements ProductionUnit {
     }
 
     @Override
-    public void process() {
+    public void process(long dt) {
 
     }
 
@@ -30,7 +33,12 @@ public class Worker extends Person implements ProductionUnit {
 
     @Override
     public void setNext(ProductionUnit unit) {
+        this.next = unit;
+    }
 
+    @Override
+    public ProductionUnit getNext() {
+        return next;
     }
 
     @Override

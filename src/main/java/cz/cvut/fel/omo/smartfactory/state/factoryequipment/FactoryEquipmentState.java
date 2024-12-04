@@ -11,7 +11,7 @@ public abstract class FactoryEquipmentState implements ProductionUnitState {
         this.context = context;
     }
 
-    public abstract void process();
+    public abstract void process(long deltaTime);
 
     public abstract boolean accept(Product product);
 
