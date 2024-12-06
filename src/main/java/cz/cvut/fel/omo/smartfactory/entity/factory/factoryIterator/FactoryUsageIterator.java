@@ -33,11 +33,16 @@ public class FactoryUsageIterator implements Iterator<AbstractFactoryEquipment> 
                 .sorted(Comparator.comparingDouble((AbstractFactoryEquipment unit) -> unit.getMaximumHealth() - unit.getActualHealth()).reversed())
                 .collect(Collectors.toList());
 
-        this.current = allProductionUnits.get(0);
+        if (!allProductionUnits.isEmpty()) {
+            this.current = allProductionUnits.get(0);
+        }
     }
 
     @Override
     public boolean hasNext() {
+        if (current == null) {
+            return false;
+        }
         return allProductionUnits.indexOf(current) < allProductionUnits.size() - 1;
     }
 
