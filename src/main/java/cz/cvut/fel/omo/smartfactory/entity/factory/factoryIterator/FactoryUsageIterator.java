@@ -1,47 +1,52 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator;
 
-import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
+import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.AbstractFactoryEquipment;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
-public class FactoryUsageIterator implements Iterator<ProductionUnit> {
-    private Factory factory;
-    private ProductionLine productionLine;
+public class FactoryUsageIterator implements Iterator<AbstractFactoryEquipment> {
+    private List<AbstractFactoryEquipment> allProductionUnits;
     @Getter
-    private ProductionUnit current;
+    private AbstractFactoryEquipment current;
 
     public FactoryUsageIterator(Factory factory) {
-        this.factory = factory;
-        this.productionLine = factory.getProductionLines().get(0);
-        this.current = productionLine.getProductionUnitChain();
+        allProductionUnits = factory.getProductionLines().stream()
+                .flatMap(line -> {
+                    List<ProductionUnit> productionUnitList = new ArrayList<>();
+                    ProductionUnit chainStart = line.getProductionUnitChain();
+                    while (chainStart != null) {
+                        productionUnitList.add(chainStart);
+                        chainStart = chainStart.getNext();
+                    }
+                    return productionUnitList.stream();
+                })
+                .filter(productionUnit -> productionUnit instanceof AbstractFactoryEquipment)
+                .map(productionUnit -> (AbstractFactoryEquipment) productionUnit)
+                .sorted(Comparator.comparingDouble((AbstractFactoryEquipment unit) -> unit.getMaximumHealth() - unit.getActualHealth()).reversed())
+                .collect(Collectors.toList());
+
+        this.current = allProductionUnits.get(0);
     }
 
-    // TODO: hasNext and next has to be update to iterate based on priority
     @Override
     public boolean hasNext() {
-        if (current.getNext() != null) {
-            return true;
-        }
-        int nextProductionUnitIndex = factory.getProductionLines().indexOf(productionLine) + 1;
-        return nextProductionUnitIndex < factory.getProductionLines().size();
+        return allProductionUnits.indexOf(current) < allProductionUnits.size() - 1;
     }
 
     @Override
-    public ProductionUnit next() {
-        if (current.getNext() != null) {
-            current = current.getNext();
-            return current;
+    public AbstractFactoryEquipment next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException("Calling has next on last element");
         }
-        int nextProductionUnitIndex = factory.getProductionLines().indexOf(productionLine) + 1;
-        if (nextProductionUnitIndex >= factory.getProductionLines().size()) {
-            throw new NoSuchElementException("Iterator cannot move to next because is at end");
-        }
-        this.productionLine = factory.getProductionLines().get(nextProductionUnitIndex);
-        current = productionLine.getProductionUnitChain();
+        current = allProductionUnits.get(allProductionUnits.indexOf(current) + 1);
         return current;
     }
 }
