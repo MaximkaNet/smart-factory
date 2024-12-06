@@ -16,12 +16,21 @@ public class FactoryTreeIterator implements Iterator<ProductionUnit> {
 
     public FactoryTreeIterator(Factory factory) {
         this.factory = factory;
+        if (factory.getProductionLines() == null) {
+            return;
+        }
+        if (factory.getProductionLines().isEmpty()) {
+            return;
+        }
         this.productionLine = factory.getProductionLines().get(0);
         this.current = productionLine.getProductionUnitChain();
     }
 
     @Override
     public boolean hasNext() {
+        if (current == null) {
+            return false;
+        }
         if (current.getNext() != null) {
             return true;
         }
@@ -31,6 +40,9 @@ public class FactoryTreeIterator implements Iterator<ProductionUnit> {
 
     @Override
     public ProductionUnit next() {
+        if (current == null) {
+            throw new NoSuchElementException("The current is not set, iterator cannot iterate");
+        }
         if (current.getNext() != null) {
             current = current.getNext();
             return current;
@@ -44,9 +56,3 @@ public class FactoryTreeIterator implements Iterator<ProductionUnit> {
         return current;
     }
 }
-
-// ----------------------------- NOTES -----------------------------
-// stromové hierarchie entit:
-//                           továrna
-//                                  ->* linka
-//                                           -> *(stroj|robot|člověk nebo výrobek)
