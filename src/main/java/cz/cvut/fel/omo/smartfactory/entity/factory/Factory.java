@@ -1,6 +1,5 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
-import cz.cvut.fel.omo.smartfactory.entity.Product;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.SeriesManager;
 import cz.cvut.fel.omo.smartfactory.entity.event.EventFacade;
@@ -115,16 +114,6 @@ public class Factory {
      */
     public Instant now() {
         return foundationDate.plusMillis(currentTick * tickLengthMillis);
-    }
-
-    /**
-     * Add series of product
-     *
-     * @param product Product for producing
-     * @param count   count of products
-     */
-    public void addSeries(Product product, int count) {
-
     }
 
     /**

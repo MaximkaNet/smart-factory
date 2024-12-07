@@ -3,6 +3,8 @@ package cz.cvut.fel.omo.smartfactory.entity.factoryequipment;
 import cz.cvut.fel.omo.smartfactory.entity.Product;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
+import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
+import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Behavioral;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.storage.consumer.ElectricityConsumer;
@@ -13,12 +15,17 @@ import cz.cvut.fel.omo.smartfactory.state.factoryequipment.ReadyState;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.logging.Logger;
+
 /**
  * Abstract factory equipment
  */
 @Getter
 @Setter
 public abstract class AbstractFactoryEquipment implements ProductionUnit, Behavioral {
+
+    protected final Logger logger = Logger.getLogger("Factory equipment");
+
     /**
      * The entity id
      */
@@ -124,5 +131,10 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit, Behavi
         }
         state.accept(product);
         return processNext(state.pop());
+    }
+
+    public void generateOutageEvent() {
+        FactoryEvent event = new OutageEvent(123, this, factory.now());
+        factory.getEventManager().notifyListeners(event);
     }
 }
