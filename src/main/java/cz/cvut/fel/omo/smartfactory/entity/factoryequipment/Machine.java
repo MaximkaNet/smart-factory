@@ -14,21 +14,17 @@ public final class Machine extends AbstractFactoryEquipment {
 
     @Override
     public void process(long dt) {
+        if (subject == null) {
+            logger.warning(name + " has no subject");
+            return;
+        }
+
+        actualHealth = -0.5f * usageTime + maximumHealth;
         usageTime += dt;
 
-        final float b = 1.009f;
-        final float bendCoefficient = 0.9f;
-        float a = 0;
-        float c = 0;
-        float q = 0;
-
-        // f(x) = -b^(x/k + a) + cx + q
-        actualHealth = (float) (Math.pow(-b, (usageTime / bendCoefficient + a)) + c * usageTime + maximumHealth);
-        if (actualHealth < 0) {
-            actualHealth = 0.0f;
-
-            // Send event
-        }
+        materialConsumer.accept(5);
+        oilConsumer.accept(12.3f);
+        electricityConsumer.accept(100.5f);
     }
 
     @Override

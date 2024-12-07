@@ -12,7 +12,10 @@ public class RunningState extends FactoryEquipmentState {
     @Override
     public void process(long dt) {
         context.process(dt);
-        if (context.isFinished()) {
+        if (context.getActualHealth() <= 0) {
+            context.setState(new BrokenState(context));
+            context.generateOutageEvent();
+        } else if (context.isFinished()) {
             context.setState(new FinishedState(context));
         }
     }

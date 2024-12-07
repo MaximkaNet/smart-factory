@@ -1,7 +1,5 @@
 package cz.cvut.fel.omo.smartfactory.entity.factoryequipment;
 
-import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
-import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.entity.person.FactoryVisitor;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,18 +13,17 @@ public final class Robot extends AbstractFactoryEquipment {
 
     @Override
     public void process(long dt) {
-        // process consumption
-        // process healthy
-        // If repair necessary generate alert event
-
-        FactoryEvent event = new OutageEvent(123, this, factory.now());
-//        event.setTargetId(this.getId());
-
-        if (factory == null) {
-            throw new RuntimeException("Robot " + this.getDiscriminator() + " is not connect to factory");
+        if (subject == null) {
+            logger.warning(name + " has no subject");
+            return;
         }
-//        factory.generateEvent(event);
-        factory.getEventManager().notifyListeners(event);
+
+        actualHealth = -1 * usageTime + maximumHealth;
+        usageTime += dt;
+
+        materialConsumer.accept(1);
+        oilConsumer.accept(2.3f);
+        electricityConsumer.accept(10.5f);
     }
 
     @Override

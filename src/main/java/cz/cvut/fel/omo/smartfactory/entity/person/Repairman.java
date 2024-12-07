@@ -3,6 +3,8 @@ package cz.cvut.fel.omo.smartfactory.entity.person;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.RepairFinishedEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.RepairStartedEvent;
+import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.AbstractFactoryEquipment;
+import cz.cvut.fel.omo.smartfactory.state.factoryequipment.RunningState;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,6 +44,10 @@ public class Repairman extends Person {
                 factory.now()
         ));
         state.ready();
+
+        AbstractFactoryEquipment factoryEquipment = outageEvent.getAbstractManufacturingEntity();
+
+        factoryEquipment.setState(new RunningState(factoryEquipment));
         System.out.println("Repairman finished");
     }
 
