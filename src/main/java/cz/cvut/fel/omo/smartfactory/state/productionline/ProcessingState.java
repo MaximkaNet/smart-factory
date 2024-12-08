@@ -10,17 +10,22 @@ public final class ProcessingState extends ProductionLineState {
     }
 
     @Override
-    public boolean applySeries(Series series) {
+    public boolean apply(Series series) {
         // TODO Throw exception ?
         return false;
     }
 
     @Override
-    public void update(long dt) {
+    public void process(long dt) {
         context.update(dt);
         if (context.getCurrentSeries().isDone()) {
             context.setProducing(false);
             context.setState(new ReadyState(context));
         }
+    }
+
+    @Override
+    public Series pop() {
+        return null;
     }
 }

@@ -10,7 +10,9 @@ public abstract class ProductionLineState {
         this.context = context;
     }
 
-    public abstract boolean applySeries(Series series);
+    public abstract boolean apply(Series series);
 
-    public abstract void update(long dt);
+    public abstract void process(long dt);
+
+    public abstract Series pop();
 }
