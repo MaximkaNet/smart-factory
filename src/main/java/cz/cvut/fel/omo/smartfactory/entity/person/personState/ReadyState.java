@@ -2,7 +2,7 @@ package cz.cvut.fel.omo.smartfactory.entity.person.personState;
 
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 
-public class ReadyState extends PersonState {
+public final class ReadyState extends PersonState {
     public ReadyState(Person person) {
         this.person = person;
     }
