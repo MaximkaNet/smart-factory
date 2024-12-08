@@ -153,5 +153,6 @@ public class FactoryTests {
 
     @Test
     void simulateFactoryWithOutageEvents() {
+
     }
 }
