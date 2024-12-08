@@ -2,15 +2,43 @@ package cz.cvut.fel.omo.smartfactory.entity.person;
 
 import cz.cvut.fel.omo.smartfactory.entity.Product;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
+import cz.cvut.fel.omo.smartfactory.entity.person.workerState.ReadyState;
+import cz.cvut.fel.omo.smartfactory.entity.person.workerState.WorkerState;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class Worker extends Person implements ProductionUnit {
 
     private ProductionUnit next;
-    private float cost;
+
+    /**
+     * Cost per tick
+     */
+    private final float cost;
+    
+    private float owingToWorker = 0.0f;
+
+    /**
+     * Worker state
+     */
+    private WorkerState workerState;
+
+    /**
+     * Was work finished ?
+     */
+    private boolean isFinished = false;
+
+    /**
+     * The worker subject
+     */
+    private Product subject = null;
 
     public Worker(String discriminator, String firstName, String lastName, float cost) {
         super(discriminator, firstName, lastName);
         this.cost = cost;
+        this.workerState = new ReadyState(this);
     }
 
     @Override
@@ -20,17 +48,22 @@ public class Worker extends Person implements ProductionUnit {
 
     @Override
     public void process(long dt) {
-
+        // Do stuff ...
+        owingToWorker += cost;
+        isFinished = true;
     }
 
     @Override
     public boolean accept(Product product) {
-        return false;
+        subject = product;
+        return true;
     }
 
     @Override
     public Product pop() {
-        return null;
+        Product product = subject;
+        subject = null;
+        return product;
     }
 
     @Override
@@ -44,13 +77,18 @@ public class Worker extends Person implements ProductionUnit {
     }
 
     @Override
-    public Product processNext(Product product) {
-        return null;
+    public Product processNext(Product product, long dt) {
+        if (next == null) {
+            return product;
+        }
+        workerState.accept(product);
+        workerState.process(dt);
+        return processNext(workerState.pop(), dt);
     }
 
     @Override
     public void update(long deltaTime) {
-
+        // Nothing ...
     }
 
     @Override
