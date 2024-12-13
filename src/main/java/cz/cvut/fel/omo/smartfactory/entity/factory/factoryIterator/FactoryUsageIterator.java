@@ -18,6 +18,7 @@ public class FactoryUsageIterator implements Iterator<AbstractFactoryEquipment> 
     private AbstractFactoryEquipment current;
 
     public FactoryUsageIterator(Factory factory) {
+        // TODO: use percents
         allProductionUnits = factory.getProductionLines().stream()
                 .flatMap(line -> {
                     List<ProductionUnit> productionUnitList = new ArrayList<>();
