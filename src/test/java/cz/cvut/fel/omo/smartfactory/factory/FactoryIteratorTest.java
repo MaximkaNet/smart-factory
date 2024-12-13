@@ -49,7 +49,7 @@ public class FactoryIteratorTest {
                 .addInspector("I", "Inspektor", "Prvy")
                 .addMachine("M", "Machine 1000", 30, 10)
                 .addMachine("M", "Machine 2000", 25, 10)
-                .addMachine("M", "Machine 3000", 15, 10)
+                .addMachine("M", "Machine 3000", 15, 5)
                 .build();
 
         List<Worker> workers = factory.getPeople().stream()
@@ -60,15 +60,19 @@ public class FactoryIteratorTest {
 
         director = factory.getFirstAvailableDirector();
         inspector = factory.getFirstAvailableInspector();
+
         worker1 = workers.get(0);
         worker2 = workers.get(1);
         worker3 = workers.get(2);
+
         machine1 = machines.get(0);
-        machine1.setActualHealth(3);
+        machine1.setActualHealth(3); // 70% usage: 7hp usage
+
         machine2 = machines.get(1);
-        machine2.setActualHealth(8);
+        machine2.setActualHealth(7); // 30% usage: 3hp usage
+
         machine3 = machines.get(2);
-        machine3.setActualHealth(5);
+        machine3.setActualHealth(3); // 40% usage: 2hp usage
 
         ProductionLine productionLine = new ProductionLine("P1", 1);
         ProductionLine productionLine2 = new ProductionLine("P2", 2);
