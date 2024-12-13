@@ -60,7 +60,7 @@ public class FactoryBuilderTest {
                 .addMachine("M", "name", 10, 10)
                 .build();
 
-        // 5 * ProductionUnits + RepairmanPool
-        assertEquals(6, factory.getBehavioralsList().size());
+        // 3 ProductionUnits + RepairmanPool
+        assertEquals(4, factory.getBehavioralsList().size());
     }
 }
