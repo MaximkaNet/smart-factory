@@ -28,7 +28,7 @@ public class Inspector extends Person implements FactoryVisitor {
             return;
         }
 
-        iterator.getCurrent().accept(this);
+        iterator.getCurrent().acceptVisitor(this);
 
         if (iterator.hasNext()) {
             iterator.next();
