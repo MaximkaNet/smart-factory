@@ -92,8 +92,6 @@ public class FactoryBuilder implements Builder<Factory> {
 
         // Link behavioral
         people.forEach(person -> factory.getBehavioralsList().add(person));
-        robots.forEach(robot -> factory.getBehavioralsList().add(robot));
-        machines.forEach(machine -> factory.getBehavioralsList().add(machine));
         factory.getBehavioralsList().add(repairmanPool);
         repairmanPool.getRepairmenList().forEach(repairman -> factory.getBehavioralsList().add(repairman));
 

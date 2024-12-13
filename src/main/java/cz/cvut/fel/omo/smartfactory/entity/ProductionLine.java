@@ -42,15 +42,29 @@ public class ProductionLine implements Behavioral {
 
     private ProductionLineState state = new ReadyState(this);
 
+    /**
+     * Create production line
+     */
     public ProductionLine(String id, int priority) {
         this.id = id;
         this.priority = priority;
     }
 
     /**
+     * Process production
+     */
+    protected void process(long dt) {
+        if (productionUnitChain == null) {
+            return;
+        }
+        Product completedProduct = productionUnitChain.processNext(currentSeries.getProduct(), dt);
+        currentSeries.addCompletedProduct(completedProduct);
+    }
+
+    /**
      * Initialize series of products
      */
-    public boolean applySeries(Series series) {
+    public boolean apply(Series series) {
         // validate chain of production units
         if (isValidChain(series.getProduct().getSequence())) {
             currentSeries = series;
@@ -59,6 +73,15 @@ public class ProductionLine implements Behavioral {
         // Line reconfiguration:
         // send request to factory for reconfiguration
         return false;
+    }
+
+    /**
+     * Release a series of products from the assembly line
+     */
+    public Series pop() {
+        Series series = currentSeries;
+        currentSeries = null;
+        return series;
     }
 
     /**
@@ -87,10 +110,6 @@ public class ProductionLine implements Behavioral {
      * the robot or machine, which will be waiting for repair)
      */
     public void update(long dt) {
-        if (productionUnitChain == null) {
-            return;
-        }
-        Product completedProduct = productionUnitChain.processNext(currentSeries.getProduct());
-        currentSeries.addCompletedProduct(completedProduct);
+        state.process(dt);
     }
 }

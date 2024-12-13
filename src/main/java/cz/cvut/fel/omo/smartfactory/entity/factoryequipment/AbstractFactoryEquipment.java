@@ -5,7 +5,6 @@ import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
-import cz.cvut.fel.omo.smartfactory.entity.factory.Behavioral;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.storage.consumer.ElectricityConsumer;
 import cz.cvut.fel.omo.smartfactory.entity.storage.consumer.MaterialConsumer;
@@ -22,7 +21,7 @@ import java.util.logging.Logger;
  */
 @Getter
 @Setter
-public abstract class AbstractFactoryEquipment implements ProductionUnit, Behavioral {
+public abstract class AbstractFactoryEquipment implements ProductionUnit {
 
     protected final Logger logger = Logger.getLogger("Factory equipment");
 
@@ -115,22 +114,19 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit, Behavi
 
     public abstract void process(long deltaTime);
 
-    public void update(long deltaTime) {
-        state.process(deltaTime);
-    }
-
     public Product pop() {
         Product product = subject;
         subject = null;
         return product;
     }
 
-    public Product processNext(Product product) {
+    public Product processNext(Product product, long dt) {
         if (next == null) {
             return product;
         }
         state.accept(product);
-        return processNext(state.pop());
+        state.process(dt);
+        return processNext(state.pop(), dt);
     }
 
     public void generateOutageEvent() {

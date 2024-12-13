@@ -110,7 +110,8 @@ public class FactoryTests {
     void createFactoryAndSimulateNTicks() {
         Factory factory = Factory.builder()
                 .setName("Factory")
-                .setTickLength(200)
+                .setTickLength(1000 * 60 * 60)
+                .setFoundationDate(LocalDate.of(2000, 1, 1))
                 .setRepairmanPool(
                         RepairmanPool.builder()
                                 .addRepairman("Janko", "Mrkvicka", 5.5f)
@@ -130,10 +131,10 @@ public class FactoryTests {
 //
 //        factory.getOrderManager().addOrder("Car", product, 100);
 
-        factory.simulate(10);
+        factory.simulate(100);
 
         assertEquals("Factory", factory.getName());
-        assertEquals(200, factory.getTickLengthMillis());
+        assertEquals(1000 * 60 * 60, factory.getTickLengthMillis());
     }
 
     @Test
