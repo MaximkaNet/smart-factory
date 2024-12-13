@@ -72,9 +72,9 @@ public class SeriesManager implements Behavioral {
         // Get compatible production line
         ProductionLine line = null;
 
-        if (line != null) {
-            line.applySeries(series);
-        }
+//        if (line != null) {
+//            line.applySeries(series);
+//        }
     }
 
     /**

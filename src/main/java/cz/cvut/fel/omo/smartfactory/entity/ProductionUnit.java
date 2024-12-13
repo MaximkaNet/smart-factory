@@ -49,5 +49,5 @@ public interface ProductionUnit {
      * @param product Input product for processing
      * @return Processed product
      */
-    Product processNext(Product product);
+    Product processNext(Product product, long dt);
 }
