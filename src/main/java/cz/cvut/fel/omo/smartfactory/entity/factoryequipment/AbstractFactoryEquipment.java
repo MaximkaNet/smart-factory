@@ -1,7 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.entity.factoryequipment;
 
 import cz.cvut.fel.omo.smartfactory.entity.Product;
-import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
@@ -23,7 +22,7 @@ import java.util.logging.Logger;
 @Setter
 public abstract class AbstractFactoryEquipment implements ProductionUnit {
 
-    protected final Logger logger = Logger.getLogger("Factory equipment");
+    protected final Logger LOGGER = Logger.getLogger("Factory equipment");
 
     /**
      * The entity id
@@ -33,7 +32,7 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit {
     /**
      * string name
      */
-    String name;
+    protected final String name;
 
     /**
      * Price per usage
@@ -89,7 +88,6 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit {
      * Factory reference
      */
     protected Factory factory;
-    protected ProductionLine productionLine;
 
     /**
      * Manufacturing entity state
@@ -104,6 +102,7 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit {
         this.maximumHealth = maximumHealth;
     }
 
+    @Override
     public boolean accept(Product product) {
         if (product == null || subject != null) {
             return false;
@@ -112,14 +111,33 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit {
         return true;
     }
 
+    @Override
     public abstract void process(long deltaTime);
 
+    @Override
     public Product pop() {
         Product product = subject;
         subject = null;
         return product;
     }
 
+    @Override
+    public void reset() {
+        ProductionUnit next = this.next;
+        this.next = null;
+
+        // If chain has next reset it
+        if (next != null) {
+            next.reset();
+        }
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return next == null;
+    }
+
+    @Override
     public Product processNext(Product product, long dt) {
         if (next == null) {
             return product;
@@ -129,6 +147,9 @@ public abstract class AbstractFactoryEquipment implements ProductionUnit {
         return processNext(state.pop(), dt);
     }
 
+    /**
+     * Generate outage event using event manager from factory
+     */
     public void generateOutageEvent() {
         FactoryEvent event = new OutageEvent(123, this, factory.now());
         factory.getEventManager().notifyListeners(event);

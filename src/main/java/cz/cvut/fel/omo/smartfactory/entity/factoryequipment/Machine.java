@@ -15,7 +15,7 @@ public final class Machine extends AbstractFactoryEquipment {
     @Override
     public void process(long dt) {
         if (subject == null) {
-            logger.warning(name + " has no subject");
+            LOGGER.warning(name + " has no subject");
             return;
         }
 
@@ -28,7 +28,7 @@ public final class Machine extends AbstractFactoryEquipment {
     }
 
     @Override
-    public void accept(FactoryVisitor visitor) {
+    public void acceptVisitor(FactoryVisitor visitor) {
         visitor.visit(this);
     }
 }

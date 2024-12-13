@@ -1,11 +1,8 @@
 package cz.cvut.fel.omo.smartfactory;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
+import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
 
 public class Main {
 
@@ -13,8 +10,14 @@ public class Main {
         System.out.println("Hello world!");
 
         // Load factory configuration
-        Factory factory = buildFactory("factory_config.json");
-
+//        Factory factory = buildFactory("factory_config.json");
+        Factory factory = Factory.builder()
+                .setName("My factory")
+                .setTickLength(100)
+                .setRepairmanPool(
+                        RepairmanPool.builder().build()
+                )
+                .build();
         // Simulate 100 ticks
         factory.simulate(100);
 

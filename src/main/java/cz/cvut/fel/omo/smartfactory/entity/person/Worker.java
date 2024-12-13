@@ -17,7 +17,7 @@ public class Worker extends Person implements ProductionUnit {
      * Cost per tick
      */
     private final float cost;
-    
+
     private float owingToWorker = 0.0f;
 
     /**
@@ -87,12 +87,22 @@ public class Worker extends Person implements ProductionUnit {
     }
 
     @Override
+    public void reset() {
+        
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return false;
+    }
+
+    @Override
     public void update(long deltaTime) {
         // Nothing ...
     }
 
     @Override
-    public void accept(FactoryVisitor visitor) {
+    public void acceptVisitor(FactoryVisitor visitor) {
         visitor.visit(this);
     }
 }

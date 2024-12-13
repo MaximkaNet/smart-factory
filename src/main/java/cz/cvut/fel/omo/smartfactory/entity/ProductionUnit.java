@@ -8,7 +8,7 @@ import cz.cvut.fel.omo.smartfactory.entity.person.FactoryVisitor;
 public interface ProductionUnit {
 
     /**
-     * Get id
+     * Get discrimination character(s)
      */
     String getDiscriminator();
 
@@ -25,13 +25,6 @@ public interface ProductionUnit {
     boolean accept(Product product);
 
     /**
-     * Accepting visitor
-     *
-     * @param visitor The factory visitor
-     */
-    void accept(FactoryVisitor visitor);
-
-    /**
      * Get product after process
      */
     Product pop();
@@ -41,6 +34,9 @@ public interface ProductionUnit {
      */
     void setNext(ProductionUnit unit);
 
+    /**
+     * Get next unit from chain of responsibility
+     */
     ProductionUnit getNext();
 
     /**
@@ -50,4 +46,21 @@ public interface ProductionUnit {
      * @return Processed product
      */
     Product processNext(Product product, long dt);
+
+    /**
+     * Reset chain
+     */
+    void reset();
+
+    /**
+     * Returns true if unit not on the production line
+     */
+    boolean isAvailable();
+
+    /**
+     * Accepting visitor
+     *
+     * @param visitor The factory visitor
+     */
+    void acceptVisitor(FactoryVisitor visitor);
 }

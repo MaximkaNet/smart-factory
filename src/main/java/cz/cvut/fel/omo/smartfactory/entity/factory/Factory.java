@@ -16,6 +16,8 @@ import cz.cvut.fel.omo.smartfactory.entity.report.OutagesReport;
 import cz.cvut.fel.omo.smartfactory.entity.report.Report;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -29,6 +31,8 @@ import java.util.NoSuchElementException;
 @Getter
 @Setter
 public class Factory {
+    public static final Logger LOGGER = LogManager.getLogger("Factory");
+
     /**
      * Factory name
      */
@@ -122,7 +126,7 @@ public class Factory {
     public synchronized void simulate() {
         currentTick++;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
-        System.out.println("Tact: " + currentTick + " at " + LocalDateTime.ofInstant(now(), ZoneId.systemDefault()).format(formatter));
+        LOGGER.info("Tact: " + currentTick + " at " + LocalDateTime.ofInstant(now(), ZoneId.systemDefault()).format(formatter));
         // run everything that needs to be run on one tact
         // send message about new tact for each tact subscriber
         behavioralsList.forEach(subscriber -> subscriber.update(tickLengthMillis));
