@@ -18,7 +18,6 @@ public class FactoryUsageIterator implements Iterator<AbstractFactoryEquipment> 
     private AbstractFactoryEquipment current;
 
     public FactoryUsageIterator(Factory factory) {
-        // TODO: use percents
         allProductionUnits = factory.getProductionLines().stream()
                 .flatMap(line -> {
                     List<ProductionUnit> productionUnitList = new ArrayList<>();
@@ -31,7 +30,8 @@ public class FactoryUsageIterator implements Iterator<AbstractFactoryEquipment> 
                 })
                 .filter(productionUnit -> productionUnit instanceof AbstractFactoryEquipment)
                 .map(productionUnit -> (AbstractFactoryEquipment) productionUnit)
-                .sorted(Comparator.comparingDouble((AbstractFactoryEquipment unit) -> unit.getMaximumHealth() - unit.getActualHealth()).reversed())
+                .sorted(Comparator.comparingDouble((AbstractFactoryEquipment unit) ->
+                        (unit.getMaximumHealth() - unit.getActualHealth()) / unit.getMaximumHealth()).reversed())
                 .collect(Collectors.toList());
 
         if (!allProductionUnits.isEmpty()) {
