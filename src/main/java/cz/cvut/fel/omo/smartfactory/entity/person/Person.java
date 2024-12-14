@@ -8,10 +8,14 @@ import cz.cvut.fel.omo.smartfactory.entity.person.personState.PersonState;
 import cz.cvut.fel.omo.smartfactory.entity.person.personState.ReadyState;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Getter
 @Setter
 abstract public class Person implements Behavioral, FactoryEventListener {
+    public static final Logger LOGGER = LogManager.getLogger("Person");
+
     String discriminator;
     protected String firstName;
     protected String lastName;
@@ -32,6 +36,6 @@ abstract public class Person implements Behavioral, FactoryEventListener {
 
     @Override
     public void receiveEvent(FactoryEvent event) {
-        System.out.println("Person received: " + event);
+        LOGGER.info("Person received: {}", event);
     }
 }
