@@ -7,10 +7,14 @@ import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.AbstractFactoryEquip
 import cz.cvut.fel.omo.smartfactory.state.factoryequipment.RunningState;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Getter
 @Setter
 public class Repairman extends Person {
+    public static final Logger LOGGER = LogManager.getLogger("Repairman");
+
     /**
      * Repair power
      */
@@ -34,7 +38,7 @@ public class Repairman extends Person {
                 outageEvent,
                 factory.now()
         ));
-        System.out.println("Repairman started");
+        LOGGER.info("Repairman started");
     }
 
     public void finishRepair() {
@@ -48,7 +52,7 @@ public class Repairman extends Person {
         AbstractFactoryEquipment factoryEquipment = outageEvent.getAbstractManufacturingEntity();
 
         factoryEquipment.setState(new RunningState(factoryEquipment));
-        System.out.println("Repairman finished");
+        LOGGER.info("Repairman finished");
     }
 
     @Override
