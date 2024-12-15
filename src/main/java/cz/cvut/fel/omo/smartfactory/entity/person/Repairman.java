@@ -47,6 +47,10 @@ public class Repairman extends Person {
                 outageEvent,
                 factory.now()
         ));
+
+        // checking the outage event
+        outageEvent.setCheckedBy(this);
+
         state.ready();
 
         AbstractFactoryEquipment factoryEquipment = outageEvent.getAbstractManufacturingEntity();
