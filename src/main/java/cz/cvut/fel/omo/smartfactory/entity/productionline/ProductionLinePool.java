@@ -48,7 +48,7 @@ public class ProductionLinePool implements FactoryEventListener, TickObserver {
     /**
      * Returns true if is compatible false otherwise
      */
-    private boolean isCompatible(String sequence) {
+    public boolean isCompatible(String sequence) {
         Map<Character, Integer> charCountMap = countCharacters(sequence);
 
         for (Map.Entry<Character, Integer> entry : charCountMap.entrySet()) {
