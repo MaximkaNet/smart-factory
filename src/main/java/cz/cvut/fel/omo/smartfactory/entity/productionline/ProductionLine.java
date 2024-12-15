@@ -16,11 +16,6 @@ import java.util.List;
 @Setter
 public class ProductionLine implements TickObserver {
     /**
-     * The unique id
-     */
-    private final String id;
-
-    /**
      * Production line priority
      */
     private int priority;
@@ -53,9 +48,9 @@ public class ProductionLine implements TickObserver {
     /**
      * Create production line
      */
-    public ProductionLine(String id, int priority) {
-        this.id = id;
+    public ProductionLine(int priority, List<ProductionUnit> productionUnitChain) {
         this.priority = priority;
+        // TODO: create chain
     }
 
     /**

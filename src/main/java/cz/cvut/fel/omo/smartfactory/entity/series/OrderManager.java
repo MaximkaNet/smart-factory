@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.Queue;
 
 @Getter
-public class SeriesManager implements TickObserver {
+public class OrderManager implements TickObserver {
 
     private static final Logger LOGGER = LogManager.getLogger("SeriesManager");
 
@@ -42,7 +42,7 @@ public class SeriesManager implements TickObserver {
      *
      * @param factory The factory
      */
-    public SeriesManager(Factory factory) {
+    public OrderManager(Factory factory) {
         this.factory = factory;
     }
 
@@ -76,15 +76,16 @@ public class SeriesManager implements TickObserver {
 
     @Override
     public void update(long deltaTime) {
-        if (incoming.isEmpty()) {
-            return;
-        }
+//        if (incoming.isEmpty()) {
+//            return;
+//        }
+//
+//        Series series = incoming.peek();
+//
+//        if (tryToConfigureProductionLine(series)) {
+//            incoming.poll();
+//        }
 
-        Series series = incoming.peek();
-
-        if (tryToConfigureProductionLine(series)) {
-            incoming.poll();
-        }
     }
 
     private boolean tryToConfigureProductionLine(Series series) {
