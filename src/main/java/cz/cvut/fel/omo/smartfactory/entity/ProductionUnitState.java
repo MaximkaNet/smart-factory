@@ -1,6 +1,4 @@
-package cz.cvut.fel.omo.smartfactory.state;
-
-import cz.cvut.fel.omo.smartfactory.entity.Product;
+package cz.cvut.fel.omo.smartfactory.entity;
 
 public interface ProductionUnitState {
     /**

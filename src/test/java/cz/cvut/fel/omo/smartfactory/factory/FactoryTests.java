@@ -3,7 +3,7 @@ package cz.cvut.fel.omo.smartfactory.factory;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
-import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
+import cz.cvut.fel.omo.smartfactory.entity.person.repairmanPool.RepairmanPool;
 import cz.cvut.fel.omo.smartfactory.entity.report.EventReport;
 import cz.cvut.fel.omo.smartfactory.entity.report.OutagesReport;
 import org.junit.jupiter.api.Test;

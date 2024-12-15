@@ -2,7 +2,7 @@ package cz.cvut.fel.omo.smartfactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
-import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
+import cz.cvut.fel.omo.smartfactory.entity.person.repairmanPool.RepairmanPool;
 
 public class Main {
 

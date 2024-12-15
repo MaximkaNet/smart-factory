@@ -1,4 +1,4 @@
-package cz.cvut.fel.omo.smartfactory.state.factoryequipment;
+package cz.cvut.fel.omo.smartfactory.entity.factoryequipment.factoryequipmentstate;
 
 import cz.cvut.fel.omo.smartfactory.entity.Product;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.AbstractFactoryEquipment;

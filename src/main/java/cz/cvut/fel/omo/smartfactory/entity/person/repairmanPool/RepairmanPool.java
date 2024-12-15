@@ -1,10 +1,10 @@
-package cz.cvut.fel.omo.smartfactory.entity.person;
+package cz.cvut.fel.omo.smartfactory.entity.person.repairmanPool;
 
-import cz.cvut.fel.omo.smartfactory.builder.RepairmanPoolBuilder;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
-import cz.cvut.fel.omo.smartfactory.entity.factory.Behavioral;
+import cz.cvut.fel.omo.smartfactory.entity.factory.TickObserver;
+import cz.cvut.fel.omo.smartfactory.entity.person.Repairman;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +14,7 @@ import java.util.PriorityQueue;
 
 @Getter
 @Setter
-public class RepairmanPool implements FactoryEventListener, Behavioral {
+public class RepairmanPool implements FactoryEventListener, TickObserver {
     private PriorityQueue<OutageEvent> outageEventsQueue;
     private List<Repairman> repairmenList;
     private boolean isRunning;

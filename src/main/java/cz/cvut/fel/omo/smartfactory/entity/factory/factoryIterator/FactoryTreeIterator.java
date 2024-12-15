@@ -1,8 +1,8 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator;
 
-import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
+import cz.cvut.fel.omo.smartfactory.entity.productionline.ProductionLine;
 import lombok.Getter;
 
 import java.util.Iterator;

@@ -1,7 +1,5 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
-import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
-import cz.cvut.fel.omo.smartfactory.entity.SeriesManager;
 import cz.cvut.fel.omo.smartfactory.entity.event.EventFacade;
 import cz.cvut.fel.omo.smartfactory.entity.event.EventManager;
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator.FactoryTreeIterator;
@@ -11,9 +9,11 @@ import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Robot;
 import cz.cvut.fel.omo.smartfactory.entity.person.Director;
 import cz.cvut.fel.omo.smartfactory.entity.person.Inspector;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
-import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
+import cz.cvut.fel.omo.smartfactory.entity.person.repairmanPool.RepairmanPool;
+import cz.cvut.fel.omo.smartfactory.entity.productionline.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.report.OutagesReport;
 import cz.cvut.fel.omo.smartfactory.entity.report.Report;
+import cz.cvut.fel.omo.smartfactory.entity.series.SeriesManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
@@ -102,7 +102,7 @@ public class Factory {
     /**
      * Behavioral list
      */
-    private List<Behavioral> behavioralsList = new ArrayList<>();
+    private List<TickObserver> behavioralsList = new ArrayList<>();
 
     public Factory(String name, int tickLengthMillis, Instant foundationDate) {
         this.name = name;

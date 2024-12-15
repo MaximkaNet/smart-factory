@@ -1,5 +1,6 @@
-package cz.cvut.fel.omo.smartfactory.entity;
+package cz.cvut.fel.omo.smartfactory.entity.series;
 
+import cz.cvut.fel.omo.smartfactory.entity.Product;
 import lombok.Getter;
 import lombok.Setter;
 

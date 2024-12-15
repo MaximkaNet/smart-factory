@@ -2,8 +2,8 @@ package cz.cvut.fel.omo.smartfactory.entity.person;
 
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
-import cz.cvut.fel.omo.smartfactory.entity.factory.Behavioral;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
+import cz.cvut.fel.omo.smartfactory.entity.factory.TickObserver;
 import cz.cvut.fel.omo.smartfactory.entity.person.personState.PersonState;
 import cz.cvut.fel.omo.smartfactory.entity.person.personState.ReadyState;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 @Getter
 @Setter
-abstract public class Person implements Behavioral, FactoryEventListener {
+abstract public class Person implements TickObserver, FactoryEventListener {
     public static final Logger LOGGER = LogManager.getLogger("Person");
 
     String discriminator;
