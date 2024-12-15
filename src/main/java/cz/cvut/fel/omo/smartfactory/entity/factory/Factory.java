@@ -13,7 +13,7 @@ import cz.cvut.fel.omo.smartfactory.entity.person.repairmanPool.RepairmanPool;
 import cz.cvut.fel.omo.smartfactory.entity.productionline.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.report.OutagesReport;
 import cz.cvut.fel.omo.smartfactory.entity.report.Report;
-import cz.cvut.fel.omo.smartfactory.entity.series.SeriesManager;
+import cz.cvut.fel.omo.smartfactory.entity.series.OrderManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
@@ -87,7 +87,7 @@ public class Factory {
     /**
      * Orders manager
      */
-    private final SeriesManager seriesManager;
+    private final OrderManager seriesManager;
 
     /**
      * Production lines
@@ -109,7 +109,7 @@ public class Factory {
         this.foundationDate = foundationDate;
         this.tickLengthMillis = tickLengthMillis;
         this.eventManager = new EventManager(this);
-        this.seriesManager = new SeriesManager(this);
+        this.seriesManager = new OrderManager(this);
         this.eventFacade = new EventFacade(this.eventManager);
     }
 
