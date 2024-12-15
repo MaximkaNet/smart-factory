@@ -13,8 +13,8 @@ public class EventFacade {
 
     public List<FactoryEvent> getEventsFromToSorted(ZonedDateTime from, ZonedDateTime to) {
         return eventManager.getEventHistory().stream()
-                .filter(event -> event.getGeneratedAt().isAfter(from.toInstant()))
-                .filter(event -> event.getGeneratedAt().isBefore(to.toInstant()))
+                .filter(outageEvent -> !outageEvent.getGeneratedAt().isBefore(from.toInstant()))
+                .filter(outageEvent -> !outageEvent.getGeneratedAt().isAfter(to.toInstant()))
                 .sorted()
                 .collect(Collectors.toList());
     }
@@ -23,8 +23,8 @@ public class EventFacade {
         return eventManager.getEventHistory().stream()
                 .filter(event -> event instanceof OutageEvent)
                 .map(event -> (OutageEvent) event)
-                .filter(outageEvent -> outageEvent.getGeneratedAt().isAfter(from.toInstant()))
-                .filter(outageEvent -> outageEvent.getGeneratedAt().isBefore(to.toInstant()))
+                .filter(outageEvent -> !outageEvent.getGeneratedAt().isBefore(from.toInstant()))
+                .filter(outageEvent -> !outageEvent.getGeneratedAt().isAfter(to.toInstant()))
                 .sorted()
                 .collect(Collectors.toList());
     }
@@ -33,8 +33,8 @@ public class EventFacade {
         return eventManager.getEventHistory().stream()
                 .filter(event -> event instanceof RepairFinishedEvent)
                 .map(event -> (RepairFinishedEvent) event)
-                .filter(outageEvent -> outageEvent.getGeneratedAt().isAfter(from.toInstant()))
-                .filter(outageEvent -> outageEvent.generatedAt.isBefore(to.toInstant()))
+                .filter(outageEvent -> !outageEvent.getGeneratedAt().isBefore(from.toInstant()))
+                .filter(outageEvent -> !outageEvent.getGeneratedAt().isAfter(to.toInstant()))
                 .sorted()
                 .collect(Collectors.toList());
     }
@@ -43,8 +43,8 @@ public class EventFacade {
         return eventManager.getEventHistory().stream()
                 .filter(event -> event instanceof RepairStartedEvent)
                 .map(event -> (RepairStartedEvent) event)
-                .filter(outageEvent -> outageEvent.getGeneratedAt().isAfter(from.toInstant()))
-                .filter(outageEvent -> outageEvent.generatedAt.isBefore(to.toInstant()))
+                .filter(outageEvent -> !outageEvent.getGeneratedAt().isBefore(from.toInstant()))
+                .filter(outageEvent -> !outageEvent.getGeneratedAt().isAfter(to.toInstant()))
                 .sorted()
                 .collect(Collectors.toList());
     }

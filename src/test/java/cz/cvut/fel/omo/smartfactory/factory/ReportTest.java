@@ -5,7 +5,6 @@ import cz.cvut.fel.omo.smartfactory.entity.event.RepairFinishedEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.RepairStartedEvent;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
-import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
 import cz.cvut.fel.omo.smartfactory.entity.report.ConsumptionReport;
 import cz.cvut.fel.omo.smartfactory.entity.report.EventReport;
@@ -51,18 +50,19 @@ public class ReportTest {
             factory.getEventManager().notifyListeners(new OutageEvent(1, machine, factory.now()));
         }
 
+        // simulate factory for 30 ticks
+        // should be enough to get all repairs done
         ticks = 30;
         factory.simulate(ticks);
 
         // added nd subtracted one minute as I want the interval to contain all events
-        afterSimulationTime = ZonedDateTime.ofInstant(factory.getEventManager().getEventHistory().get(factory.getEventManager().getEventHistory().size() - 1).getGeneratedAt(), ZoneId.of("UTC")).plusMinutes(1);
-        factoryFoundationTime = ZonedDateTime.ofInstant(factory.getFoundationDate(), ZoneId.of("UTC")).minusMinutes(1);
+        afterSimulationTime = ZonedDateTime.ofInstant(factory.getEventManager().getEventHistory().get(factory.getEventManager().getEventHistory().size() - 1).getGeneratedAt(), ZoneId.of("UTC"));
+        factoryFoundationTime = ZonedDateTime.ofInstant(factory.getFoundationDate(), ZoneId.of("UTC"));
     }
 
     @Test
     public void OutagesReportCalculatesStatisticsForGivenTimeSpan() {
         OutagesReport outagesReport = new OutagesReport(factoryFoundationTime, afterSimulationTime, factory);
-        System.out.println(outagesReport);
 
         assertNotEquals(Duration.ZERO, outagesReport.getAvgOutageTime());
         assertNotEquals(Duration.ZERO, outagesReport.getAvgWaitingTime());
@@ -74,11 +74,6 @@ public class ReportTest {
     @Test
     public void EventReportCalculatesStatisticsForGivenTimeSpan() {
         EventReport eventReport = new EventReport(factoryFoundationTime, afterSimulationTime, factory);
-        System.out.println(eventReport);
-
-        for (Optional<Person> p : eventReport.getEventCheckerMap().keySet()) {
-            System.out.println(p);
-        }
 
         assertEquals(5, eventReport.getEventSourceMap().size()); // 5 machines send events
         assertEquals(3, eventReport.getEventTypeMap().size()); // three event types at all
