@@ -51,13 +51,13 @@ public class ReportTest {
         }
 
         // simulate factory for 30 ticks
-        // should be enough to get all repairs done
+        // is enough to get all repairs done
         ticks = 30;
         factory.simulate(ticks);
 
-        // added nd subtracted one minute as I want the interval to contain all events
-        afterSimulationTime = ZonedDateTime.ofInstant(factory.getEventManager().getEventHistory().get(factory.getEventManager().getEventHistory().size() - 1).getGeneratedAt(), ZoneId.of("UTC"));
+        // using UTC time zone as that is used by our events
         factoryFoundationTime = ZonedDateTime.ofInstant(factory.getFoundationDate(), ZoneId.of("UTC"));
+        afterSimulationTime = ZonedDateTime.ofInstant(factory.getEventManager().getEventHistory().get(factory.getEventManager().getEventHistory().size() - 1).getGeneratedAt(), ZoneId.of("UTC"));
     }
 
     @Test
@@ -80,11 +80,12 @@ public class ReportTest {
         assertEquals(5, eventReport.getEventTypeMap().get(OutageEvent.class).size()); // 5 outage events
         assertEquals(5, eventReport.getEventTypeMap().get(RepairStartedEvent.class).size()); // 5 repair started events
         assertEquals(5, eventReport.getEventTypeMap().get(RepairFinishedEvent.class).size()); // 5 repair finished events
-        assertNotEquals(eventReport.getEvents().size(), eventReport.getEventCheckerMap().get(Optional.empty()).size()); // at lest OutageEvents should be checked by the repairmen
+        // the outage events were checked by the repairman in the pool
+        assertEquals(5, eventReport.getEventCheckerMap().get(Optional.of(factory.getRepairmanPool().getRepairmenList().get(0))).size());
     }
 
-    @Test
     // TODO: the test fails as the consumption is not yet implemented
+    @Test
     public void ConsumptionReportCalculatesStatisticsForGivenTimeSpan() {
         ConsumptionReport consumptionReport = new ConsumptionReport(factoryFoundationTime, afterSimulationTime, factory);
         System.out.println(consumptionReport);
