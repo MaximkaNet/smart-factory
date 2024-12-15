@@ -1,7 +1,10 @@
 package cz.cvut.fel.omo.smartfactory.state.productionline;
 
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
+import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.Series;
+
+import java.util.List;
 
 public final class ProcessingState extends ProductionLineState {
 
@@ -10,7 +13,7 @@ public final class ProcessingState extends ProductionLineState {
     }
 
     @Override
-    public boolean apply(Series series) {
+    public boolean apply(Series series, List<ProductionUnit> sequence) {
         // TODO Throw exception ?
         return false;
     }

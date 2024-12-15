@@ -7,6 +7,8 @@ import cz.cvut.fel.omo.smartfactory.state.productionline.ReadyState;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class ProductionLine implements Behavioral {
@@ -40,6 +42,9 @@ public class ProductionLine implements Behavioral {
      */
     private Factory factory;
 
+    /**
+     * Production line state
+     */
     private ProductionLineState state = new ReadyState(this);
 
     /**
@@ -64,15 +69,32 @@ public class ProductionLine implements Behavioral {
     /**
      * Initialize series of products
      */
-    public boolean apply(Series series) {
+    public boolean apply(Series series, List<ProductionUnit> sequence) {
+        createChain(sequence);
         // validate chain of production units
         if (isValidChain(series.getProduct().getSequence())) {
             currentSeries = series;
             return true;
         }
-        // Line reconfiguration:
-        // send request to factory for reconfiguration
         return false;
+    }
+
+    /**
+     * Create chain of responsibility
+     *
+     * @param list sequence of production units
+     */
+    private void createChain(List<ProductionUnit> list) {
+        ProductionUnit current = null;
+        for (ProductionUnit unit : list) {
+            // Handle first item in chain
+            if (current == null) {
+                current = unit;
+                continue;
+            }
+            current.setNext(unit);
+            current = unit;
+        }
     }
 
     /**
@@ -81,6 +103,11 @@ public class ProductionLine implements Behavioral {
     public Series pop() {
         Series series = currentSeries;
         currentSeries = null;
+
+        // Reset the chain of responsibility, means make production units
+        // on this line available for configuration on another lines
+        productionUnitChain.reset();
+
         return series;
     }
 
@@ -91,7 +118,7 @@ public class ProductionLine implements Behavioral {
         ProductionUnit current = productionUnitChain;
         StringBuilder actualSequence = new StringBuilder();
         while (current != null) {
-            actualSequence.append(current.getDiscriminator().charAt(0));
+            actualSequence.append(current.getDiscriminator());
             current = current.getNext();
         }
         return chainForCheck.toUpperCase().contentEquals(actualSequence);

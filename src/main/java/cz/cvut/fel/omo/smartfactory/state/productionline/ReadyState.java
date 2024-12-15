@@ -1,7 +1,10 @@
 package cz.cvut.fel.omo.smartfactory.state.productionline;
 
 import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
+import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.Series;
+
+import java.util.List;
 
 public final class ReadyState extends ProductionLineState {
 
@@ -10,8 +13,8 @@ public final class ReadyState extends ProductionLineState {
     }
 
     @Override
-    public boolean apply(Series series) {
-        if (context.apply(series)) {
+    public boolean apply(Series series, List<ProductionUnit> sequence) {
+        if (context.apply(series, sequence)) {
             context.setState(new ProcessingState(context));
             return true;
         }
