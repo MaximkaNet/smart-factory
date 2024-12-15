@@ -3,6 +3,8 @@ package cz.cvut.fel.omo.smartfactory.entity;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Behavioral;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import lombok.Getter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +17,8 @@ import java.util.Queue;
 
 @Getter
 public class SeriesManager implements Behavioral {
+
+    private static final Logger LOGGER = LogManager.getLogger("SeriesManager");
 
     /**
      * Incoming orders
@@ -49,13 +53,16 @@ public class SeriesManager implements Behavioral {
      */
     public void addSeries(String name, Product product, int count) {
         if (!isCompatibleWithFactory(product.getSequence())) {
-            throw new RuntimeException("Factory does not have enough production units.");
+            LOGGER.error("Cannot create series of products. Factory does not have enough production units.");
+            return;
         }
 
         Date date = new Date();
         name += "_" + date.getTime();
         Series series = new Series(name, product, count);
         incoming.add(series);
+
+        LOGGER.info("Series " + name + " to incoming queue");
     }
 
     /**
@@ -67,14 +74,25 @@ public class SeriesManager implements Behavioral {
 
     @Override
     public void update(long deltaTime) {
+        if (incoming.isEmpty()) {
+            return;
+        }
+
         Series series = incoming.peek();
 
-        // Get compatible production line
-        ProductionLine line = null;
+        if (tryToConfigureProductionLine(series)) {
+            incoming.poll();
+        }
+    }
 
-//        if (line != null) {
-//            line.applySeries(series);
-//        }
+    private boolean tryToConfigureProductionLine(Series series) {
+        Map<Character, Integer> numberOfEachProductionUnit = getNumberOfEachProductionUnit(series.getProduct().getSequence());
+
+        List<ProductionUnit> productionChain = new ArrayList<>();
+        // Get available workers
+        int workers = 0;
+
+        return false;
     }
 
     /**
@@ -84,12 +102,7 @@ public class SeriesManager implements Behavioral {
      */
     public boolean isCompatibleWithFactory(String sequence) {
         // Group sequence by type of production unit
-        Map<Character, Integer> stat = new HashMap<>();
-
-        for (char ch : sequence.toCharArray()) {
-            int count = stat.getOrDefault(ch, 0);
-            stat.put(ch, ++count);
-        }
+        Map<Character, Integer> stat = getNumberOfEachProductionUnit(sequence);
 
         long countRobots = factory.getRobots().size();
         long countMachines = factory.getMachines().size();
@@ -112,5 +125,16 @@ public class SeriesManager implements Behavioral {
         }
 
         return hasEnoughUnits;
+    }
+
+    private Map<Character, Integer> getNumberOfEachProductionUnit(String sequence) {
+        Map<Character, Integer> stat = new HashMap<>();
+
+        for (char ch : sequence.toCharArray()) {
+            int count = stat.getOrDefault(ch, 0);
+            stat.put(ch, ++count);
+        }
+
+        return stat;
     }
 }
