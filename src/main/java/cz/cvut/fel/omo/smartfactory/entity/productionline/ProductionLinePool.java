@@ -9,14 +9,17 @@ import cz.cvut.fel.omo.smartfactory.entity.factory.TickObserver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 public class ProductionLinePool implements FactoryEventListener, TickObserver {
 
     private final Factory factory;
     private final Map<Character, List<ProductionUnit>> productionUnitMap;
     private final List<ProductionLine> productionLineList = new ArrayList<>();
+    private final Queue<ProductionLine> forRemoval = new LinkedList<>();
 
     public ProductionLinePool(Factory factory, Map<Character, List<ProductionUnit>> productionUnitMap) {
         this.factory = factory;
@@ -26,12 +29,13 @@ public class ProductionLinePool implements FactoryEventListener, TickObserver {
     /**
      * Will try to configure a ProductionLine
      *
-     * @param sequence
      * @return productionLine if configured or throws RuntimeException
      */
     public ProductionLine tryConfigure(String sequence) throws RuntimeException {
         // throws RuntimeException if sequence not compatible with factory
-        isCompatible(sequence);
+        if (!isCompatible(sequence)) {
+            throw new RuntimeException("Cannot configure for sequence: " + sequence);
+        }
         List<ProductionUnit> productionUnitList = getCompatibleSequence(sequence);
         if (productionUnitList.size() != sequence.length()) {
             return null;
@@ -41,15 +45,24 @@ public class ProductionLinePool implements FactoryEventListener, TickObserver {
         return productionLine;
     }
 
-    private void isCompatible(String sequence) {
+    /**
+     * Returns true if is compatible false otherwise
+     */
+    private boolean isCompatible(String sequence) {
         Map<Character, Integer> charCountMap = countCharacters(sequence);
+
         for (Map.Entry<Character, Integer> entry : charCountMap.entrySet()) {
             if (productionUnitMap.getOrDefault(entry.getKey(), new ArrayList<>()).size() < entry.getValue()) {
-                throw new RuntimeException("Cannot configure for sequence: " + sequence);
+                return false;
             }
         }
+
+        return true;
     }
 
+    /**
+     * Get character "statistic"
+     */
     private static Map<Character, Integer> countCharacters(String input) {
         Map<Character, Integer> charCountMap = new HashMap<>();
 
@@ -60,6 +73,9 @@ public class ProductionLinePool implements FactoryEventListener, TickObserver {
         return charCountMap;
     }
 
+    /**
+     * Returns compatible sequence of production units
+     */
     private List<ProductionUnit> getCompatibleSequence(String sequence) {
         List<ProductionUnit> productionUnitList = new ArrayList<>();
         for (Character c : sequence.toCharArray()) {
@@ -87,15 +103,17 @@ public class ProductionLinePool implements FactoryEventListener, TickObserver {
         SeriesFinishedEvent seriesFinishedevent = (SeriesFinishedEvent) event;
         ProductionLine productionLine = seriesFinishedevent.getProductionLine();
 
-        if (productionLineList.contains(productionLine)) {
-            productionLineList.remove(productionLine);
-        }
+        productionLineList.remove(productionLine);
     }
 
     @Override
     public void update(long deltaTime) {
         productionLineList.forEach(productionLine -> {
             productionLine.getState().process(deltaTime);
+            if (productionLine.isFinished()) {
+                factory.addCompletedSeries(productionLine.pop());
+                productionLineList.remove(productionLine);
+            }
         });
     }
 }
