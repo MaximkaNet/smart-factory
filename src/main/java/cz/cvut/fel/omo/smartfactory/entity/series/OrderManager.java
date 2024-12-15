@@ -22,11 +22,6 @@ public class OrderManager implements TickObserver {
     private final List<Series> incoming = new ArrayList<>();
 
     /**
-     * Completed series
-     */
-    private final List<Series> completed = new ArrayList<>();
-
-    /**
      * The factory reference
      */
     private final Factory factory;
@@ -59,13 +54,6 @@ public class OrderManager implements TickObserver {
         incoming.add(series);
 
         LOGGER.info("Series {} to incoming queue", name);
-    }
-
-    /**
-     * Add completed series of products
-     */
-    public void addCompletedSeries(Series series) {
-        completed.add(series);
     }
 
     @Override
