@@ -89,5 +89,4 @@ public class ReportTest {
         ConsumptionReport consumptionReport = new ConsumptionReport(factoryFoundationTime, afterSimulationTime, factory);
         System.out.println(consumptionReport);
     }
-
 }
