@@ -11,9 +11,11 @@ import cz.cvut.fel.omo.smartfactory.entity.person.Inspector;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
 import cz.cvut.fel.omo.smartfactory.entity.person.repairmanPool.RepairmanPool;
 import cz.cvut.fel.omo.smartfactory.entity.productionline.ProductionLine;
+import cz.cvut.fel.omo.smartfactory.entity.productionline.ProductionLinePool;
 import cz.cvut.fel.omo.smartfactory.entity.report.OutagesReport;
 import cz.cvut.fel.omo.smartfactory.entity.report.Report;
 import cz.cvut.fel.omo.smartfactory.entity.series.OrderManager;
+import cz.cvut.fel.omo.smartfactory.entity.series.Series;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
@@ -98,6 +100,16 @@ public class Factory {
      * Repair man pool
      */
     private RepairmanPool repairmanPool;
+
+    /**
+     * Production Line Pool
+     */
+    private ProductionLinePool productionLinePool;
+
+    /**
+     * Completed series
+     */
+    private final List<Series> completed = new ArrayList<>();
 
     /**
      * Behavioral list
@@ -197,6 +209,10 @@ public class Factory {
                 .map(person -> (Inspector) person)
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("No available Inspector found"));
+    }
+
+    public void addCompletedSeries(Series series) {
+        completed.add(series);
     }
 
     /**
