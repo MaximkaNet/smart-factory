@@ -1,8 +1,8 @@
-package cz.cvut.fel.omo.smartfactory.state.productionline;
+package cz.cvut.fel.omo.smartfactory.entity.productionline.productionline;
 
-import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
-import cz.cvut.fel.omo.smartfactory.entity.Series;
+import cz.cvut.fel.omo.smartfactory.entity.productionline.ProductionLine;
+import cz.cvut.fel.omo.smartfactory.entity.series.Series;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.RepairFinishedEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.RepairStartedEvent;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.AbstractFactoryEquipment;
-import cz.cvut.fel.omo.smartfactory.state.factoryequipment.RunningState;
+import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.factoryequipmentstate.RunningState;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;

@@ -5,7 +5,7 @@ import cz.cvut.fel.omo.smartfactory.entity.event.RepairFinishedEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.RepairStartedEvent;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
-import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
+import cz.cvut.fel.omo.smartfactory.entity.person.repairmanPool.RepairmanPool;
 import cz.cvut.fel.omo.smartfactory.entity.report.ConsumptionReport;
 import cz.cvut.fel.omo.smartfactory.entity.report.EventReport;
 import cz.cvut.fel.omo.smartfactory.entity.report.OutagesReport;

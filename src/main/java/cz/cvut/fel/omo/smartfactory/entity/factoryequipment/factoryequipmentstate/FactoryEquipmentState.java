@@ -1,8 +1,8 @@
-package cz.cvut.fel.omo.smartfactory.state.factoryequipment;
+package cz.cvut.fel.omo.smartfactory.entity.factoryequipment.factoryequipmentstate;
 
 import cz.cvut.fel.omo.smartfactory.entity.Product;
+import cz.cvut.fel.omo.smartfactory.entity.ProductionUnitState;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.AbstractFactoryEquipment;
-import cz.cvut.fel.omo.smartfactory.state.ProductionUnitState;
 
 public abstract class FactoryEquipmentState implements ProductionUnitState {
     protected final AbstractFactoryEquipment context;

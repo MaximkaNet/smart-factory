@@ -1,9 +1,12 @@
-package cz.cvut.fel.omo.smartfactory.entity;
+package cz.cvut.fel.omo.smartfactory.entity.productionline;
 
-import cz.cvut.fel.omo.smartfactory.entity.factory.Behavioral;
+import cz.cvut.fel.omo.smartfactory.entity.Product;
+import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
-import cz.cvut.fel.omo.smartfactory.state.productionline.ProductionLineState;
-import cz.cvut.fel.omo.smartfactory.state.productionline.ReadyState;
+import cz.cvut.fel.omo.smartfactory.entity.factory.TickObserver;
+import cz.cvut.fel.omo.smartfactory.entity.productionline.productionline.ProductionLineState;
+import cz.cvut.fel.omo.smartfactory.entity.productionline.productionline.ReadyState;
+import cz.cvut.fel.omo.smartfactory.entity.series.Series;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ProductionLine implements Behavioral {
+public class ProductionLine implements TickObserver {
     /**
      * The unique id
      */

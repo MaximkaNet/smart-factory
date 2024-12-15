@@ -1,14 +1,13 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
-import cz.cvut.fel.omo.smartfactory.builder.Builder;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Robot;
 import cz.cvut.fel.omo.smartfactory.entity.person.Director;
 import cz.cvut.fel.omo.smartfactory.entity.person.Inspector;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
-import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
 import cz.cvut.fel.omo.smartfactory.entity.person.Worker;
+import cz.cvut.fel.omo.smartfactory.entity.person.repairmanPool.RepairmanPool;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -16,7 +15,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FactoryBuilder implements Builder<Factory> {
+public class FactoryBuilder {
     private String name = "Default Factory";
     private Integer tickLength = 500;
     private Instant foundationDate = Instant.now();
@@ -72,8 +71,7 @@ public class FactoryBuilder implements Builder<Factory> {
         this.foundationDate = of.atStartOfDay(ZoneId.of("UTC")).toInstant();
         return this;
     }
-
-    @Override
+    
     public Factory build() {
 
         Factory factory = new Factory(this.name, this.tickLength, this.foundationDate);

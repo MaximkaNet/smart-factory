@@ -1,14 +1,14 @@
 package cz.cvut.fel.omo.smartfactory.factory;
 
-import cz.cvut.fel.omo.smartfactory.entity.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator.FactoryTreeIterator;
 import cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator.FactoryUsageIterator;
 import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
 import cz.cvut.fel.omo.smartfactory.entity.person.Director;
 import cz.cvut.fel.omo.smartfactory.entity.person.Inspector;
-import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
 import cz.cvut.fel.omo.smartfactory.entity.person.Worker;
+import cz.cvut.fel.omo.smartfactory.entity.person.repairmanPool.RepairmanPool;
+import cz.cvut.fel.omo.smartfactory.entity.productionline.ProductionLine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

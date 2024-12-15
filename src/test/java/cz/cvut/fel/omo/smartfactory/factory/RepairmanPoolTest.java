@@ -2,7 +2,7 @@ package cz.cvut.fel.omo.smartfactory.factory;
 
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
-import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
+import cz.cvut.fel.omo.smartfactory.entity.person.repairmanPool.RepairmanPool;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;

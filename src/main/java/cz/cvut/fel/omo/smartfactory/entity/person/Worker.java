@@ -88,7 +88,7 @@ public class Worker extends Person implements ProductionUnit {
 
     @Override
     public void reset() {
-        
+
     }
 
     @Override

@@ -1,12 +1,11 @@
-package cz.cvut.fel.omo.smartfactory.builder;
+package cz.cvut.fel.omo.smartfactory.entity.person.repairmanPool;
 
 import cz.cvut.fel.omo.smartfactory.entity.person.Repairman;
-import cz.cvut.fel.omo.smartfactory.entity.person.RepairmanPool;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepairmanPoolBuilder implements Builder<RepairmanPool> {
+public class RepairmanPoolBuilder {
 
     public final List<Repairman> repairmenList = new ArrayList<>();
 
@@ -15,7 +14,6 @@ public class RepairmanPoolBuilder implements Builder<RepairmanPool> {
         return this;
     }
 
-    @Override
     public RepairmanPool build() {
         return new RepairmanPool(repairmenList);
     }

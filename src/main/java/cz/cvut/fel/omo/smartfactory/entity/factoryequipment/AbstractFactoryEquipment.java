@@ -5,11 +5,11 @@ import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
+import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.factoryequipmentstate.FactoryEquipmentState;
+import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.factoryequipmentstate.ReadyState;
 import cz.cvut.fel.omo.smartfactory.entity.storage.consumer.ElectricityConsumer;
 import cz.cvut.fel.omo.smartfactory.entity.storage.consumer.MaterialConsumer;
 import cz.cvut.fel.omo.smartfactory.entity.storage.consumer.OilConsumer;
-import cz.cvut.fel.omo.smartfactory.state.factoryequipment.FactoryEquipmentState;
-import cz.cvut.fel.omo.smartfactory.state.factoryequipment.ReadyState;
 import lombok.Getter;
 import lombok.Setter;
 

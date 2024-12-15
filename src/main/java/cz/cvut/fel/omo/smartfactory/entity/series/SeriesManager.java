@@ -1,7 +1,9 @@
-package cz.cvut.fel.omo.smartfactory.entity;
+package cz.cvut.fel.omo.smartfactory.entity.series;
 
-import cz.cvut.fel.omo.smartfactory.entity.factory.Behavioral;
+import cz.cvut.fel.omo.smartfactory.entity.Product;
+import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
+import cz.cvut.fel.omo.smartfactory.entity.factory.TickObserver;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +18,7 @@ import java.util.Objects;
 import java.util.Queue;
 
 @Getter
-public class SeriesManager implements Behavioral {
+public class SeriesManager implements TickObserver {
 
     private static final Logger LOGGER = LogManager.getLogger("SeriesManager");
 
