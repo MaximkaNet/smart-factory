@@ -50,7 +50,7 @@ public class ProductionLine implements TickObserver {
      */
     public ProductionLine(int priority, List<ProductionUnit> productionUnitChain) {
         this.priority = priority;
-        // TODO: create chain
+        this.createChain(productionUnitChain);
     }
 
     /**
@@ -127,6 +127,10 @@ public class ProductionLine implements TickObserver {
      */
     public boolean isReady() {
         return !producing;
+    }
+
+    public boolean isFinished() {
+        return currentSeries.isDone();
     }
 
     /**
