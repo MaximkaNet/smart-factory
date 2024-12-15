@@ -59,7 +59,7 @@ public class OrderManager implements TickObserver {
     @Override
     public void update(long deltaTime) {
         incoming.removeIf(element -> {
-            ProductionLine productionLine = factory.getProductionLinePool().tryConfigure(element);
+            ProductionLine productionLine = factory.getProductionLinePool().tryConfigure(element.getProduct().getSequence());
             if (productionLine == null) {
                 return false;
             } else {
