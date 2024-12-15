@@ -4,6 +4,7 @@ import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.person.Person;
+import lombok.Getter;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Getter
 public class EventReport extends Report {
     List<FactoryEvent> events;
     Map<Class<? extends FactoryEvent>, List<FactoryEvent>> eventTypeMap;
