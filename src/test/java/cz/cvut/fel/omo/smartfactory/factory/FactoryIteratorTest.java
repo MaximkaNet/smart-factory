@@ -74,9 +74,10 @@ public class FactoryIteratorTest {
         machine3 = machines.get(2);
         machine3.setActualHealth(3); // 40% usage: 2hp usage
 
-        ProductionLine productionLine = new ProductionLine("P1", 1);
-        ProductionLine productionLine2 = new ProductionLine("P2", 2);
+        ProductionLine productionLine = new ProductionLine(1, new ArrayList<>(Arrays.asList(worker1, worker2, machine1, machine2)));
+        ProductionLine productionLine2 = new ProductionLine(2, new ArrayList<>(Arrays.asList(worker3, machine3)));
 
+        // Manually setting the productionChains, TODO: will be removed as will be automated
         productionLine.setProductionUnitChain(worker1);
         worker1.setNext(worker2);
         worker2.setNext(machine1);
