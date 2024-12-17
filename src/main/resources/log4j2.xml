@@ -2,21 +2,13 @@
 <Configuration status="WARN">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <!--            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>-->
-            <PatternLayout>
-                <Pattern>
-                    %highlight{%p [%logger]: %m%n}{INFO=blue}
-                </Pattern>
-            </PatternLayout>
+            <PatternLayout pattern="[%t/%p] (%c{1}) %m%n"/>
+            <!--            <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%p] (%c{1}) %m%n"/>-->
         </Console>
-        <!--        <File name="File" fileName="logs/app.log">-->
-        <!--            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>-->
-        <!--        </File>-->
     </Appenders>
     <Loggers>
         <Root level="info">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="File"/>
         </Root>
     </Loggers>
 </Configuration>
