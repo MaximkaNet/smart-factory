@@ -1,39 +1,23 @@
 package cz.cvut.fel.omo.smartfactory.entity.factory;
 
-import cz.cvut.fel.omo.smartfactory.entity.event.EventFacade;
 import cz.cvut.fel.omo.smartfactory.entity.event.EventManager;
-import cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator.FactoryTreeIterator;
-import cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator.FactoryUsageIterator;
-import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Machine;
-import cz.cvut.fel.omo.smartfactory.entity.factoryequipment.Robot;
-import cz.cvut.fel.omo.smartfactory.entity.person.Director;
-import cz.cvut.fel.omo.smartfactory.entity.person.Inspector;
-import cz.cvut.fel.omo.smartfactory.entity.person.Person;
+import cz.cvut.fel.omo.smartfactory.entity.memento.Memento;
+import cz.cvut.fel.omo.smartfactory.entity.memento.Snapshot;
 import cz.cvut.fel.omo.smartfactory.entity.person.repairmanPool.RepairmanPool;
-import cz.cvut.fel.omo.smartfactory.entity.productionline.ProductionLine;
-import cz.cvut.fel.omo.smartfactory.entity.productionline.ProductionLinePool;
-import cz.cvut.fel.omo.smartfactory.entity.report.OutagesReport;
+import cz.cvut.fel.omo.smartfactory.entity.productionline.ProductionLineManager;
 import cz.cvut.fel.omo.smartfactory.entity.report.Report;
 import cz.cvut.fel.omo.smartfactory.entity.series.OrderManager;
-import cz.cvut.fel.omo.smartfactory.entity.series.Series;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Getter
 @Setter
-public class Factory {
-    public static final Logger LOGGER = LogManager.getLogger("Factory");
+public abstract class Factory implements Memento {
+    private static final Logger LOGGER = LogManager.getLogger("Factory");
 
     /**
      * Factory name
@@ -41,39 +25,14 @@ public class Factory {
     private String name;
 
     /**
-     * Tick length
+     * Factory timer
      */
-    private long tickLengthMillis;
-
-    /**
-     * Foundation date
-     */
-    private final Instant foundationDate;
+    private final FactoryTimer timer;
 
     /**
      * All reports
      */
     private List<Report> reports;
-
-    /**
-     * Current tick
-     */
-    private long currentTick = 0;
-
-    /**
-     * People
-     */
-    private List<Person> people;
-
-    /**
-     * Robots
-     */
-    private List<Robot> robots;
-
-    /**
-     * Machines
-     */
-    private List<Machine> machines;
 
 
     /**
@@ -82,19 +41,9 @@ public class Factory {
     private EventManager eventManager;
 
     /**
-     * Event facade
-     */
-    private EventFacade eventFacade;
-
-    /**
      * Orders manager
      */
     private final OrderManager seriesManager;
-
-    /**
-     * Production lines
-     */
-    private List<ProductionLine> productionLines;
 
     /**
      * Repair man pool
@@ -104,45 +53,25 @@ public class Factory {
     /**
      * Production Line Pool
      */
-    private ProductionLinePool productionLinePool;
+    private ProductionLineManager productionLinePool;
 
     /**
-     * Completed series
+     * Create new factory
+     *
+     * @param name  The factory name
+     * @param timer The factory timer
      */
-    private final List<Series> completed = new ArrayList<>();
-
-    /**
-     * Behavioral list
-     */
-    private List<TickObserver> behavioralsList = new ArrayList<>();
-
-    public Factory(String name, int tickLengthMillis, Instant foundationDate) {
+    protected Factory(String name, FactoryTimer timer) {
         this.name = name;
-        this.foundationDate = foundationDate;
-        this.tickLengthMillis = tickLengthMillis;
+        this.timer = timer;
         this.eventManager = new EventManager(this);
         this.seriesManager = new OrderManager(this);
-        this.eventFacade = new EventFacade(this.eventManager);
     }
 
     /**
-     * Returns instant of simulation time
+     * Simulate one factory iteration
      */
-    public Instant now() {
-        return foundationDate.plusMillis(currentTick * tickLengthMillis);
-    }
-
-    /**
-     * Simulate one iteration
-     */
-    public synchronized void simulate() {
-        currentTick++;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
-        LOGGER.info("Tact: " + currentTick + " at " + LocalDateTime.ofInstant(now(), ZoneId.systemDefault()).format(formatter));
-        // run everything that needs to be run on one tact
-        // send message about new tact for each tact subscriber
-        behavioralsList.forEach(subscriber -> subscriber.update(tickLengthMillis));
-    }
+    public abstract void simulate();
 
     /**
      * Simulate number of iterations
@@ -163,7 +92,7 @@ public class Factory {
     public void simulateRealtime(int ticks) throws InterruptedException {
         for (long i = 0; i < ticks; i++) {
             simulate();
-            Thread.sleep(tickLengthMillis);
+            Thread.sleep(timer.getRealtimeTickDelay());
         }
     }
 
@@ -176,66 +105,9 @@ public class Factory {
         return new FactoryBuilder();
     }
 
-    /**
-     * Create outage report in a time span
-     *
-     * @return stringify report
-     */
-    public OutagesReport createOutageReport(ZonedDateTime from, ZonedDateTime to) {
-        return new OutagesReport(from, to, this);
-    }
-
-    public FactoryTreeIterator getFactoryTreeIterator() {
-        return new FactoryTreeIterator(this);
-    }
-
-    public FactoryUsageIterator getFactoryUsageIterator() {
-        return new FactoryUsageIterator(this);
-    }
-
-    public Director getFirstAvailableDirector() {
-        return people.stream()
-                .filter(person -> person instanceof Director)
-                .filter(person -> person.getState().isAvailable())
-                .map(person -> (Director) person)
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("No available Director found"));
-    }
-
-    public Inspector getFirstAvailableInspector() {
-        return people.stream()
-                .filter(person -> person instanceof Inspector)
-                .filter(person -> person.getState().isAvailable())
-                .map(person -> (Inspector) person)
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("No available Inspector found"));
-    }
-
-    public void addCompletedSeries(Series series) {
-        completed.add(series);
-    }
-
-    /**
-     * This method will be used in memento pattern
-     *
-     * @param date restore date
-     */
-    public void restore(String date) {
-        // TODO: restoring of the factory in memento pattern
-    }
-
-    /**
-     * Conduct an inspection of the factory
-     */
-    public void inspect() {
-        // TODO: inspector will iterate through factory and inspection will be performed
-    }
-
     @Override
-    public String toString() {
-        return this.getClass().getSimpleName() + "{"
-                + "name=" + name
-                + ", tactLengthMilliseconds=" + tickLengthMillis
-                + ", currentTact=" + currentTick + "}";
+    public Snapshot save() {
+        // Walk through all attributes of this factory
+        return null;
     }
 }
