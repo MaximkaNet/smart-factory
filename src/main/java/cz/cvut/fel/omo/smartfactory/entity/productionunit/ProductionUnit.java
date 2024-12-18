@@ -1,5 +1,6 @@
-package cz.cvut.fel.omo.smartfactory.entity;
+package cz.cvut.fel.omo.smartfactory.entity.productionunit.state;
 
+import cz.cvut.fel.omo.smartfactory.entity.Product;
 import cz.cvut.fel.omo.smartfactory.entity.person.FactoryVisitor;
 
 /**
@@ -10,7 +11,7 @@ public interface ProductionUnit {
     /**
      * Get discrimination character(s)
      */
-    String getDiscriminator();
+    String getName();
 
     /**
      * Process product production
@@ -30,6 +31,11 @@ public interface ProductionUnit {
     Product pop();
 
     /**
+     * Peek the product
+     */
+    Product peek();
+
+    /**
      * Set next production unit in chain of responsibility
      */
     void setNext(ProductionUnit unit);
@@ -39,13 +45,13 @@ public interface ProductionUnit {
      */
     ProductionUnit getNext();
 
-    /**
-     * Process chain of responsibility
-     *
-     * @param product Input product for processing
-     * @return Processed product
-     */
-    Product processNext(Product product, long dt);
+//    /**
+//     * Process chain of responsibility
+//     *
+//     * @param product Input product for processing
+//     * @return Processed product
+//     */
+//    Product processNext(Product product, long dt);
 
     /**
      * Reset chain

@@ -1,48 +1,59 @@
 package cz.cvut.fel.omo.smartfactory.entity.person;
 
 import cz.cvut.fel.omo.smartfactory.entity.Product;
-import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
-import cz.cvut.fel.omo.smartfactory.entity.person.workerState.ReadyState;
-import cz.cvut.fel.omo.smartfactory.entity.person.workerState.WorkerState;
+import cz.cvut.fel.omo.smartfactory.entity.productionunit.ProductionUnit;
+import cz.cvut.fel.omo.smartfactory.entity.productionunit.state.ProductionUnitState;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class Worker extends Person implements ProductionUnit {
-
-    private ProductionUnit next;
+public class Worker implements ProductionUnit {
 
     /**
-     * Cost per tick
+     * The name
      */
-    private final float cost;
-
-    private float owingToWorker = 0.0f;
-
-    /**
-     * Worker state
-     */
-    private WorkerState workerState;
-
-    /**
-     * Was work finished ?
-     */
-    private boolean isFinished = false;
+    private String name;
 
     /**
      * The worker subject
      */
     private Product subject = null;
 
-    public Worker(String discriminator, String firstName, String lastName, float cost) {
-        super(discriminator, firstName, lastName);
-        this.cost = cost;
-        this.workerState = new ReadyState(this);
+//    /**
+//     * Material storage
+//     */
+//    private Storage<Material> materialStorage = null;
+
+    /**
+     * Next production unit in chain of responsibility
+     */
+    private ProductionUnit next;
+
+    /**
+     * The production unit state
+     */
+    private ProductionUnitState state = null;
+
+//    /**
+//     * Cost per tick
+//     */
+//    private final float cost;
+//
+//    private float owingToWorker = 0.0f;
+//
+//    /**
+//     * Was work finished ?
+//     */
+//    private boolean isFinished = false;
+
+
+    public Worker(String name) {
+        this.name = name;
     }
 
     @Override
-    public String getDiscriminator() {
+    public String getName() {
         return "";
     }
 

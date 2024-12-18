@@ -4,26 +4,27 @@ import cz.cvut.fel.omo.smartfactory.entity.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
 import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
 import cz.cvut.fel.omo.smartfactory.entity.event.SeriesFinishedEvent;
-import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.entity.factory.TickObserver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
+import java.util.Set;
 
 public class ProductionLinePool implements FactoryEventListener, TickObserver {
 
-    private final Factory factory;
-    private final Map<Character, List<ProductionUnit>> productionUnitMap;
     private final List<ProductionLine> productionLineList = new ArrayList<>();
-    private final Queue<ProductionLine> forRemoval = new LinkedList<>();
 
-    public ProductionLinePool(Factory factory, Map<Character, List<ProductionUnit>> productionUnitMap) {
-        this.factory = factory;
-        this.productionUnitMap = productionUnitMap;
+    private final Set<ProductionUnit> productionUnits = new HashSet<>();
+
+    public ProductionLinePool() {
+
+    }
+
+    public void addUnit(ProductionUnit unit) {
+        productionUnits.add(unit);
     }
 
     /**

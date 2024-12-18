@@ -1,4 +1,6 @@
-package cz.cvut.fel.omo.smartfactory.entity;
+package cz.cvut.fel.omo.smartfactory.entity.productionunit.state;
+
+import cz.cvut.fel.omo.smartfactory.entity.Product;
 
 public interface ProductionUnitState {
     /**
@@ -17,4 +19,9 @@ public interface ProductionUnitState {
      * Get product after process
      */
     Product pop();
+
+    /**
+     * Peek the product
+     */
+    Product peek();
 }
