@@ -1,7 +1,6 @@
-package cz.cvut.fel.omo.smartfactory.entity.productionunit.state;
+package cz.cvut.fel.omo.smartfactory.entity.productionunit;
 
 import cz.cvut.fel.omo.smartfactory.entity.Product;
-import cz.cvut.fel.omo.smartfactory.entity.person.FactoryVisitor;
 
 /**
  * Production line component
@@ -45,14 +44,6 @@ public interface ProductionUnit {
      */
     ProductionUnit getNext();
 
-//    /**
-//     * Process chain of responsibility
-//     *
-//     * @param product Input product for processing
-//     * @return Processed product
-//     */
-//    Product processNext(Product product, long dt);
-
     /**
      * Reset chain
      */
@@ -64,9 +55,12 @@ public interface ProductionUnit {
     boolean isAvailable();
 
     /**
-     * Accepting visitor
-     *
-     * @param visitor The factory visitor
+     * Returns true if processing is complete
      */
-    void acceptVisitor(FactoryVisitor visitor);
+    boolean isFinished();
+
+    /**
+     * Set production unit state
+     */
+    void setState(ProductionUnitState state);
 }
