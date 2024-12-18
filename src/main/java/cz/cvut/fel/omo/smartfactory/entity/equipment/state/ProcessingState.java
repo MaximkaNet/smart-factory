@@ -1,9 +1,9 @@
-package cz.cvut.fel.omo.smartfactory.entity.equipment.equipmentstate;
+package cz.cvut.fel.omo.smartfactory.entity.equipment.state;
 
 import cz.cvut.fel.omo.smartfactory.entity.Product;
+import cz.cvut.fel.omo.smartfactory.entity.productionunit.AbstractProductionUnitState;
 import cz.cvut.fel.omo.smartfactory.entity.productionunit.ProductionUnit;
 import cz.cvut.fel.omo.smartfactory.entity.productionunit.ProductionUnitStateFactory;
-import cz.cvut.fel.omo.smartfactory.entity.productionunit.state.AbstractProductionUnitState;
 
 public class ProcessingState extends AbstractProductionUnitState {
 
