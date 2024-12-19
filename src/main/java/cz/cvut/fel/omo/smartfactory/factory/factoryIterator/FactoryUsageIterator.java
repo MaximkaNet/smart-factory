@@ -1,0 +1,58 @@
+package cz.cvut.fel.omo.smartfactory.entity.factory.factoryIterator;
+
+import cz.cvut.fel.omo.smartfactory.entity.equipment.AbstractEquipment;
+import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
+import cz.cvut.fel.omo.smartfactory.entity.productionunit.ProductionUnit;
+import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
+public class FactoryUsageIterator implements Iterator<AbstractEquipment> {
+    private List<AbstractEquipment> allProductionUnits;
+    @Getter
+    private AbstractEquipment current;
+
+    public FactoryUsageIterator(Factory factory) {
+        allProductionUnits = factory.getProductionLines().stream()
+                .flatMap(line -> {
+                    List<ProductionUnit> productionUnitList = new ArrayList<>();
+                    ProductionUnit chainStart = line.getChain();
+                    while (chainStart != null) {
+                        productionUnitList.add(chainStart);
+                        chainStart = chainStart.getNext();
+                    }
+                    return productionUnitList.stream();
+                })
+                .filter(productionUnit -> productionUnit instanceof AbstractEquipment)
+                .map(productionUnit -> (AbstractEquipment) productionUnit)
+                .sorted(Comparator.comparingDouble((AbstractEquipment unit) ->
+                        (unit.getMaximumHealth() - unit.getActualHealth()) / unit.getMaximumHealth()).reversed())
+                .collect(Collectors.toList());
+
+        if (!allProductionUnits.isEmpty()) {
+            this.current = allProductionUnits.get(0);
+        }
+    }
+
+    @Override
+    public boolean hasNext() {
+        if (current == null) {
+            return false;
+        }
+        return allProductionUnits.indexOf(current) < allProductionUnits.size() - 1;
+    }
+
+    @Override
+    public AbstractEquipment next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException("Calling has next on last element");
+        }
+        current = allProductionUnits.get(allProductionUnits.indexOf(current) + 1);
+        return current;
+    }
+}
