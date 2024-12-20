@@ -1,6 +1,8 @@
 package cz.cvut.fel.omo.smartfactory.productionunit;
 
 import cz.cvut.fel.omo.smartfactory.Product;
+import cz.cvut.fel.omo.smartfactory.consumer.MaterialConsumer;
+import cz.cvut.fel.omo.smartfactory.consumer.ResourceConsumer;
 import cz.cvut.fel.omo.smartfactory.utils.JobUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,6 +39,11 @@ public abstract class AbstractProductionUnit {
     private final float costPerUsage = 0.0f;
 
     /**
+     * The usage time
+     */
+    protected long usageTime = 0;
+
+    /**
      * Available flag
      */
     private boolean isAvailable = true;
@@ -50,6 +57,16 @@ public abstract class AbstractProductionUnit {
      * The job progress
      */
     protected float jobProgress = JobUtils.START_POINT;
+
+    /**
+     * The material consumer
+     */
+    private final MaterialConsumer materialConsumer = new MaterialConsumer();
+
+    /**
+     * The usage consumer (just counter)
+     */
+    private final ResourceConsumer usageConsumer = new ResourceConsumer();
 
     /**
      * Create production unit
