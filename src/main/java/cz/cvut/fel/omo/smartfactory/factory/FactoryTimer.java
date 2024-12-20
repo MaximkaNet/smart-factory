@@ -1,4 +1,4 @@
-package cz.cvut.fel.omo.smartfactory.entity.factory;
+package cz.cvut.fel.omo.smartfactory.factory;
 
 import lombok.Getter;
 import lombok.Setter;
