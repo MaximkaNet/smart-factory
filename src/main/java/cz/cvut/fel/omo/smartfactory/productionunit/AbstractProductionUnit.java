@@ -94,17 +94,14 @@ public abstract class AbstractProductionUnit {
     /**
      * Process chain
      */
-    public Product processChain(long dt) {
-        if (next == null) {
-            return state.pop();
-        }
-        // Accept
-        if (next.state.accept(state.peek())) {
-            state.pop();
-        }
-        next.state.process(dt);
+    public Product processChain(Product in, long dt) {
+        this.state.accept(in);
+        this.state.process(dt);
 
-        return next.processChain(dt);
+        if (next == null) {
+            return this.state.pop();
+        }
+        return this.next.processChain(this.state.pop(), dt);
     }
 
     /**
