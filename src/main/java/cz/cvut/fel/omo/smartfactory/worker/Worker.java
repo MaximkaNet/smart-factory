@@ -1,5 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.worker;
 
+import cz.cvut.fel.omo.smartfactory.Material;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
 import cz.cvut.fel.omo.smartfactory.worker.state.ReadyState;
 import lombok.Getter;
@@ -33,6 +34,8 @@ public final class Worker extends AbstractProductionUnit {
     public void process(long dt) {
         jobProgress += jobStep;
 
+        this.getUsageConsumer().accept(1.0f);
+        this.getMaterialConsumer().accept(new Material("worker", 1.0f, 2));
         // Do something ...
     }
 
