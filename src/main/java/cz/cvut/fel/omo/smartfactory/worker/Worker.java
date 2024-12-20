@@ -1,8 +1,8 @@
-package cz.cvut.fel.omo.smartfactory.entity.person;
+package cz.cvut.fel.omo.smartfactory.worker;
 
-import cz.cvut.fel.omo.smartfactory.entity.productionunit.AbstractProductionUnit;
-import cz.cvut.fel.omo.smartfactory.entity.productionunit.state.ReadyState;
-import cz.cvut.fel.omo.smartfactory.entity.productionunit.state.factory.StateFactory;
+import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
+import cz.cvut.fel.omo.smartfactory.productionunit.state.ReadyState;
+import cz.cvut.fel.omo.smartfactory.productionunit.state.factory.StateFactory;
 import lombok.Getter;
 import lombok.Setter;
 
