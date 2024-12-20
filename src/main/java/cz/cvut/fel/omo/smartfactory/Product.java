@@ -1,4 +1,4 @@
-package cz.cvut.fel.omo.smartfactory.entity;
+package cz.cvut.fel.omo.smartfactory;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -42,6 +42,7 @@ public class Product {
     public void consume(Product product) {
         if (product.getName().equals(name)) {
             this.count += product.getCount();
+            product.count = 0;
         } else {
             throw new RuntimeException("The products are different");
         }
@@ -53,7 +54,10 @@ public class Product {
      * @param count Number of product
      */
     public Product pop(long count) {
-        // return new instance
-        return null;
+        if (this.count <= count) {
+            return this;
+        }
+        this.count -= Math.max(0, count);
+        return new Product(name, count);
     }
 }
