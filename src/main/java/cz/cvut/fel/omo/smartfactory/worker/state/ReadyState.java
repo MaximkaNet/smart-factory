@@ -37,7 +37,7 @@ public final class ReadyState extends AbstractProductionUnitState {
 
     @Override
     public Product peek() {
-        return null;
+        return context.peek();
     }
 
     @Override

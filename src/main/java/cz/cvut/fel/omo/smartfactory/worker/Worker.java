@@ -1,7 +1,7 @@
 package cz.cvut.fel.omo.smartfactory.worker;
 
-import cz.cvut.fel.omo.smartfactory.equipment.state.ReadyState;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
+import cz.cvut.fel.omo.smartfactory.worker.state.ReadyState;
 import lombok.Getter;
 import lombok.Setter;
 
