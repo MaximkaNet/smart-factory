@@ -3,30 +3,19 @@ package cz.cvut.fel.omo.smartfactory.equipment.state;
 import cz.cvut.fel.omo.smartfactory.Product;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnitState;
-import cz.cvut.fel.omo.smartfactory.utils.JobUtils;
 
-public class ProcessingState extends AbstractProductionUnitState {
+public class FinishedState extends AbstractProductionUnitState {
     /**
      * Create production unit state
      *
      * @param context The context
      */
-    public ProcessingState(AbstractProductionUnit context) {
+    public FinishedState(AbstractProductionUnit context) {
         super(context);
     }
 
     @Override
     public void process(long dt) {
-        context.process(dt);
-
-        if (context.needRepair()) {
-            context.setState(new BrokenState(context));
-            return;
-        }
-
-        if (context.getJobProgress() >= JobUtils.MAX_DURATION) {
-            context.setState(new FinishedState(context));
-        }
     }
 
     @Override
@@ -36,7 +25,8 @@ public class ProcessingState extends AbstractProductionUnitState {
 
     @Override
     public Product pop() {
-        return null;
+        context.setState(new ReadyState(context));
+        return context.pop();
     }
 
     @Override

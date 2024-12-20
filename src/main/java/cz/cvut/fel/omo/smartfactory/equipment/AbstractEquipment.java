@@ -1,9 +1,8 @@
-package cz.cvut.fel.omo.smartfactory.entity.equipment;
+package cz.cvut.fel.omo.smartfactory.equipment;
 
-import cz.cvut.fel.omo.smartfactory.entity.equipment.state.factory.EquipmentStateFactory;
-import cz.cvut.fel.omo.smartfactory.entity.event.EventSender;
-import cz.cvut.fel.omo.smartfactory.entity.productionunit.AbstractProductionUnit;
-import cz.cvut.fel.omo.smartfactory.entity.productionunit.state.ReadyState;
+import cz.cvut.fel.omo.smartfactory.equipment.state.ReadyState;
+import cz.cvut.fel.omo.smartfactory.event.EventSender;
+import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,7 +34,7 @@ public abstract class AbstractEquipment extends AbstractProductionUnit implement
         this.maximumHealth = health;
 
         // Set initial state
-        this.setState(new ReadyState(this, new EquipmentStateFactory()));
+        this.setState(new ReadyState(this));
     }
 
     /**
@@ -54,7 +53,8 @@ public abstract class AbstractEquipment extends AbstractProductionUnit implement
         return false;
     }
 
-    public boolean isBroken() {
-        return false;
+    @Override
+    public boolean needRepair() {
+        return actualHealth <= 0;
     }
 }
