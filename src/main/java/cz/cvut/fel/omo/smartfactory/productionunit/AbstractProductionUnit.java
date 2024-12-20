@@ -1,6 +1,7 @@
-package cz.cvut.fel.omo.smartfactory.entity.productionunit;
+package cz.cvut.fel.omo.smartfactory.productionunit;
 
-import cz.cvut.fel.omo.smartfactory.entity.Product;
+import cz.cvut.fel.omo.smartfactory.Product;
+import cz.cvut.fel.omo.smartfactory.utils.JobUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public abstract class AbstractProductionUnit implements ProductionUnit {
+public abstract class AbstractProductionUnit {
     /**
      * The name
      */
@@ -23,17 +24,17 @@ public abstract class AbstractProductionUnit implements ProductionUnit {
     /**
      * Next production unit in chain of responsibility
      */
-    private ProductionUnit next = null;
+    private AbstractProductionUnit next = null;
 
     /**
      * Manufacturing entity state
      */
-    private ProductionUnitState state;
+    private AbstractProductionUnitState state;
 
     /**
      * Price per usage
      */
-    private float costPerUsage = 0.0f;
+    private final float costPerUsage = 0.0f;
 
     /**
      * Available flag
@@ -41,9 +42,19 @@ public abstract class AbstractProductionUnit implements ProductionUnit {
     private boolean isAvailable = true;
 
     /**
+     * Is finished flag
+     */
+    private boolean isFinished = false;
+
+    /**
+     * The job progress
+     */
+    protected float jobProgress = JobUtils.START_POINT;
+
+    /**
      * Create production unit
      */
-    public AbstractProductionUnit(String name, ProductionUnitState initialState) {
+    public AbstractProductionUnit(String name, AbstractProductionUnitState initialState) {
         this.name = name;
         this.state = initialState;
     }
@@ -52,30 +63,62 @@ public abstract class AbstractProductionUnit implements ProductionUnit {
         this(name, null);
     }
 
-    @Override
+    /**
+     * Accept product for processing
+     *
+     * @return True if product was accepted false otherwise
+     */
     public boolean accept(Product product) {
         if (product == null || subject != null) {
             return false;
         }
+        jobProgress = JobUtils.START_POINT;
         subject = product;
         return true;
     }
 
-    @Override
+    /**
+     * Get product after process
+     */
     public Product pop() {
         Product product = subject;
         subject = null;
         return product;
     }
 
-    @Override
+    /**
+     * Process product production
+     */
+    public abstract void process(long dt);
+
+    /**
+     * Process chain
+     */
+    public Product processChain(long dt) {
+        if (next == null) {
+            return state.pop();
+        }
+        // Accept
+        if (next.state.accept(state.peek())) {
+            state.pop();
+        }
+        next.state.process(dt);
+
+        return next.processChain(dt);
+    }
+
+    /**
+     * Peek the product
+     */
     public Product peek() {
         return subject;
     }
 
-    @Override
+    /**
+     * Reset chain
+     */
     public void reset() {
-        ProductionUnit next = this.next;
+        AbstractProductionUnit next = this.next;
         this.next = null;
 
         // If chain has next reset it
@@ -84,21 +127,13 @@ public abstract class AbstractProductionUnit implements ProductionUnit {
         }
     }
 
-    @Override
-    public boolean isAvailable() {
-        return false;
-    }
+    /**
+     * Repair the production unit
+     */
+    public abstract boolean repair(float power);
 
-    public boolean isReady() {
-        return false;
-    }
-
-    public boolean isProcessing() {
-        return false;
-    }
-
-    public boolean isFinished() {
-        return false;
-    }
-
+    /**
+     * Returns true if actual health <= 0
+     */
+    public abstract boolean needRepair();
 }

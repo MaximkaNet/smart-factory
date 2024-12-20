@@ -1,28 +1,50 @@
-package cz.cvut.fel.omo.smartfactory.entity.productionunit;
+package cz.cvut.fel.omo.smartfactory.productionunit;
+
+import cz.cvut.fel.omo.smartfactory.Product;
 
 /**
  * Abstract production unit state
  */
-public abstract class AbstractProductionUnitState implements ProductionUnitState {
+public abstract class AbstractProductionUnitState {
 
     /**
      * The context
      */
-    protected final ProductionUnit context;
-
-    /**
-     * State factory
-     */
-    protected final ProductionUnitStateFactory stateFactory;
+    protected final AbstractProductionUnit context;
 
     /**
      * Create production unit state
      *
-     * @param context      The context
-     * @param stateFactory The state factory
+     * @param context The context
      */
-    public AbstractProductionUnitState(ProductionUnit context, ProductionUnitStateFactory stateFactory) {
+    public AbstractProductionUnitState(AbstractProductionUnit context) {
         this.context = context;
-        this.stateFactory = stateFactory;
     }
+
+    /**
+     * Process product production
+     */
+    public abstract void process(long dt);
+
+    /**
+     * Accept product for processing
+     *
+     * @return True if product was accepted false otherwise
+     */
+    public abstract boolean accept(Product product);
+
+    /**
+     * Get product after process
+     */
+    public abstract Product pop();
+
+    /**
+     * Peek the product
+     */
+    public abstract Product peek();
+
+    /**
+     * Repair the unit
+     */
+    public abstract boolean repair(float power);
 }
