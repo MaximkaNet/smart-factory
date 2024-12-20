@@ -1,5 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.equipment;
 
+import cz.cvut.fel.omo.smartfactory.consumer.ResourceConsumer;
 import cz.cvut.fel.omo.smartfactory.equipment.state.ReadyState;
 import cz.cvut.fel.omo.smartfactory.event.EventSender;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
@@ -22,6 +23,16 @@ public abstract class AbstractEquipment extends AbstractProductionUnit implement
      * Actual health
      */
     private float actualHealth = 0;
+
+    /**
+     * Electricity consumer
+     */
+    private ResourceConsumer electricityConsumer = new ResourceConsumer();
+
+    /**
+     * Oil consumer
+     */
+    private ResourceConsumer oilConsumer = new ResourceConsumer();
 
     /**
      * Create factory equipment
@@ -47,6 +58,7 @@ public abstract class AbstractEquipment extends AbstractProductionUnit implement
 
         if (actualHealth >= maximumHealth) {
             actualHealth = maximumHealth;
+            usageTime = 0;
             return true;
         }
 
