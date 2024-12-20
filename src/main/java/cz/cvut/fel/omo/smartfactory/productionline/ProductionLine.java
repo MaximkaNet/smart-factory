@@ -1,21 +1,29 @@
-package cz.cvut.fel.omo.smartfactory.entity.productionline;
+package cz.cvut.fel.omo.smartfactory.productionline;
 
-import cz.cvut.fel.omo.smartfactory.entity.Product;
-import cz.cvut.fel.omo.smartfactory.entity.productionline.productionline.ProductionLineState;
-import cz.cvut.fel.omo.smartfactory.entity.productionline.productionline.ReadyState;
-import cz.cvut.fel.omo.smartfactory.entity.productionunit.ProductionUnit;
-import cz.cvut.fel.omo.smartfactory.entity.storage.Storage;
+import cz.cvut.fel.omo.smartfactory.Product;
+import cz.cvut.fel.omo.smartfactory.productionline.state.ProductionLineState;
+import cz.cvut.fel.omo.smartfactory.productionline.state.ReadyState;
+import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+/**
+ * The production line
+ */
 @Getter
 @Setter
 public class ProductionLine {
+    /**
+     * Production line logger
+     */
+    private static final Logger LOGGER = LogManager.getLogger("Production line");
 
     /**
      * Current configuration (chain of responsibility)
      */
-    private ProductionUnit chain;
+    private AbstractProductionUnit chain;
 
     /**
      * Input template
@@ -33,33 +41,10 @@ public class ProductionLine {
     private ProductionLineState state = new ReadyState(this);
 
     /**
-     * Input storage pointer
-     */
-    private Storage<Product> inStorage;
-
-    /**
-     * Output storage pointer
-     */
-    private Storage<Product> outStorage;
-
-    /**
      * Create production line
      */
-    public ProductionLine(ProductionUnit chain) {
-        this(chain, null, null);
-    }
-
-    /**
-     * Create production line and connect in/out storage
-     *
-     * @param chain The production unit chain
-     * @param in    Input storage
-     * @param out   Output storage
-     */
-    public ProductionLine(ProductionUnit chain, Storage<Product> in, Storage<Product> out) {
+    public ProductionLine(AbstractProductionUnit chain) {
         this.chain = chain;
-        this.inStorage = in;
-        this.outStorage = out;
     }
 
     /**
@@ -79,29 +64,18 @@ public class ProductionLine {
     /**
      * Process production
      */
-    protected void process(long dt) {
-        // Input storage hook
-        if (inputTemplate == null && inStorage != null) {
-            inputTemplate = inStorage.pop(1);
+    public void process(long dt) {
+        if (releasedProduct != null) {
+            LOGGER.warn("The production line cannot handle the chain due to the released product");
+            return;
         }
 
-        // Accept product template
-        if (chain.accept(inputTemplate)) {
-            inputTemplate = null;
-        }
-
-        chain.process(dt);
+        // Accept product template and update chain
+        Product released = chain.processChain(inputTemplate, dt);
 
         // Release processed product
-        Product out = chain.pop();
-        if (out != null) {
-            releasedProduct = out;
-        }
-
-        // Output storage hook
-        if (releasedProduct != null && outStorage != null) {
-            outStorage.push(releasedProduct);
-            releasedProduct = null;
+        if (released != null) {
+            releasedProduct = released;
         }
     }
 
@@ -121,19 +95,10 @@ public class ProductionLine {
         return releasedProduct;
     }
 
-    public boolean isFinished() {
-        return false;
-    }
-
-    public boolean isWaitForTemplate() {
-        return false;
-    }
-
-    public boolean isProcessing() {
-        return false;
-    }
-
-    public boolean isWaitForPickUp() {
-        return false;
+    /**
+     * Returns true if production line has released product
+     */
+    public boolean productIsDone() {
+        return releasedProduct != null;
     }
 }
