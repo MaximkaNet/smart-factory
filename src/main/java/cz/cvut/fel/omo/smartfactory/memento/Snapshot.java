@@ -1,4 +1,4 @@
-package cz.cvut.fel.omo.smartfactory.entity.memento;
+package cz.cvut.fel.omo.smartfactory.memento;
 
 /**
  * The object snapshot
