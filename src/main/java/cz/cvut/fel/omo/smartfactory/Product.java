@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Product {
+public class Product implements Stackable<Product> {
     /**
      * The unique product name
      */
@@ -39,6 +39,7 @@ public class Product {
     /**
      * Consume the product
      */
+    @Override
     public void consume(Product product) {
         if (product.getName().equals(name)) {
             this.count += product.getCount();
@@ -53,6 +54,7 @@ public class Product {
      *
      * @param count Number of product
      */
+    @Override
     public Product pop(long count) {
         if (this.count <= count) {
             return this;
