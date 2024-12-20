@@ -1,11 +1,11 @@
-package cz.cvut.fel.omo.smartfactory.entity.factory;
+package cz.cvut.fel.omo.smartfactory.factory;
 
-import cz.cvut.fel.omo.smartfactory.entity.event.EventBus;
-import cz.cvut.fel.omo.smartfactory.entity.memento.Memento;
-import cz.cvut.fel.omo.smartfactory.entity.memento.Snapshot;
-import cz.cvut.fel.omo.smartfactory.entity.productionline.ProductionLineManager;
-import cz.cvut.fel.omo.smartfactory.entity.repair.RepairmenPool;
-import cz.cvut.fel.omo.smartfactory.entity.series.OrderManager;
+import cz.cvut.fel.omo.smartfactory.event.EventBus;
+import cz.cvut.fel.omo.smartfactory.memento.Memento;
+import cz.cvut.fel.omo.smartfactory.memento.Snapshot;
+import cz.cvut.fel.omo.smartfactory.productionline.ProductionLineManager;
+import cz.cvut.fel.omo.smartfactory.repair.RepairmenPool;
+import cz.cvut.fel.omo.smartfactory.series.OrderManager;
 import lombok.Getter;
 import lombok.Setter;
 
