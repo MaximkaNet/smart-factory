@@ -1,6 +1,7 @@
 package cz.cvut.fel.omo.smartfactory.equipment;
 
 import cz.cvut.fel.omo.smartfactory.Material;
+import cz.cvut.fel.omo.smartfactory.event.EventBus;
 
 /**
  * The machine
@@ -12,8 +13,8 @@ public final class Machine extends AbstractEquipment {
      * @param name   The equipment name
      * @param health The maximum health
      */
-    public Machine(String name, float health) {
-        super(name, health);
+    public Machine(String name, float health, EventBus eventBus) {
+        super(name, health, eventBus);
     }
 
     @Override
