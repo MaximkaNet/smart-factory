@@ -3,6 +3,7 @@ package cz.cvut.fel.omo.smartfactory.equipment;
 import cz.cvut.fel.omo.smartfactory.consumer.ResourceConsumer;
 import cz.cvut.fel.omo.smartfactory.equipment.state.ReadyState;
 import cz.cvut.fel.omo.smartfactory.event.EventBus;
+import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,11 +43,11 @@ public abstract class AbstractEquipment extends AbstractProductionUnit {
     /**
      * Create factory equipment
      *
-     * @param name   The equipment name
+     * @param id     The equipment identifier
      * @param health The maximum health
      */
-    public AbstractEquipment(String name, float health, EventBus eventBus) {
-        super(name);
+    public AbstractEquipment(Identifier id, float health, EventBus eventBus) {
+        super(id);
         this.maximumHealth = health;
         this.eventBus = eventBus;
 
