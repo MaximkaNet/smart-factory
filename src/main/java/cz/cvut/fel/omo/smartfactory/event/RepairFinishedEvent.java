@@ -1,20 +1,18 @@
-package cz.cvut.fel.omo.smartfactory.entity.event;
+package cz.cvut.fel.omo.smartfactory.event;
 
 import lombok.Getter;
 
 import java.time.Instant;
 
 @Getter
-public class RepairFinishedEvent extends FactoryEvent {
+public class RepairFinishedEvent extends AbstractEvent {
 
     /**
      * Create event
      *
-     * @param sender      The event sender
-     * @param priority    The event priority
      * @param generatedAt The generation time
      */
-    public RepairFinishedEvent(EventSender sender, int priority, Instant generatedAt) {
-        super(sender, priority, generatedAt);
+    public RepairFinishedEvent(Instant generatedAt) {
+        super(0, generatedAt);
     }
 }

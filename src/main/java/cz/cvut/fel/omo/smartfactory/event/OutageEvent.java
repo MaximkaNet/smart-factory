@@ -1,6 +1,6 @@
-package cz.cvut.fel.omo.smartfactory.entity.event;
+package cz.cvut.fel.omo.smartfactory.event;
 
-import cz.cvut.fel.omo.smartfactory.entity.equipment.AbstractEquipment;
+import cz.cvut.fel.omo.smartfactory.equipment.AbstractEquipment;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,9 +11,14 @@ import java.time.Instant;
  * Outage event
  */
 @Getter
-public class OutageEvent extends FactoryEvent {
+public class OutageEvent extends AbstractEvent {
 
     private static final Logger LOGGER = LogManager.getLogger("OutageEvent");
+
+    /**
+     * Outage sender
+     */
+    private final AbstractEquipment sender;
 
     /**
      * Repair started at
@@ -33,7 +38,8 @@ public class OutageEvent extends FactoryEvent {
      * @param time      Generated time
      */
     public OutageEvent(AbstractEquipment equipment, int priority, Instant time) {
-        super(equipment, priority, time);
+        super(priority, time);
+        this.sender = equipment;
     }
 
     /**

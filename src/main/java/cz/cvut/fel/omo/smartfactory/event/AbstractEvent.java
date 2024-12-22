@@ -1,4 +1,4 @@
-package cz.cvut.fel.omo.smartfactory.entity.event;
+package cz.cvut.fel.omo.smartfactory.event;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,12 +10,7 @@ import java.time.Instant;
  */
 @Getter
 @Setter
-public abstract class FactoryEvent implements Comparable<FactoryEvent> {
-    /**
-     * Event sender
-     */
-    private final EventSender sender;
-
+public abstract class AbstractEvent implements Comparable<AbstractEvent> {
     /**
      * The event priority
      */
@@ -29,18 +24,16 @@ public abstract class FactoryEvent implements Comparable<FactoryEvent> {
     /**
      * Create event
      *
-     * @param sender      The event sender
      * @param priority    The event priority
      * @param generatedAt The generation time
      */
-    public FactoryEvent(EventSender sender, int priority, Instant generatedAt) {
-        this.sender = sender;
+    public AbstractEvent(int priority, Instant generatedAt) {
         this.priority = priority;
         this.generatedAt = generatedAt;
     }
 
     @Override
-    public int compareTo(FactoryEvent o) {
+    public int compareTo(AbstractEvent o) {
         int priorityComparison = Integer.compare(o.getPriority(), this.priority);
         if (priorityComparison != 0) {
             return priorityComparison;
