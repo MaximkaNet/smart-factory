@@ -1,6 +1,7 @@
 package cz.cvut.fel.omo.smartfactory.worker;
 
 import cz.cvut.fel.omo.smartfactory.Material;
+import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
 import cz.cvut.fel.omo.smartfactory.worker.state.ReadyState;
 import lombok.Getter;
@@ -21,11 +22,11 @@ public final class Worker extends AbstractProductionUnit {
     /**
      * Create a worker
      *
-     * @param name    The worker name
+     * @param id      The worker name
      * @param jobStep The job step (in percents)
      */
-    public Worker(String name, float jobStep) {
-        super(name);
+    public Worker(Identifier id, float jobStep) {
+        super(id);
         this.jobStep = jobStep;
         setState(new ReadyState(this));
     }

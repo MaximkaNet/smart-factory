@@ -3,6 +3,7 @@ package cz.cvut.fel.omo.smartfactory.productionunit;
 import cz.cvut.fel.omo.smartfactory.Product;
 import cz.cvut.fel.omo.smartfactory.consumer.MaterialConsumer;
 import cz.cvut.fel.omo.smartfactory.consumer.ResourceConsumer;
+import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
 import cz.cvut.fel.omo.smartfactory.utils.JobUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,9 +15,9 @@ import lombok.Setter;
 @Setter
 public abstract class AbstractProductionUnit {
     /**
-     * The name
+     * The identifier
      */
-    private final String name;
+    private final Identifier id;
 
     /**
      * Current product
@@ -71,13 +72,13 @@ public abstract class AbstractProductionUnit {
     /**
      * Create production unit
      */
-    public AbstractProductionUnit(String name, AbstractProductionUnitState initialState) {
-        this.name = name;
+    public AbstractProductionUnit(Identifier id, AbstractProductionUnitState initialState) {
+        this.id = id;
         this.state = initialState;
     }
 
-    public AbstractProductionUnit(String name) {
-        this(name, null);
+    public AbstractProductionUnit(Identifier id) {
+        this(id, null);
     }
 
     /**

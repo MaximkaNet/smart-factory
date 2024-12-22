@@ -1,6 +1,8 @@
 package cz.cvut.fel.omo.smartfactory.productionunit;
 
 import cz.cvut.fel.omo.smartfactory.Product;
+import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
+import cz.cvut.fel.omo.smartfactory.identifier.IdentifierManager;
 import cz.cvut.fel.omo.smartfactory.utils.JobUtils;
 import cz.cvut.fel.omo.smartfactory.worker.Worker;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,9 @@ public class WorkerTest {
     void createAndProcessOneProductAndFinished() {
         Product templates = new Product("Test product", 10);
 
-        AbstractProductionUnit worker = new Worker("Worker", JobUtils.stepDuration(1));
+        Identifier workerId = IdentifierManager.getFactory("WORKER_TEST").create("Worker");
+
+        AbstractProductionUnit worker = new Worker(workerId, JobUtils.stepDuration(1));
 
         boolean isAccepted = worker.getState().accept(templates.pop(1));
         worker.getState().process(10);
