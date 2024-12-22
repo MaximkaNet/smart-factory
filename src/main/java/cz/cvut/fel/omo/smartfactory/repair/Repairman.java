@@ -1,10 +1,11 @@
-package cz.cvut.fel.omo.smartfactory.entity.repair;
+package cz.cvut.fel.omo.smartfactory.repair;
 
-import cz.cvut.fel.omo.smartfactory.entity.equipment.AbstractEquipment;
-import cz.cvut.fel.omo.smartfactory.entity.equipment.state.AbstractEquipmentState;
-import cz.cvut.fel.omo.smartfactory.entity.event.EventBus;
-import cz.cvut.fel.omo.smartfactory.entity.event.EventSender;
-import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
+import cz.cvut.fel.omo.smartfactory.equipment.AbstractEquipment;
+import cz.cvut.fel.omo.smartfactory.event.EventBus;
+import cz.cvut.fel.omo.smartfactory.event.OutageEvent;
+import cz.cvut.fel.omo.smartfactory.event.RepairFinishedEvent;
+import cz.cvut.fel.omo.smartfactory.event.RepairStartedEvent;
+import cz.cvut.fel.omo.smartfactory.factory.FactoryTimer;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
@@ -15,8 +16,13 @@ import org.apache.logging.log4j.Logger;
  */
 @Getter
 @Setter
-public class Repairman implements EventSender {
+public class Repairman {
     public static final Logger LOGGER = LogManager.getLogger("Repairman");
+
+    /**
+     * The name
+     */
+    private final String name;
 
     /**
      * Repair power
@@ -36,15 +42,17 @@ public class Repairman implements EventSender {
     /**
      * The event bus
      */
-    private EventBus eventBus;
+    private final EventBus eventBus;
 
     /**
      * Create repairman
      *
      * @param power The repair power per tick
      */
-    public Repairman(float power) {
+    public Repairman(String name, float power, EventBus eventBus) {
+        this.name = name;
         this.power = power;
+        this.eventBus = eventBus;
     }
 
     /**
@@ -58,12 +66,11 @@ public class Repairman implements EventSender {
         }
 
         outageEvent = event;
-        subject = (AbstractEquipment) outageEvent.getSender();
+        subject = outageEvent.getSender();
         // Generate repair started event
-        if (eventBus != null) {
-            eventBus.getEventsFactory().generateRepairStartedEvent(this);
-            outageEvent.repairStarted(eventBus.getTimer().now());
-        }
+        FactoryTimer timer = eventBus.getTimer();
+        eventBus.notifyListeners(new RepairStartedEvent(timer.now()));
+        outageEvent.repairStarted(timer.now());
         return true;
     }
 
@@ -75,18 +82,15 @@ public class Repairman implements EventSender {
             return;
         }
 
-        AbstractEquipmentState subjectState = (AbstractEquipmentState) subject.getState();
-
-        boolean isRepaired = subjectState.repair(power * deltaTime);
+        boolean isRepaired = subject.getState().repair(power * deltaTime);
 
         if (isRepaired) {
             subject = null;
             outageEvent = null;
             // Generate finished event
-            if (eventBus != null) {
-                eventBus.getEventsFactory().generateRepairFinishedEvent(this);
-                outageEvent.repairFinished(eventBus.getTimer().now());
-            }
+            FactoryTimer timer = eventBus.getTimer();
+            eventBus.notifyListeners(new RepairFinishedEvent(timer.now()));
+            outageEvent.repairFinished(timer.now());
         }
     }
 }
