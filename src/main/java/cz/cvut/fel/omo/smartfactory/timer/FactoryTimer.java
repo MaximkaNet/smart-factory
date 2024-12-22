@@ -1,4 +1,4 @@
-package cz.cvut.fel.omo.smartfactory.factory;
+package cz.cvut.fel.omo.smartfactory.timer;
 
 import lombok.Getter;
 import lombok.Setter;
