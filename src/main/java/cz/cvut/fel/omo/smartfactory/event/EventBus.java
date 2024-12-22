@@ -1,6 +1,6 @@
-package cz.cvut.fel.omo.smartfactory.entity.event;
+package cz.cvut.fel.omo.smartfactory.event;
 
-import cz.cvut.fel.omo.smartfactory.entity.factory.FactoryTimer;
+import cz.cvut.fel.omo.smartfactory.factory.FactoryTimer;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -17,12 +17,12 @@ public class EventBus {
     /**
      * Listeners map
      */
-    private final Map<Class<? extends FactoryEvent>, List<FactoryEventListener>> eventTypeListenersMap = new HashMap<>();
+    private final Map<Class<? extends AbstractEvent>, List<EventListener>> eventTypeListenersMap = new HashMap<>();
 
     /**
      * Event history
      */
-    private final List<FactoryEvent> eventHistory = new ArrayList<>();
+    private final List<AbstractEvent> eventHistory = new ArrayList<>();
 
     /**
      * The factory timer
@@ -30,16 +30,10 @@ public class EventBus {
     private final FactoryTimer timer;
 
     /**
-     * Event factory
-     */
-    private final EventsFactory eventsFactory;
-
-    /**
      * Create event manager
      */
     public EventBus(FactoryTimer timer) {
         this.timer = timer;
-        this.eventsFactory = new EventsFactory(this);
     }
 
     /**
@@ -47,7 +41,7 @@ public class EventBus {
      *
      * @param event Factory event
      */
-    public void notifyListeners(FactoryEvent event) {
+    public void notifyListeners(AbstractEvent event) {
         // Notify all registered listeners
         eventTypeListenersMap.getOrDefault(event.getClass(), new ArrayList<>()).forEach((listener) -> listener.receiveEvent(event));
         // Add event to history
@@ -60,7 +54,7 @@ public class EventBus {
      * @param eventType The type of event
      * @param listener  The listener
      */
-    public void registerListener(Class<? extends FactoryEvent> eventType, FactoryEventListener listener) {
+    public void registerListener(Class<? extends AbstractEvent> eventType, EventListener listener) {
         eventTypeListenersMap.computeIfAbsent(eventType, key -> new ArrayList<>()).add(listener);
     }
 }
