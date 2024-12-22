@@ -1,6 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.event;
 
-import cz.cvut.fel.omo.smartfactory.factory.FactoryTimer;
+import cz.cvut.fel.omo.smartfactory.timer.FactoryTimer;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class EventBus {
     /**
      * Listeners map
      */
-    private final Map<Class<? extends AbstractEvent>, List<EventListener>> eventTypeListenersMap = new HashMap<>();
+    private final Map<EventType, List<EventListener>> eventTypeListenersMap = new HashMap<>();
 
     /**
      * Event history
@@ -43,7 +43,7 @@ public class EventBus {
      */
     public void notifyListeners(AbstractEvent event) {
         // Notify all registered listeners
-        eventTypeListenersMap.getOrDefault(event.getClass(), new ArrayList<>()).forEach((listener) -> listener.receiveEvent(event));
+        eventTypeListenersMap.getOrDefault(event.getType(), new ArrayList<>()).forEach((listener) -> listener.receiveEvent(event));
         // Add event to history
         eventHistory.add(event);
     }
@@ -54,7 +54,7 @@ public class EventBus {
      * @param eventType The type of event
      * @param listener  The listener
      */
-    public void registerListener(Class<? extends AbstractEvent> eventType, EventListener listener) {
+    public void registerListener(EventType eventType, EventListener listener) {
         eventTypeListenersMap.computeIfAbsent(eventType, key -> new ArrayList<>()).add(listener);
     }
 }

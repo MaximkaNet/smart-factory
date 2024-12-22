@@ -38,7 +38,7 @@ public class OutageEvent extends AbstractEvent {
      * @param time      Generated time
      */
     public OutageEvent(AbstractEquipment equipment, int priority, Instant time) {
-        super(priority, time);
+        super(EventType.OUTAGE, equipment.getId(), priority, time);
         this.sender = equipment;
     }
 

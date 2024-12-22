@@ -1,5 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.event;
 
+import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
 import lombok.Getter;
 
 import java.time.Instant;
@@ -12,7 +13,7 @@ public class RepairFinishedEvent extends AbstractEvent {
      *
      * @param generatedAt The generation time
      */
-    public RepairFinishedEvent(Instant generatedAt) {
-        super(0, generatedAt);
+    public RepairFinishedEvent(Identifier senderId, Instant generatedAt) {
+        super(EventType.REPAIR_FINISHED, senderId, 0, generatedAt);
     }
 }
