@@ -1,9 +1,10 @@
-package cz.cvut.fel.omo.smartfactory.entity.repair;
+package cz.cvut.fel.omo.smartfactory.repair;
 
-import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
-import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEventListener;
-import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
-import cz.cvut.fel.omo.smartfactory.entity.factory.TickObserver;
+import cz.cvut.fel.omo.smartfactory.event.AbstractEvent;
+import cz.cvut.fel.omo.smartfactory.event.EventListener;
+import cz.cvut.fel.omo.smartfactory.event.EventType;
+import cz.cvut.fel.omo.smartfactory.event.OutageEvent;
+import cz.cvut.fel.omo.smartfactory.factory.TickObserver;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +16,7 @@ import java.util.PriorityQueue;
  */
 @Getter
 @Setter
-public class RepairmenPool implements FactoryEventListener, TickObserver {
+public class RepairmenPool implements EventListener, TickObserver {
     /**
      * The outage events queue
      */
@@ -57,7 +58,11 @@ public class RepairmenPool implements FactoryEventListener, TickObserver {
     }
 
     @Override
-    public void receiveEvent(FactoryEvent event) {
-        outageQueue.add((OutageEvent) event);
+    public void receiveEvent(AbstractEvent event) {
+        if (event.getType() == EventType.OUTAGE) {
+            outageQueue.add((OutageEvent) event);
+        } else {
+            throw new RuntimeException("Unsupported event type");
+        }
     }
 }

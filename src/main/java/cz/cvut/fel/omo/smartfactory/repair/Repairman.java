@@ -5,7 +5,8 @@ import cz.cvut.fel.omo.smartfactory.event.EventBus;
 import cz.cvut.fel.omo.smartfactory.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.event.RepairFinishedEvent;
 import cz.cvut.fel.omo.smartfactory.event.RepairStartedEvent;
-import cz.cvut.fel.omo.smartfactory.factory.FactoryTimer;
+import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
+import cz.cvut.fel.omo.smartfactory.timer.FactoryTimer;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
@@ -22,7 +23,7 @@ public class Repairman {
     /**
      * The name
      */
-    private final String name;
+    private final Identifier id;
 
     /**
      * Repair power
@@ -49,8 +50,8 @@ public class Repairman {
      *
      * @param power The repair power per tick
      */
-    public Repairman(String name, float power, EventBus eventBus) {
-        this.name = name;
+    public Repairman(Identifier id, float power, EventBus eventBus) {
+        this.id = id;
         this.power = power;
         this.eventBus = eventBus;
     }
@@ -61,7 +62,7 @@ public class Repairman {
      * @param event The outage event
      */
     public boolean accept(OutageEvent event) {
-        if (outageEvent != null || subject != null) {
+        if (event == null || outageEvent != null || subject != null) {
             return false;
         }
 
@@ -69,7 +70,7 @@ public class Repairman {
         subject = outageEvent.getSender();
         // Generate repair started event
         FactoryTimer timer = eventBus.getTimer();
-        eventBus.notifyListeners(new RepairStartedEvent(timer.now()));
+        eventBus.notifyListeners(new RepairStartedEvent(id, timer.now()));
         outageEvent.repairStarted(timer.now());
         return true;
     }
@@ -78,19 +79,20 @@ public class Repairman {
      * Process repairing
      */
     public void process(long deltaTime) {
-        if (subject == null) {
+        if (subject == null || outageEvent == null) {
             return;
         }
 
         boolean isRepaired = subject.getState().repair(power * deltaTime);
 
         if (isRepaired) {
-            subject = null;
-            outageEvent = null;
             // Generate finished event
             FactoryTimer timer = eventBus.getTimer();
-            eventBus.notifyListeners(new RepairFinishedEvent(timer.now()));
+            eventBus.notifyListeners(new RepairFinishedEvent(id, timer.now()));
             outageEvent.repairFinished(timer.now());
+            // Reset subject and event
+            subject = null;
+            outageEvent = null;
         }
     }
 }
