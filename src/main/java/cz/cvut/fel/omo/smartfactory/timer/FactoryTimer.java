@@ -64,6 +64,13 @@ public class FactoryTimer {
     }
 
     /**
+     * Returns new instance of TimerBuilder
+     */
+    public static TimerBuilder builder() {
+        return new TimerBuilder();
+    }
+
+    /**
      * Handle new timer tick
      */
     public void tick() {
