@@ -40,6 +40,7 @@ public class IdentifierFactory {
     public IdentifierFactory(String name, long identity) {
         this.identity = identity;
         this.name = name;
+        this.lastNumber = 0;
     }
 
     /**
@@ -49,7 +50,7 @@ public class IdentifierFactory {
      * @return The identifier with unique number
      */
     public Identifier create(String name) {
-        lastNumber += 1;
+        lastNumber += identity;
         return new Identifier(lastNumber, name);
     }
 }
