@@ -1,5 +1,5 @@
-package cz.cvut.fel.omo.smartfactory.entity.event;
+package cz.cvut.fel.omo.smartfactory.event;
 
-public interface FactoryEventListener {
-    void receiveEvent(FactoryEvent event);
+public interface EventListener {
+    void receiveEvent(AbstractEvent event);
 }
