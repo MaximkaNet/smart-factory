@@ -1,5 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.event;
 
+import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,17 @@ import java.time.Instant;
 @Getter
 @Setter
 public abstract class AbstractEvent implements Comparable<AbstractEvent> {
+
+    /**
+     * The sender if
+     */
+    private final Identifier senderId;
+
+    /**
+     * Event type
+     */
+    private final EventType type;
+
     /**
      * The event priority
      */
@@ -27,7 +39,9 @@ public abstract class AbstractEvent implements Comparable<AbstractEvent> {
      * @param priority    The event priority
      * @param generatedAt The generation time
      */
-    public AbstractEvent(int priority, Instant generatedAt) {
+    public AbstractEvent(EventType type, Identifier senderId, int priority, Instant generatedAt) {
+        this.type = type;
+        this.senderId = senderId;
         this.priority = priority;
         this.generatedAt = generatedAt;
     }
