@@ -14,6 +14,11 @@ public class Identifier {
     private final String name;
 
     /**
+     * The short name
+     */
+    private final String shortName;
+
+    /**
      * The identifier number
      */
     private final long number;
@@ -24,9 +29,10 @@ public class Identifier {
      * @param number The unique number
      * @param name   The name
      */
-    public Identifier(long number, String name) {
+    public Identifier(long number, String name, String shortName) {
         this.number = number;
         this.name = name;
+        this.shortName = shortName;
     }
 
     @Override

@@ -51,6 +51,17 @@ public class IdentifierFactory {
      */
     public Identifier create(String name) {
         lastNumber += identity;
-        return new Identifier(lastNumber, name);
+        return create(name, String.valueOf(name.charAt(0)));
+    }
+
+    /**
+     * Create identifier with specified short name
+     *
+     * @param name The object name. For instance "Robot", "Manipulator 300", "Machine 2897"
+     * @return The identifier with unique number
+     */
+    public Identifier create(String name, String shortName) {
+        lastNumber += identity;
+        return new Identifier(lastNumber, name, shortName);
     }
 }
