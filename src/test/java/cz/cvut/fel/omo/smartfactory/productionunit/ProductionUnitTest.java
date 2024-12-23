@@ -17,7 +17,8 @@ public class ProductionUnitTest {
 
         Product template = new Product("The product");
 
-        Product productFromChain = chain.processChain(template, 1);
+        chain.getState().accept(template);
+        Product productFromChain = chain.processChain(1);
 
         Product worker1Product = chain.getState().peek();
 
