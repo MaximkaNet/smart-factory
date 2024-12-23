@@ -5,24 +5,22 @@ import org.junit.jupiter.api.Test;
 
 import static cz.cvut.fel.omo.smartfactory.helpers.ChainUtils.createChain;
 import static cz.cvut.fel.omo.smartfactory.helpers.ChainUtils.getWorkerListWithOneStepEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProductionLineTest {
     @Test
     public void createChainAndDevelopOneProduct() {
-        Product templates = new Product("Tesla model S", 100);
+        Product template = new Product("Tesla model S");
 
         ProductionLine productionLine = new ProductionLine(createChain(getWorkerListWithOneStepEach()));
 
-        boolean isAccepted = productionLine.getState().accept(templates.pop(1));
-        productionLine.getState().process(1);
-        Product releasedProduct = productionLine.getState().pop();
-        Product productAfterPop = productionLine.getState().peek();
+        productionLine.addTemplate(template);
+        productionLine.process(1);
+        Product releasedProduct = productionLine.pop();
 
-        assertTrue(isAccepted);
         assertNotNull(releasedProduct);
-        assertNull(productAfterPop);
+        assertEquals(template, releasedProduct);
+        assertEquals(0, productionLine.getInProgress());
     }
 }
