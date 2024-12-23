@@ -1,13 +1,15 @@
 package cz.cvut.fel.omo.smartfactory.productionline;
 
 import cz.cvut.fel.omo.smartfactory.Product;
-import cz.cvut.fel.omo.smartfactory.productionline.state.ProductionLineState;
-import cz.cvut.fel.omo.smartfactory.productionline.state.ReadyState;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
 
 /**
  * The production line
@@ -26,19 +28,19 @@ public class ProductionLine {
     private AbstractProductionUnit chain;
 
     /**
-     * Input template
+     * Input queue
      */
-    private Product inputTemplate;
+    private Queue<Product> inputQueue = new LinkedList<>();
 
     /**
-     * Released product
+     * Output stack
      */
-    private Product releasedProduct;
+    private Stack<Product> outputStack = new Stack<>();
 
     /**
-     * Production line state
+     * Items in progress
      */
-    private ProductionLineState state = new ReadyState(this);
+    private long inProgress = 0;
 
     /**
      * Create production line
@@ -51,31 +53,31 @@ public class ProductionLine {
      * Accept product template for processing
      *
      * @param template The product template
-     * @return True if input slot is empty false otherwise
      */
-    public boolean accept(Product template) {
-        if (inputTemplate != null) {
-            return false;
-        }
-        inputTemplate = template;
-        return true;
+    public void addTemplate(Product template) {
+        inputQueue.add(template);
+        inProgress++;
     }
 
     /**
      * Process production
      */
     public void process(long dt) {
-        if (releasedProduct != null) {
-            LOGGER.warn("The production line cannot handle the chain due to the released product");
+        if (inProgress == 0) {
             return;
         }
 
         // Accept product template and update chain
-        Product released = chain.processChain(inputTemplate, dt);
+        if (chain.getState().accept(inputQueue.peek())) {
+            inputQueue.poll();
+        }
+
+        Product released = chain.processChain(dt);
 
         // Release processed product
         if (released != null) {
-            releasedProduct = released;
+            inProgress--;
+            outputStack.push(released);
         }
     }
 
@@ -83,22 +85,23 @@ public class ProductionLine {
      * Returns released product
      */
     public Product pop() {
-        Product out = releasedProduct;
-        releasedProduct = null;
-        return out;
+        if (outputStack.empty()) {
+            return null;
+        }
+        return outputStack.pop();
     }
 
     /**
      * Returns released product
      */
     public Product peek() {
-        return releasedProduct;
+        if (outputStack.empty()) {
+            return null;
+        }
+        return outputStack.peek();
     }
 
-    /**
-     * Returns true if production line has released product
-     */
-    public boolean productIsDone() {
-        return releasedProduct != null;
+    public boolean hasReleasedProduct() {
+        return !outputStack.empty();
     }
 }
