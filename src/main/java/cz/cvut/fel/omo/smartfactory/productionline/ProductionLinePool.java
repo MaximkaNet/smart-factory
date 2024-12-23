@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductionLineManager implements TickObserver {
+public class ProductionLinePool implements TickObserver {
 
     private static final Logger LOGGER = LogManager.getLogger("Production line manager");
 
@@ -19,7 +19,7 @@ public class ProductionLineManager implements TickObserver {
     /**
      * Create production line manager
      */
-    public ProductionLineManager() {
+    public ProductionLinePool() {
     }
 
     /**
@@ -31,22 +31,6 @@ public class ProductionLineManager implements TickObserver {
 
     @Override
     public void update(long deltaTime) {
-//        for (Storage storage : storages) {
-//            if (storage.isEmpty()) {
-//                StorageConnector connector = storage.getConnector();
-//                ProductionLine productionLine = connector.getProductionLine();
-//                if (productionLine.productIsDone()) {
-//                    removingQueue.add(productionLine);
-//                }
-//            }
-//        }
-
-//        productionLineList.forEach(productionLine -> {
-//            productionLine.getState().process(deltaTime);
-//            if (productionLine.isFinished()) {
-//                factory.addCompletedSeries(productionLine.pop());
-//                productionLineList.remove(productionLine);
-//            }
-//        });
+        productionLineList.forEach(productionLine -> productionLine.process(deltaTime));
     }
 }
