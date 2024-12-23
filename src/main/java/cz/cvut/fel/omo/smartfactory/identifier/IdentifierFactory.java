@@ -50,7 +50,6 @@ public class IdentifierFactory {
      * @return The identifier with unique number
      */
     public Identifier create(String name) {
-        lastNumber += identity;
         return create(name, String.valueOf(name.charAt(0)));
     }
 
