@@ -1,5 +1,7 @@
 package cz.cvut.fel.omo.smartfactory.helpers;
 
+import cz.cvut.fel.omo.smartfactory.identifier.IdentifierFactory;
+import cz.cvut.fel.omo.smartfactory.identifier.IdentifierManager;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
 import cz.cvut.fel.omo.smartfactory.utils.JobUtils;
 import cz.cvut.fel.omo.smartfactory.worker.Worker;
@@ -27,11 +29,12 @@ public class ChainUtils {
     }
 
     public static List<AbstractProductionUnit> getWorkerListWithOneStepEach() {
+        IdentifierFactory identifierFactory = IdentifierManager.getFactory("WORKER_TEST");
         return List.of(
-                new Worker("Worker 1", JobUtils.stepDuration(1)),
-                new Worker("Worker 2", JobUtils.stepDuration(1)),
-                new Worker("Worker 3", JobUtils.stepDuration(1)),
-                new Worker("Worker 4", JobUtils.stepDuration(1))
+                new Worker(identifierFactory.create("Worker 1"), JobUtils.stepDuration(1)),
+                new Worker(identifierFactory.create("Worker 2"), JobUtils.stepDuration(1)),
+                new Worker(identifierFactory.create("Worker 3"), JobUtils.stepDuration(1)),
+                new Worker(identifierFactory.create("Worker 4"), JobUtils.stepDuration(1))
         );
     }
 }
