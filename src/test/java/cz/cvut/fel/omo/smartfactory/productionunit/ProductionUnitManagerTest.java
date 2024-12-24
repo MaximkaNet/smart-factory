@@ -41,14 +41,14 @@ public class ProductionUnitManagerTest {
 
         manager.addAvailableUnit(new Worker(idFactory.create("Worker", "W"), JobUtils.stepDuration(1)));
         manager.addAvailableUnit(new Worker(idFactory.create("Worker", "W"), JobUtils.stepDuration(1)));
-        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200, null));
-        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200, null));
-        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200, null));
-        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200, null));
-        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200, null));
-        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200, null));
-        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200, null));
-        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200, null));
+        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200));
+        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200));
+        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200));
+        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200));
+        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200));
+        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200));
+        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200));
+        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200));
 
         List<AbstractProductionUnit> chain = manager.getUnits(List.of("W", "M", "M", "R", "W", "R", "M"));
 
@@ -73,14 +73,14 @@ public class ProductionUnitManagerTest {
 
         manager.addAvailableUnit(new Worker(idFactory.create("Worker", "W"), JobUtils.stepDuration(1)));
         manager.addAvailableUnit(new Worker(idFactory.create("Worker", "W"), JobUtils.stepDuration(1)));
-        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200, null));
-        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200, null));
-        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200, null));
-        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200, null));
-        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200, null));
-        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200, null));
-        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200, null));
-        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200, null));
+        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200));
+        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200));
+        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200));
+        manager.addAvailableUnit(new Robot(idFactory.create("Robot", "R"), 200));
+        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200));
+        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200));
+        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200));
+        manager.addAvailableUnit(new Machine(idFactory.create("Machine", "M"), 200));
 
         Throwable thrown = assertThrows(
                 RuntimeException.class,
