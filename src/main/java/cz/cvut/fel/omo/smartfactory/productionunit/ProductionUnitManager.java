@@ -68,4 +68,25 @@ public class ProductionUnitManager {
 
         return out;
     }
+
+    /**
+     * Remove units from busy units and add it to available units
+     *
+     * @param units The busy units
+     */
+    public void makeUnitsAvailable(List<AbstractProductionUnit> units) {
+        for (AbstractProductionUnit unit : units) {
+            busyUnits.computeIfAbsent(
+                    unit.getId().getShortName(),
+                    k -> new ArrayList<>()
+            ).remove(unit);
+        }
+
+        for (AbstractProductionUnit unit : units) {
+            availableUnits.computeIfAbsent(
+                    unit.getId().getShortName(),
+                    k -> new ArrayList<>()
+            ).add(unit);
+        }
+    }
 }

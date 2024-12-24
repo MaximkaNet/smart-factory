@@ -1,5 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.productionunit;
 
+import cz.cvut.fel.omo.smartfactory.Material;
 import cz.cvut.fel.omo.smartfactory.Product;
 import cz.cvut.fel.omo.smartfactory.consumer.MaterialConsumer;
 import cz.cvut.fel.omo.smartfactory.consumer.ResourceConsumer;
@@ -62,7 +63,7 @@ public abstract class AbstractProductionUnit {
     /**
      * The material consumer
      */
-    private final MaterialConsumer materialConsumer = new MaterialConsumer();
+    private final MaterialConsumer materialConsumer = new MaterialConsumer(new Material("worker", 1));
 
     /**
      * The usage consumer (just counter)
@@ -112,14 +113,16 @@ public abstract class AbstractProductionUnit {
     /**
      * Process chain
      */
-    public Product processChain(Product in, long dt) {
-        this.state.accept(in);
+    public Product processChain(long dt) {
         this.state.process(dt);
 
         if (next == null) {
             return this.state.pop();
         }
-        return this.next.processChain(this.state.pop(), dt);
+        if (this.next.state.accept(this.state.peek())) {
+            this.state.pop();
+        }
+        return this.next.processChain(dt);
     }
 
     /**
