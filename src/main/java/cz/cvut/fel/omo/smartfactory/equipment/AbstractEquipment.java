@@ -2,7 +2,6 @@ package cz.cvut.fel.omo.smartfactory.equipment;
 
 import cz.cvut.fel.omo.smartfactory.consumer.ResourceConsumer;
 import cz.cvut.fel.omo.smartfactory.equipment.state.ReadyState;
-import cz.cvut.fel.omo.smartfactory.event.EventBus;
 import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
 import lombok.Getter;
@@ -36,20 +35,14 @@ public abstract class AbstractEquipment extends AbstractProductionUnit {
     private ResourceConsumer oilConsumer = new ResourceConsumer();
 
     /**
-     * The event bus
-     */
-    private final EventBus eventBus;
-
-    /**
      * Create factory equipment
      *
      * @param id     The equipment identifier
      * @param health The maximum health
      */
-    public AbstractEquipment(Identifier id, float health, EventBus eventBus) {
+    public AbstractEquipment(Identifier id, float health) {
         super(id);
         this.maximumHealth = health;
-        this.eventBus = eventBus;
 
         // Set initial state
         this.setState(new ReadyState(this));

@@ -2,11 +2,14 @@ package cz.cvut.fel.omo.smartfactory.repair;
 
 import cz.cvut.fel.omo.smartfactory.equipment.AbstractEquipment;
 import cz.cvut.fel.omo.smartfactory.event.EventBus;
+import cz.cvut.fel.omo.smartfactory.event.EventBusManager;
 import cz.cvut.fel.omo.smartfactory.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.event.RepairFinishedEvent;
 import cz.cvut.fel.omo.smartfactory.event.RepairStartedEvent;
+import cz.cvut.fel.omo.smartfactory.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
 import cz.cvut.fel.omo.smartfactory.timer.FactoryTimer;
+import cz.cvut.fel.omo.smartfactory.timer.TimerManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
@@ -41,19 +44,13 @@ public class Repairman {
     private AbstractEquipment subject;
 
     /**
-     * The event bus
-     */
-    private final EventBus eventBus;
-
-    /**
      * Create repairman
      *
      * @param power The repair power per tick
      */
-    public Repairman(Identifier id, float power, EventBus eventBus) {
+    public Repairman(Identifier id, float power) {
         this.id = id;
         this.power = power;
-        this.eventBus = eventBus;
     }
 
     /**
@@ -69,7 +66,9 @@ public class Repairman {
         outageEvent = event;
         subject = outageEvent.getSender();
         // Generate repair started event
-        FactoryTimer timer = eventBus.getTimer();
+        FactoryTimer timer = TimerManager.getTimer(Factory.TIMER_NAME);
+        EventBus eventBus = EventBusManager.getEventBus(Factory.TIMER_NAME);
+
         eventBus.notifyListeners(new RepairStartedEvent(id, timer.now()));
         outageEvent.repairStarted(timer.now());
         return true;
@@ -87,7 +86,9 @@ public class Repairman {
 
         if (isRepaired) {
             // Generate finished event
-            FactoryTimer timer = eventBus.getTimer();
+            FactoryTimer timer = TimerManager.getTimer(Factory.TIMER_NAME);
+            EventBus eventBus = EventBusManager.getEventBus(Factory.TIMER_NAME);
+            
             eventBus.notifyListeners(new RepairFinishedEvent(id, timer.now()));
             outageEvent.repairFinished(timer.now());
             // Reset subject and event

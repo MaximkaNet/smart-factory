@@ -20,4 +20,11 @@ public class EventBusManager {
     public static EventBus getEventBus(String name) {
         return buses.computeIfAbsent(name, k -> new EventBus());
     }
+
+    /**
+     * Clear the event buses
+     */
+    public static void clear() {
+        buses.clear();
+    }
 }
