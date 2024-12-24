@@ -1,7 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.equipment;
 
 import cz.cvut.fel.omo.smartfactory.Material;
-import cz.cvut.fel.omo.smartfactory.event.EventBus;
 import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
 
 /**
@@ -14,8 +13,8 @@ public final class Robot extends AbstractEquipment {
      * @param id     The equipment name
      * @param health The maximum health
      */
-    public Robot(Identifier id, float health, EventBus eventBus) {
-        super(id, health, eventBus);
+    public Robot(Identifier id, float health) {
+        super(id, health);
     }
 
     @Override

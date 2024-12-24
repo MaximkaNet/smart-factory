@@ -3,9 +3,13 @@ package cz.cvut.fel.omo.smartfactory.equipment.state;
 import cz.cvut.fel.omo.smartfactory.Product;
 import cz.cvut.fel.omo.smartfactory.equipment.AbstractEquipment;
 import cz.cvut.fel.omo.smartfactory.event.EventBus;
+import cz.cvut.fel.omo.smartfactory.event.EventBusManager;
 import cz.cvut.fel.omo.smartfactory.event.OutageEvent;
+import cz.cvut.fel.omo.smartfactory.factory.Factory;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnitState;
+import cz.cvut.fel.omo.smartfactory.timer.FactoryTimer;
+import cz.cvut.fel.omo.smartfactory.timer.TimerManager;
 import cz.cvut.fel.omo.smartfactory.utils.JobUtils;
 
 /**
@@ -29,9 +33,11 @@ public final class ProcessingState extends AbstractProductionUnitState {
             context.setState(new BrokenState(context));
 
             AbstractEquipment equipment = (AbstractEquipment) context;
-            EventBus eventBus = equipment.getEventBus();
+            
+            EventBus eventBus = EventBusManager.getEventBus(Factory.EVENTBUS_NAME);
+            FactoryTimer timer = TimerManager.getTimer(Factory.TIMER_NAME);
 
-            eventBus.notifyListeners(new OutageEvent(equipment, 1, eventBus.getTimer().now()));
+            eventBus.notifyListeners(new OutageEvent(equipment, 1, timer.now()));
             return;
         }
 
