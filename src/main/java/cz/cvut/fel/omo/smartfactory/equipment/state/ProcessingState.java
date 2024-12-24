@@ -1,11 +1,17 @@
 package cz.cvut.fel.omo.smartfactory.equipment.state;
 
 import cz.cvut.fel.omo.smartfactory.Product;
+import cz.cvut.fel.omo.smartfactory.equipment.AbstractEquipment;
+import cz.cvut.fel.omo.smartfactory.event.EventBus;
+import cz.cvut.fel.omo.smartfactory.event.OutageEvent;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnitState;
 import cz.cvut.fel.omo.smartfactory.utils.JobUtils;
 
-public class ProcessingState extends AbstractProductionUnitState {
+/**
+ * Processing state for Equipment
+ */
+public final class ProcessingState extends AbstractProductionUnitState {
     /**
      * Create production unit state
      *
@@ -21,6 +27,11 @@ public class ProcessingState extends AbstractProductionUnitState {
 
         if (context.needRepair()) {
             context.setState(new BrokenState(context));
+
+            AbstractEquipment equipment = (AbstractEquipment) context;
+            EventBus eventBus = equipment.getEventBus();
+
+            eventBus.notifyListeners(new OutageEvent(equipment, 1, eventBus.getTimer().now()));
             return;
         }
 
