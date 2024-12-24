@@ -4,7 +4,10 @@ import cz.cvut.fel.omo.smartfactory.Product;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnitState;
 
-public class ReadyState extends AbstractProductionUnitState {
+/**
+ * Ready state for Equipment
+ */
+public final class ReadyState extends AbstractProductionUnitState {
     /**
      * Create production unit state
      *
