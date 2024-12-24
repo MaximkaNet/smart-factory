@@ -1,6 +1,5 @@
 package cz.cvut.fel.omo.smartfactory.event;
 
-import cz.cvut.fel.omo.smartfactory.timer.FactoryTimer;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -25,15 +24,9 @@ public class EventBus {
     private final List<AbstractEvent> eventHistory = new ArrayList<>();
 
     /**
-     * The factory timer
-     */
-    private final FactoryTimer timer;
-
-    /**
      * Create event manager
      */
-    public EventBus(FactoryTimer timer) {
-        this.timer = timer;
+    public EventBus() {
     }
 
     /**
