@@ -44,7 +44,7 @@ public class FactoryTimer {
     private boolean isNewDay;
 
     public FactoryTimer(long tickLengthMilli) {
-        this(Instant.MIN, tickLengthMilli);
+        this(Instant.EPOCH, tickLengthMilli);
     }
 
     public FactoryTimer(Instant foundationDate, long tickLengthMilli) {
@@ -61,6 +61,7 @@ public class FactoryTimer {
         this.realtimeTickDelay = realtimeTickLengthMilli;
         this.timezone = timezone;
         this.isNewDay = false;
+        this.now = foundationDate;
     }
 
     /**
