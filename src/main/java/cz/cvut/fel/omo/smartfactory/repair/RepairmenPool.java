@@ -36,15 +36,6 @@ public class RepairmenPool implements EventListener, TickObserver {
         this.repairmanList = repairmenList;
     }
 
-    /**
-     * Get repairman pool builder
-     *
-     * @return RepairmanPoolBuilder
-     */
-    public static RepairmenPoolBuilder builder() {
-        return new RepairmenPoolBuilder();
-    }
-
     @Override
     public void update(long deltaTime) {
         for (Repairman repairman : repairmanList) {
