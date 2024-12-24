@@ -8,17 +8,9 @@ import java.util.Map;
  */
 public class TimerManager {
 
-    private static final Map<String, FactoryTimer> timers = new HashMap<>();
+    public static final long DEFAULT_TICK_LENGTH = 200;
 
-    /**
-     * Add timer
-     *
-     * @param name  The timer name
-     * @param timer The timer
-     */
-    public static void addTimer(String name, FactoryTimer timer) {
-        timers.put(name, timer);
-    }
+    private static final Map<String, FactoryTimer> timers = new HashMap<>();
 
     /**
      * Get timer by name
@@ -27,6 +19,23 @@ public class TimerManager {
      * @return FactoryTimer or NULL if timer not found
      */
     public static FactoryTimer getTimer(String timer) {
-        return timers.getOrDefault(timer, null);
+        return timers.computeIfAbsent(timer, k -> new FactoryTimer(DEFAULT_TICK_LENGTH));
+    }
+
+    /**
+     * Get timer by name
+     *
+     * @param name The timer name
+     * @return FactoryTimer or NULL if timer not found
+     */
+    public static FactoryTimer getTimer(String name, long tickLength) {
+        return timers.computeIfAbsent(name, k -> new FactoryTimer(tickLength));
+    }
+
+    /**
+     * Clear timers
+     */
+    public static void clear() {
+        timers.clear();
     }
 }
