@@ -3,6 +3,7 @@ package cz.cvut.fel.omo.smartfactory.worker;
 import cz.cvut.fel.omo.smartfactory.Material;
 import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
+import cz.cvut.fel.omo.smartfactory.visitor.FactoryVisitor;
 import cz.cvut.fel.omo.smartfactory.worker.state.ReadyState;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,5 +49,10 @@ public final class Worker extends AbstractProductionUnit {
     @Override
     public boolean needRepair() {
         return false; // Worker not repairable, because always false
+    }
+
+    @Override
+    public void acceptVisitor(FactoryVisitor visitor) {
+        visitor.visitWorker(this);
     }
 }

@@ -6,6 +6,7 @@ import cz.cvut.fel.omo.smartfactory.consumer.MaterialConsumer;
 import cz.cvut.fel.omo.smartfactory.consumer.ResourceConsumer;
 import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
 import cz.cvut.fel.omo.smartfactory.utils.JobUtils;
+import cz.cvut.fel.omo.smartfactory.visitor.Visitable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public abstract class AbstractProductionUnit {
+public abstract class AbstractProductionUnit implements Visitable {
     /**
      * The identifier
      */

@@ -2,6 +2,7 @@ package cz.cvut.fel.omo.smartfactory.equipment;
 
 import cz.cvut.fel.omo.smartfactory.Material;
 import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
+import cz.cvut.fel.omo.smartfactory.visitor.FactoryVisitor;
 
 /**
  * The machine
@@ -26,5 +27,10 @@ public final class Machine extends AbstractEquipment {
         this.getElectricityConsumer().accept(20.0f); // 20 kW/hour
         this.getOilConsumer().accept(1.0f); // 1 liter/hour
         this.getMaterialConsumer().accept(new Material("machine", 1.0f, 5));
+    }
+
+    @Override
+    public void acceptVisitor(FactoryVisitor visitor) {
+        visitor.visitMachine(this);
     }
 }
