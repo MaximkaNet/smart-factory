@@ -35,6 +35,18 @@ public class Identifier {
         this.shortName = shortName;
     }
 
+    public static Identifier of(long number, String name, String shortName) {
+        return new Identifier(number, name, shortName);
+    }
+
+    public static Identifier of(long number, String name) {
+        return Identifier.of(number, name, String.valueOf(name.charAt(0)));
+    }
+
+    public static Identifier of(long number) {
+        return Identifier.of(number, " ");
+    }
+
     @Override
     public String toString() {
         return name + " (" + number + ")";
