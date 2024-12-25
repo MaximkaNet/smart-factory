@@ -1,115 +1,147 @@
-package cz.cvut.fel.omo.smartfactory.entity.report;
+package cz.cvut.fel.omo.smartfactory.report;
 
-import cz.cvut.fel.omo.smartfactory.entity.equipment.AbstractEquipment;
-import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
-import cz.cvut.fel.omo.smartfactory.entity.event.RepairFinishedEvent;
-import cz.cvut.fel.omo.smartfactory.entity.event.RepairStartedEvent;
-import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
+import cz.cvut.fel.omo.smartfactory.event.OutageEvent;
 import lombok.Getter;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Outages report
+ */
 @Getter
-public class OutagesReport extends Report {
-    Duration shortestOutageTime;
-    Duration longestOutageTime;
-    Duration avgOutageTime;
-    Duration avgWaitingTime;
-    List<AbstractEquipment> outageSourcesSorted;
+public class OutagesReport implements Report {
+    /**
+     * Longest outage time
+     */
+    private final Duration longestOutageTime;
 
-    public OutagesReport(ZonedDateTime from, ZonedDateTime to, Factory factory) {
-        super(factory, from, to);
+    /**
+     * Shortest outage time
+     */
+    private final Duration shortestOutageTime;
 
-        List<OutageEvent> outageEventsList = factory.getEventFacade().getOutageEventsFromToSorted(from, to);
-        List<RepairFinishedEvent> repairFinishedEventsList = factory.getEventFacade().getRepairFinishedEventsFromToSorted(from, to);
-        List<RepairStartedEvent> repairStartedEventsList = factory.getEventFacade().getRepairStartedEventsFromToSorted(from, to);
+    /**
+     * Average outage time
+     */
+    private final Duration avgOutageTime;
 
-        // shortest OutageTime
-        calcShortestOutageTime(repairFinishedEventsList);
+    /**
+     * Average waiting time
+     */
+    private final Duration avgWaitingTime;
 
-        // longest OutageTime
-        calcLongestOutageTime(repairFinishedEventsList);
+    /**
+     * Outage sources sorted
+     */
+    private final List<String> outageSourcesSorted;
 
-        // avg outage time
-        calcAvgOutageTime(repairFinishedEventsList);
-
-        // avg waiting time
-        calcAvgWaitingTime(repairStartedEventsList);
-
-        // calculating the outage sources and sorting them descending
-        calcOutageSourcesSorted(outageEventsList);
+    /**
+     * Create outages report
+     */
+    private OutagesReport(Duration longestOutageTime, Duration shortestOutageTime, Duration avgOutageTime, Duration avgWaitingTime, List<String> outageSourcesSorted) {
+        this.longestOutageTime = longestOutageTime;
+        this.shortestOutageTime = shortestOutageTime;
+        this.avgOutageTime = avgOutageTime;
+        this.avgWaitingTime = avgWaitingTime;
+        this.outageSourcesSorted = outageSourcesSorted;
     }
 
-    private void calcOutageSourcesSorted(List<OutageEvent> outageEventsList) {
-        outageSourcesSorted = outageEventsList.stream()
-                .map(OutageEvent::getEntity)
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+    /**
+     * Create report using event history from factory event bus
+     *
+     * @param from Start point
+     * @param to   End point
+     */
+    public static OutagesReport createReport(List<OutageEvent> outageEvents, ZonedDateTime from, ZonedDateTime to) {
+        // Get outage events in specified range
+        List<OutageEvent> events = outageEvents.stream()
+                .filter(event -> event.getGeneratedAt().isAfter(from.toInstant()) &&
+                        event.getGeneratedAt().isBefore(to.toInstant()))
+                .toList();
+
+        // Create outage report
+        return new OutagesReport(
+                getLongestOutageTime(events),
+                getShortestOutageTime(events),
+                getAvgOutageTime(events),
+                getAvgWaitingTime(events),
+                getOutageSourcesSorted(events)
+        );
+    }
+
+    /**
+     * Get outage sources sorted
+     *
+     * @param outageEventsList The outage events
+     */
+    private static List<String> getOutageSourcesSorted(List<OutageEvent> outageEventsList) {
+        return outageEventsList.stream()
+                .collect(Collectors.toMap(
+                        event -> event.getSender().getId().getShortName(),
+                        event -> event.getRepairFinishedAt() != null ? Duration.between(event.getGeneratedAt(), event.getRepairFinishedAt()).toMillis() : Duration.ZERO.toMillis(),
+                        Long::sum
+                ))
                 .entrySet().stream()
                 .sorted((entry1, entry2) -> Long.compare(entry2.getValue(), entry1.getValue()))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }
 
-    private void calcAvgWaitingTime(List<RepairStartedEvent> repairStartedEventsList) {
-        double averageWaitingNanos = repairStartedEventsList.stream()
-                .map(repairFinishedEvent -> {
-                    OutageEvent outageEvent = repairFinishedEvent.getOutageEvent();
-                    if (outageEvent != null) {
-                        return Duration.between(outageEvent.getGeneratedAt(), repairFinishedEvent.getGeneratedAt());
-                    }
-                    return Duration.ZERO;
-                })
+    /**
+     * Get average time from event generation time to repair start
+     *
+     * @param outageEvents The outage events
+     */
+    private static Duration getAvgWaitingTime(List<OutageEvent> outageEvents) {
+        double averageWaitingNanos = outageEvents.stream()
+                .map(event -> event.getRepairStartedAt() == null ? Duration.ZERO : Duration.between(event.getGeneratedAt(), event.getRepairStartedAt()))
                 .filter(duration -> !duration.isZero())
                 .mapToLong(Duration::toNanos)
                 .average()
                 .orElse(.0);
-        avgWaitingTime = Duration.ofNanos(Math.round(averageWaitingNanos));
+        return Duration.ofNanos(Math.round(averageWaitingNanos));
     }
 
-    private void calcAvgOutageTime(List<RepairFinishedEvent> repairFinishedEventsList) {
-        double averageOutageNanos = repairFinishedEventsList.stream()
-                .map(repairFinishedEvent -> {
-                    OutageEvent outageEvent = repairFinishedEvent.getOutageEvent();
-                    if (outageEvent != null) {
-                        return Duration.between(outageEvent.getGeneratedAt(), repairFinishedEvent.getGeneratedAt());
-                    }
-                    return Duration.ZERO;
-                })
+    /**
+     * Get average time from event generation time to repair finish
+     *
+     * @param outageEvents The outage events
+     */
+    private static Duration getAvgOutageTime(List<OutageEvent> outageEvents) {
+        double averageWaitingNanos = outageEvents.stream()
+                .map(event -> event.getRepairFinishedAt() == null ? Duration.ZERO : Duration.between(event.getGeneratedAt(), event.getRepairFinishedAt()))
                 .filter(duration -> !duration.isZero())
                 .mapToLong(Duration::toNanos)
                 .average()
                 .orElse(.0);
-        avgOutageTime = Duration.ofNanos(Math.round(averageOutageNanos));
+        return Duration.ofNanos(Math.round(averageWaitingNanos));
     }
 
-    private void calcLongestOutageTime(List<RepairFinishedEvent> repairFinishedEventsList) {
-        longestOutageTime = repairFinishedEventsList.stream()
-                .map(repairFinishedEvent -> {
-                    OutageEvent outageEvent = repairFinishedEvent.getOutageEvent(); // Assuming getter for OutageEvent
-                    if (outageEvent != null) {
-                        return Duration.between(outageEvent.getGeneratedAt(), repairFinishedEvent.getGeneratedAt());
-                    }
-                    return Duration.ZERO;
-                })
+    /**
+     * Get the longest outage time
+     *
+     * @param outageEvents The outage events
+     */
+    private static Duration getLongestOutageTime(List<OutageEvent> outageEvents) {
+        return outageEvents.stream()
+                .map(event -> event.getRepairFinishedAt() == null ? Duration.ZERO : Duration.between(event.getGeneratedAt(), event.getRepairFinishedAt()))
                 .filter(duration -> !duration.isZero())
                 .max(Duration::compareTo)
                 .orElse(Duration.ZERO);
     }
 
-    private void calcShortestOutageTime(List<RepairFinishedEvent> repairFinishedEventsList) {
-        shortestOutageTime = repairFinishedEventsList.stream()
-                .map(repairFinishedEvent -> {
-                    OutageEvent outageEvent = repairFinishedEvent.getOutageEvent(); // Assuming getter for OutageEvent
-                    if (outageEvent != null) {
-                        return Duration.between(outageEvent.getGeneratedAt(), repairFinishedEvent.getGeneratedAt());
-                    }
-                    return Duration.ZERO;
-                })
+    /**
+     * Get the shortest outage time
+     *
+     * @param outageEvents The outage events
+     */
+    private static Duration getShortestOutageTime(List<OutageEvent> outageEvents) {
+        return outageEvents.stream()
+                .map(event -> event.getRepairFinishedAt() == null ? Duration.ZERO : Duration.between(event.getGeneratedAt(), event.getRepairFinishedAt()))
                 .filter(duration -> !duration.isZero())
                 .min(Duration::compareTo)
                 .orElse(Duration.ZERO);
@@ -117,16 +149,16 @@ public class OutagesReport extends Report {
 
     @Override
     public String toString() {
-        return super.toString().replace("}", "")
-                + ", shortestOutageTime=" + shortestOutageTime.toMillis() + "ms"
-                + ", longestOutageTime=" + longestOutageTime.toMillis() + "ms"
-                + ", avgOutageTime=" + avgOutageTime.toMillis() + "ms"
-                + ", avgWaitingTime=" + avgWaitingTime.toMillis() + "ms"
-                + ", outageSourcesSorted:" + System.lineSeparator()
-                + outageSourcesSorted.stream()
-                .map(Object::toString)
-                .collect(Collectors.joining(System.lineSeparator()))
-                + System.lineSeparator() + "}";
+        return "Shortest outage time: " + shortestOutageTime.toString() +
+                System.lineSeparator() +
+                "Longest outage time: " + longestOutageTime.toString() +
+                System.lineSeparator() +
+                "Average outage time: " + avgOutageTime.toString() +
+                System.lineSeparator() +
+                "Average waiting time: " + avgWaitingTime.toString() +
+                System.lineSeparator() +
+                "Outage sources: " + String.join(", ", outageSourcesSorted) +
+                System.lineSeparator();
     }
 
     @Override
