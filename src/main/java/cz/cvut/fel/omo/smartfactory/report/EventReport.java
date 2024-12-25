@@ -1,45 +1,75 @@
-package cz.cvut.fel.omo.smartfactory.entity.report;
+package cz.cvut.fel.omo.smartfactory.report;
 
-import cz.cvut.fel.omo.smartfactory.entity.event.FactoryEvent;
-import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
-import cz.cvut.fel.omo.smartfactory.entity.person.Person;
-import cz.cvut.fel.omo.smartfactory.entity.productionunit.ProductionUnit;
+import cz.cvut.fel.omo.smartfactory.event.AbstractEvent;
 import lombok.Getter;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
+/**
+ * Event report
+ */
 @Getter
-public class EventReport extends Report {
-    List<FactoryEvent> events;
-    Map<Class<? extends FactoryEvent>, List<FactoryEvent>> eventTypeMap;
-    Map<ProductionUnit, List<FactoryEvent>> eventSourceMap;
-    Map<Optional<Person>, List<FactoryEvent>> eventCheckerMap;
+public class EventReport implements Report {
+    /**
+     * Event types
+     */
+    private final List<String> eventTypes;
 
-    public EventReport(ZonedDateTime from, ZonedDateTime to, Factory factory) {
-        super(factory, from, to);
+    /**
+     * Event sources
+     */
+    private final List<String> eventSources;
 
-        this.events = factory.getEventFacade().getEventsFromToSorted(from, to);
+    /**
+     * Create event report
+     */
+    private EventReport(List<String> eventTypes, List<String> eventSources) {
+        this.eventTypes = eventTypes;
+        this.eventSources = eventSources;
+    }
 
-        this.eventTypeMap = events.stream()
-                .collect(Collectors.groupingBy(FactoryEvent::getClass));
+    /**
+     * Create event report in specified time range
+     */
+    public static EventReport createReport(List<AbstractEvent> events, ZonedDateTime from, ZonedDateTime to) {
 
-        this.eventSourceMap = events.stream()
-                .collect(Collectors.groupingBy(FactoryEvent::getSender));
+        List<AbstractEvent> eventsInRange = events.stream()
+                .filter(event -> event.getGeneratedAt().isAfter(from.toInstant()) && event.getGeneratedAt().isBefore(to.toInstant()))
+                .toList();
 
-        this.eventCheckerMap = events.stream()
-                .collect(Collectors.groupingBy(event -> Optional.ofNullable(event.getCheckedBy())));
+        return new EventReport(
+                getEventTypes(eventsInRange),
+                getSources(eventsInRange)
+        );
+    }
+
+    /**
+     * Get event types
+     */
+    private static List<String> getEventTypes(List<AbstractEvent> events) {
+        return events.stream()
+                .map(event -> event.getType().name())
+                .distinct()
+                .toList();
+    }
+
+    /**
+     * Get event sources
+     */
+    private static List<String> getSources(List<AbstractEvent> events) {
+        return events.stream()
+                .map(event -> event.getSenderId().getShortName())
+                .distinct()
+                .toList();
     }
 
     @Override
     public String toString() {
-        return super.toString().replace("}", "")
-                + ", eventTypeMap=" + eventTypeMap + System.lineSeparator()
-                + ", eventSourceMap=" + eventSourceMap + System.lineSeparator()
-                + ", eventCheckerMap=" + eventCheckerMap + System.lineSeparator();
+        return "Types: " + String.join(", ", eventTypes) +
+                System.lineSeparator() +
+                "Sources: " + String.join(", ", eventSources) +
+                System.lineSeparator();
     }
 
     @Override
