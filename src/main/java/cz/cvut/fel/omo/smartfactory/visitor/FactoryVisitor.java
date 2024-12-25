@@ -1,4 +1,4 @@
-package cz.cvut.fel.omo.smartfactory.person;
+package cz.cvut.fel.omo.smartfactory.visitor;
 
 import cz.cvut.fel.omo.smartfactory.equipment.Machine;
 import cz.cvut.fel.omo.smartfactory.equipment.Robot;
@@ -13,19 +13,19 @@ public interface FactoryVisitor {
      *
      * @param worker The worker
      */
-    void visit(Worker worker);
+    void visitWorker(Worker worker);
 
     /**
      * Visit machine
      *
      * @param machine The machine
      */
-    void visit(Machine machine);
+    void visitMachine(Machine machine);
 
     /**
      * Visit robot
      *
      * @param robot The robot
      */
-    void visit(Robot robot);
+    void visitRobot(Robot robot);
 }
