@@ -2,7 +2,7 @@ package cz.cvut.fel.omo.smartfactory.visitor;
 
 import cz.cvut.fel.omo.smartfactory.equipment.Machine;
 import cz.cvut.fel.omo.smartfactory.equipment.Robot;
-import cz.cvut.fel.omo.smartfactory.factory.factoryIterator.FactoryTreeIterator;
+import cz.cvut.fel.omo.smartfactory.factory.iterator.FactoryIterator;
 import cz.cvut.fel.omo.smartfactory.worker.Worker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +33,7 @@ public class Visitor implements FactoryVisitor {
      *
      * @param iterator The factory iterator
      */
-    public void visitFactory(FactoryTreeIterator iterator) {
+    public void visitFactory(FactoryIterator iterator) {
         while (iterator.hasNext()) {
             Visitable visitableEntity = iterator.next();
             visitableEntity.acceptVisitor(this);
