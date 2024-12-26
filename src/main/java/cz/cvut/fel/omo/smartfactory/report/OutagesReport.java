@@ -4,7 +4,7 @@ import cz.cvut.fel.omo.smartfactory.event.OutageEvent;
 import lombok.Getter;
 
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -56,11 +56,17 @@ public class OutagesReport implements Report {
      * @param from Start point
      * @param to   End point
      */
-    public static OutagesReport createReport(List<OutageEvent> outageEvents, ZonedDateTime from, ZonedDateTime to) {
+    public static OutagesReport createReport(List<OutageEvent> outageEvents, Instant from, Instant to) {
         // Get outage events in specified range
         List<OutageEvent> events = outageEvents.stream()
-                .filter(event -> event.getGeneratedAt().isAfter(from.toInstant()) &&
-                        event.getGeneratedAt().isBefore(to.toInstant()))
+                .filter(event -> {
+                    Instant generatedAt = event.getGeneratedAt();
+
+                    boolean afterOrEquals = generatedAt.isAfter(from) || generatedAt.equals(from);
+                    boolean beforeOrEquals = generatedAt.isBefore(to) || generatedAt.equals(to);
+
+                    return afterOrEquals && beforeOrEquals;
+                })
                 .toList();
 
         // Create outage report
