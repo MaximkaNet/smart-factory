@@ -36,8 +36,8 @@ public class TreeIteratorTest {
         robot2.setNext(robot3);
 
         List<ProductionLine> productionLines = List.of(
-                new ProductionLine(worker1),
-                new ProductionLine(robot1)
+                new ProductionLine(Identifier.of(1, "Production line", "PL"), worker1),
+                new ProductionLine(Identifier.of(1, "Production line", "PL"), robot1)
         );
 
         TreeIterator iterator = new TreeIterator(productionLines);
@@ -51,7 +51,7 @@ public class TreeIteratorTest {
         assertEquals(robot2, iterator.next());
         assertEquals(robot3, iterator.next());
         assertFalse(iterator.hasNext());
-        
+
         Throwable throwable = assertThrows(NoSuchElementException.class, iterator::next, "NEXT NOT FOUND");
         assertEquals("No production lines available", throwable.getMessage());
     }

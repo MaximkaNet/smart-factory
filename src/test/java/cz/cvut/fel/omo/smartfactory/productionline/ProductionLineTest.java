@@ -1,6 +1,7 @@
 package cz.cvut.fel.omo.smartfactory.productionline;
 
 import cz.cvut.fel.omo.smartfactory.Product;
+import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
 import org.junit.jupiter.api.Test;
 
 import static cz.cvut.fel.omo.smartfactory.helpers.ChainUtils.createChain;
@@ -13,7 +14,10 @@ public class ProductionLineTest {
     public void createChainAndDevelopOneProduct() {
         Product template = new Product("Tesla model S");
 
-        ProductionLine productionLine = new ProductionLine(createChain(getWorkerListWithOneStepEach()));
+        ProductionLine productionLine = new ProductionLine(
+                Identifier.of(1, "Production line", "PL"),
+                createChain(getWorkerListWithOneStepEach())
+        );
 
         productionLine.addTemplate(template);
         productionLine.process(1);

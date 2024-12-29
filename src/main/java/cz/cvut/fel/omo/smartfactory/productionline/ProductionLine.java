@@ -59,6 +59,13 @@ public class ProductionLine {
     }
 
     /**
+     * Create production line
+     */
+    public ProductionLine(Identifier id, List<AbstractProductionUnit> sequence) {
+        this(id, createChain(sequence));
+    }
+
+    /**
      * Accept product template for processing
      *
      * @param template The product template
