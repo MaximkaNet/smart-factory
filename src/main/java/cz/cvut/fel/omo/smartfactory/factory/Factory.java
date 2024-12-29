@@ -1,39 +1,38 @@
 package cz.cvut.fel.omo.smartfactory.factory;
 
-import cz.cvut.fel.omo.smartfactory.event.EventBus;
-import cz.cvut.fel.omo.smartfactory.memento.Memento;
-import cz.cvut.fel.omo.smartfactory.memento.Snapshot;
-import cz.cvut.fel.omo.smartfactory.productionline.ProductionLineManager;
+import cz.cvut.fel.omo.smartfactory.Product;
+import cz.cvut.fel.omo.smartfactory.event.EventBusManager;
+import cz.cvut.fel.omo.smartfactory.event.EventType;
+import cz.cvut.fel.omo.smartfactory.productionline.ProductionLine;
+import cz.cvut.fel.omo.smartfactory.productionline.ProductionLinePool;
+import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
+import cz.cvut.fel.omo.smartfactory.productionunit.ProductionUnitManager;
 import cz.cvut.fel.omo.smartfactory.repair.RepairmenPool;
-import cz.cvut.fel.omo.smartfactory.series.OrderManager;
+import cz.cvut.fel.omo.smartfactory.timer.FactoryTimer;
+import cz.cvut.fel.omo.smartfactory.timer.TimerManager;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Basic facade for factory
  */
 @Getter
 @Setter
-public abstract class Factory implements Memento {
+public class Factory {
+    public static final String TIMER_NAME = "FACTORY_TIMER";
+    public static final String EVENTBUS_NAME = "FACTORY_EVENTBUS";
+
+    private static final Logger LOGGER = LogManager.getLogger("Factory");
+
     /**
      * Factory name
      */
     private String name;
-
-    /**
-     * Factory timer
-     */
-    private final FactoryTimer timer;
-
-    /**
-     * Event manager
-     */
-    private EventBus eventBus;
-
-    /**
-     * Orders manager
-     */
-    private final OrderManager seriesManager;
 
     /**
      * Repair man pool
@@ -43,25 +42,66 @@ public abstract class Factory implements Memento {
     /**
      * Production Line Pool
      */
-    private ProductionLineManager productionLinePool;
+    private ProductionLinePool productionLinePool;
+
+    /**
+     * Production units
+     */
+    private ProductionUnitManager productionUnitManager;
 
     /**
      * Create new factory
      *
-     * @param name  The factory name
-     * @param timer The factory timer
+     * @param name The factory name
      */
-    protected Factory(String name, FactoryTimer timer) {
-        this.name = name;
-        this.timer = timer;
-        this.eventBus = new EventBus(timer);
-        this.seriesManager = new OrderManager(this);
+    public Factory(String name) {
+        this(name, new RepairmenPool(new ArrayList<>()), new ProductionLinePool(), new ProductionUnitManager());
     }
 
     /**
-     * Simulate one factory iteration
+     * Create new factory
+     *
+     * @param name                  The factory name
+     * @param repairmanPool         The repairman pool
+     * @param productionLinePool    The production line pool
+     * @param productionUnitManager The production unit manager
      */
-    public abstract void simulate();
+    public Factory(String name, RepairmenPool repairmanPool, ProductionLinePool productionLinePool, ProductionUnitManager productionUnitManager) {
+        this.name = name;
+        this.productionLinePool = productionLinePool;
+        this.productionUnitManager = productionUnitManager;
+
+        this.setRepairmanPool(repairmanPool);
+    }
+
+    /**
+     * Set repairman pool and register it for outage events
+     *
+     * @param repairmanPool The repairman pool
+     */
+    public void setRepairmanPool(RepairmenPool repairmanPool) {
+        this.repairmanPool = repairmanPool;
+        EventBusManager.getEventBus(Factory.EVENTBUS_NAME).registerListener(EventType.OUTAGE, repairmanPool);
+    }
+
+    /**
+     * Simulate one factory iteration.
+     * Simulation workflow:
+     * - Update timer
+     * - Check for new orders
+     * - Update production lines
+     * - Update repairman pool
+     */
+    public void simulate() {
+        FactoryTimer timer = TimerManager.getTimer(Factory.TIMER_NAME);
+        // Update timer
+        timer.tick();
+
+        // Update production line pool
+        productionLinePool.update(timer.getDeltaTime());
+        // Update repairman pool
+        repairmanPool.update(timer.getDeltaTime());
+    }
 
     /**
      * Simulate number of iterations
@@ -80,6 +120,7 @@ public abstract class Factory implements Memento {
      * @param ticks number of simulations
      */
     public void simulateRealtime(int ticks) throws InterruptedException {
+        FactoryTimer timer = TimerManager.getTimer(Factory.TIMER_NAME);
         for (long i = 0; i < ticks; i++) {
             simulate();
             Thread.sleep(timer.getRealtimeTickDelay());
@@ -95,14 +136,20 @@ public abstract class Factory implements Memento {
         return new FactoryBuilder();
     }
 
-    @Override
-    public Snapshot save() {
-        // Walk through all attributes of this factory
-        return null;
-    }
+    /**
+     * Create new order
+     *
+     * @param name     The order name
+     * @param count    Count of products
+     * @param sequence The sequence
+     */
+    public void addOrder(String name, long count, List<String> sequence) {
+        List<AbstractProductionUnit> productionUnitSequence = productionUnitManager.convertSequence(sequence);
 
-    @Override
-    public void restore(Snapshot snapshot) {
-        // Nothing...
+        ProductionLine line = productionLinePool.createLine("Line of " + name, productionUnitSequence);
+
+        for (long i = 0; i < count; i++) {
+            line.addTemplate(new Product(name));
+        }
     }
 }
