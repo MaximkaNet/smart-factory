@@ -1,6 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.productionunit;
 
-import cz.cvut.fel.omo.smartfactory.Material;
+import cz.cvut.fel.omo.smartfactory.CommonMaterial;
 import cz.cvut.fel.omo.smartfactory.Product;
 import cz.cvut.fel.omo.smartfactory.consumer.MaterialConsumer;
 import cz.cvut.fel.omo.smartfactory.consumer.ResourceConsumer;
@@ -64,7 +64,7 @@ public abstract class AbstractProductionUnit implements Visitable {
     /**
      * The material consumer
      */
-    private final MaterialConsumer materialConsumer = new MaterialConsumer(new Material("worker", 1));
+    private final MaterialConsumer materialConsumer = new MaterialConsumer(new CommonMaterial());
 
     /**
      * The usage consumer (just counter)

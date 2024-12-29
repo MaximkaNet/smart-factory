@@ -1,6 +1,6 @@
 package cz.cvut.fel.omo.smartfactory.worker;
 
-import cz.cvut.fel.omo.smartfactory.Material;
+import cz.cvut.fel.omo.smartfactory.CommonMaterial;
 import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
 import cz.cvut.fel.omo.smartfactory.visitor.FactoryVisitor;
@@ -37,7 +37,7 @@ public final class Worker extends AbstractProductionUnit {
         jobProgress += jobStep;
 
         this.getUsageConsumer().accept(1.0f);
-        this.getMaterialConsumer().accept(new Material("worker", 1.0f, 2));
+        this.getMaterialConsumer().accept(new CommonMaterial());
         // Do something ...
     }
 
