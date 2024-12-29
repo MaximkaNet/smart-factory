@@ -1,66 +1,44 @@
 package cz.cvut.fel.omo.smartfactory.factory;
 
-import cz.cvut.fel.omo.smartfactory.entity.event.OutageEvent;
-import cz.cvut.fel.omo.smartfactory.entity.factory.Factory;
-import cz.cvut.fel.omo.smartfactory.entity.person.repairmanPool.RepairmanPool;
+import cz.cvut.fel.omo.smartfactory.productionunit.ProductionUnitManager;
+import cz.cvut.fel.omo.smartfactory.repair.RepairmenPool;
+import cz.cvut.fel.omo.smartfactory.utils.JobUtils;
 import org.junit.jupiter.api.Test;
 
-import java.time.Instant;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FactoryBuilderTest {
 
     @Test
-    public void factoryBuilderSetsRepairmanPoolAsBehavioral() {
-        RepairmanPool mockRepairmanPool = mock(RepairmanPool.class);
+    void buildComplexFactory() {
+
+        RepairmenPool pool = new RepairmenPool();
+
+        pool.createRepairman("Repairman", 1.0f);
+        pool.createRepairman("Repairman", 1.0f);
+        pool.createRepairman("Repairman", 1.0f);
+        pool.createRepairman("Repairman", 1.0f);
+
+        ProductionUnitManager productionUnitManager = new ProductionUnitManager();
+
+        productionUnitManager.createWorker("Worker", JobUtils.stepDuration(1));
+        productionUnitManager.createWorker("Worker", JobUtils.stepDuration(1));
+        productionUnitManager.createWorker("Worker", JobUtils.stepDuration(1));
+
+        productionUnitManager.createRobot("Robot", 100);
+        productionUnitManager.createRobot("Robot", 100);
+        productionUnitManager.createRobot("Robot", 100);
+        productionUnitManager.createRobot("Robot", 100);
 
         Factory factory = Factory.builder()
-                .setRepairmanPool(
-                        mockRepairmanPool
-                )
+                .setName("Test factory")
+                .setRepairmenPool(pool)
+                .setProductionUnitManager(productionUnitManager)
                 .build();
 
-        factory.simulate(10);
-        verify(mockRepairmanPool, times(10)).update(anyLong());
-    }
+        factory.simulate();
 
-    @Test
-    public void FactoryBuilderSetsRepairmanToListenToOutageEvent() {
-        RepairmanPool mockRepairmanPool = mock(RepairmanPool.class);
-
-        Factory factory = Factory.builder()
-                .setRepairmanPool(
-                        mockRepairmanPool
-                )
-                .addMachine("M", "machine", 10, 10)
-                .build();
-
-        factory.getEventManager().notifyListeners(new OutageEvent(1, factory.getMachines().get(0), Instant.now()));
-        factory.getEventManager().notifyListeners(new OutageEvent(2, factory.getMachines().get(0), Instant.now()));
-        factory.simulate(5);
-        verify(mockRepairmanPool, times(2)).receiveEvent(any());
-    }
-
-    @Test
-    public void factoryBuilderSetsBehavioralsForAllProductionUnits() {
-        Factory factory = Factory.builder()
-                .setRepairmanPool(
-                        RepairmanPool.builder().build()
-                )
-                .addWorker("W", "first", "last", 10)
-                .addRobot("R", "name", 10, 10)
-                .addDirector("D", "first", "last")
-                .addInspector("I", "first", "last")
-                .addMachine("M", "name", 10, 10)
-                .build();
-
-        // 3 ProductionUnits + RepairmanPool
-        assertEquals(4, factory.getBehavioralsList().size());
+        assertEquals("Test factory", factory.getName());
+        assertEquals(pool, factory.getRepairmanPool());
     }
 }

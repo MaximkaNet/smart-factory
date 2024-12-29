@@ -1,93 +1,74 @@
-package cz.cvut.fel.omo.smartfactory.entity.factory;
+package cz.cvut.fel.omo.smartfactory.factory;
 
-import cz.cvut.fel.omo.smartfactory.entity.repair.RepairmenPool;
+import cz.cvut.fel.omo.smartfactory.productionunit.ProductionUnitManager;
+import cz.cvut.fel.omo.smartfactory.repair.RepairmenPool;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Objects;
 
+/**
+ * Factory builder
+ */
 public class FactoryBuilder {
-    private String name = "Default Factory";
-    private Integer tickLength = 500;
-    private Instant foundationDate = Instant.now();
-    private RepairmenPool repairmanPool;
-//    private List<Person> people = new ArrayList<>();
-//    private List<Machine> machines = new ArrayList<>();
-//    private List<Robot> robots = new ArrayList<>();
 
+    /**
+     * The factory name
+     */
+    private String name = "Default Factory";
+
+    /**
+     * Factory repairman pool
+     */
+    private RepairmenPool repairmanPool = new RepairmenPool(new ArrayList<>());
+
+    /**
+     * The production unit manager
+     */
+    private ProductionUnitManager productionUnitManager = new ProductionUnitManager();
+
+    /**
+     * Create factory builder
+     */
     public FactoryBuilder() {
     }
 
+    /**
+     * Set factory name
+     *
+     * @param name The factory name
+     */
     public FactoryBuilder setName(String name) {
-        this.name = name;
+        this.name = Objects.requireNonNull(name);
         return this;
     }
 
-    public FactoryBuilder setTickLength(Integer tickLength) {
-        this.tickLength = tickLength;
+    /**
+     * Set production unit manager
+     *
+     * @param manager The production unit manager
+     */
+    public FactoryBuilder setProductionUnitManager(ProductionUnitManager manager) {
+        this.productionUnitManager = Objects.requireNonNull(manager);
         return this;
     }
 
-    public FactoryBuilder setRepairmanPool(RepairmenPool pool) {
-        this.repairmanPool = pool;
+    /**
+     * Set repairman pool
+     *
+     * @param pool The repairman pool
+     */
+    public FactoryBuilder setRepairmenPool(RepairmenPool pool) {
+        this.repairmanPool = Objects.requireNonNull(pool);
         return this;
     }
 
-    public FactoryBuilder addWorker(String id, String firstName, String lastName, float cost) {
-//        people.add(new AbstractWorker(id, firstName, lastName, cost));
-        return this;
-    }
-
-    public FactoryBuilder addDirector(String id, String firstName, String lastName) {
-//        people.add(new Director(id, firstName, lastName));
-        return this;
-    }
-
-    public FactoryBuilder addInspector(String id, String firstName, String lastName) {
-//        people.add(new Inspector(id, firstName, lastName));
-        return this;
-    }
-
-    public FactoryBuilder addRobot(String id, String name, float cost, float health) {
-//        robots.add(new Robot(id, name, cost, health));
-        return this;
-    }
-
-    public FactoryBuilder addMachine(String id, String name, float cost, float health) {
-//        machines.add(new Machine(id, name, cost, health));
-        return this;
-    }
-
-    public FactoryBuilder setFoundationDate(LocalDate of) {
-        this.foundationDate = of.atStartOfDay(ZoneId.of("UTC")).toInstant();
-        return this;
-    }
-
+    /**
+     * Build the factory
+     */
     public Factory build() {
-
-//        Factory factory = new Factory(this.name, this.tickLength, this.foundationDate);
-
-//        // link people
-//        people.forEach(person -> person.setFactory(factory));
-//        factory.setRepairmanPool(repairmanPool);
-//        factory.setPeople(people);
-//        repairmanPool.getRepairmenList().forEach(repairman -> repairman.setFactory(factory));
-//
-//        // link robots
-//        factory.setRobots(robots);
-//
-//        // link machines
-//        factory.setMachines(machines);
-//
-//        // Link behavioral
-//        people.forEach(person -> factory.getBehavioralsList().add(person));
-//        factory.getBehavioralsList().add(repairmanPool);
-//        repairmanPool.getRepairmenList().forEach(repairman -> factory.getBehavioralsList().add(repairman));
-//
-//        // Register event listeners
-//        factory.getEventManager().registerListener(OutageEvent.class, repairmanPool);
-//
-//        return factory;
-        return null;
+        Factory factory = new Factory(name);
+        factory.setRepairmanPool(repairmanPool);
+        factory.setProductionUnitManager(productionUnitManager);
+        return factory;
     }
 }
