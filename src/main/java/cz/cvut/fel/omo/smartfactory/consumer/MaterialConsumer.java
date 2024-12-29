@@ -6,6 +6,15 @@ import cz.cvut.fel.omo.smartfactory.Material;
  * Consumer for Materials
  */
 public class MaterialConsumer extends AbstractConsumer<Material> {
+    /**
+     * Create consumer
+     *
+     * @param initialValue
+     */
+    public MaterialConsumer(Material initialValue) {
+        super(initialValue);
+    }
+
     @Override
     public void accept(Material material) {
         consumed.consume(material);

@@ -15,7 +15,8 @@ public abstract class AbstractConsumer<T> {
      */
     protected T consumed;
 
-    protected AbstractConsumer() {
+    protected AbstractConsumer(T initialValue) {
+        this.consumed = initialValue;
     }
 
     /**
