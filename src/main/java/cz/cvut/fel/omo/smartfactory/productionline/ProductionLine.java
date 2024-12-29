@@ -1,6 +1,7 @@
 package cz.cvut.fel.omo.smartfactory.productionline;
 
 import cz.cvut.fel.omo.smartfactory.Product;
+import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,11 @@ public class ProductionLine {
     private static final Logger LOGGER = LogManager.getLogger("Production line");
 
     /**
+     * The production line identifier
+     */
+    private final Identifier id;
+
+    /**
      * Current configuration (chain of responsibility)
      */
     private AbstractProductionUnit chain;
@@ -47,8 +53,9 @@ public class ProductionLine {
     /**
      * Create production line
      */
-    public ProductionLine(AbstractProductionUnit chain) {
+    public ProductionLine(Identifier id, AbstractProductionUnit chain) {
         this.chain = chain;
+        this.id = id;
     }
 
     /**
@@ -103,8 +110,11 @@ public class ProductionLine {
         return outputStack.peek();
     }
 
-    public boolean hasReleasedProduct() {
-        return !outputStack.empty();
+    /**
+     * Returns true if no products in progress
+     */
+    public boolean isReady() {
+        return inProgress == 0;
     }
 
     /**
@@ -113,11 +123,11 @@ public class ProductionLine {
      * @param productionUnits The sequence of production units
      * @return ProductionLine or NULL if production unit list is empty
      */
-    public static ProductionLine create(List<AbstractProductionUnit> productionUnits) {
+    public static ProductionLine create(Identifier id, List<AbstractProductionUnit> productionUnits) {
         if (productionUnits.isEmpty()) {
             return null;
         }
-        return new ProductionLine(createChain(productionUnits));
+        return new ProductionLine(id, createChain(productionUnits));
     }
 
     /**
@@ -129,7 +139,7 @@ public class ProductionLine {
         if (line == null) {
             return new ArrayList<>();
         }
-        
+
         AbstractProductionUnit chain = line.getChain();
 
         if (chain == null) {
