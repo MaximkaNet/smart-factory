@@ -1,11 +1,16 @@
 package cz.cvut.fel.omo.smartfactory.productionunit;
 
+import cz.cvut.fel.omo.smartfactory.equipment.Machine;
+import cz.cvut.fel.omo.smartfactory.equipment.Robot;
+import cz.cvut.fel.omo.smartfactory.identifier.IdentifierFactory;
+import cz.cvut.fel.omo.smartfactory.worker.Worker;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * The production unit manager
@@ -13,80 +18,89 @@ import java.util.Map;
 @Getter
 public class ProductionUnitManager {
 
-    /**
-     * Busy production units
-     */
-    private final Map<String, List<AbstractProductionUnit>> busyUnits = new HashMap<>();
+    private final IdentifierFactory identifierFactory = new IdentifierFactory("PRODUCTION_UNIT");
 
     /**
-     * Available production units
+     * Production units
      */
     private final Map<String, List<AbstractProductionUnit>> availableUnits = new HashMap<>();
 
     /**
-     * Add busy unit
-     *
-     * @param unit The production unit
+     * Add production unit
      */
-    public void addBusyUnit(AbstractProductionUnit unit) {
-        busyUnits.computeIfAbsent(unit.getId().getShortName(), (k) -> new ArrayList<>())
-                .add(unit);
+    public void addProductionUnit(AbstractProductionUnit unit) {
+        availableUnits.computeIfAbsent(unit.getId().getShortName(), k -> new ArrayList<>()).add(unit);
     }
 
     /**
-     * Add available unit
+     * Create worker and add to production units
      *
-     * @param unit The production unit
+     * @param name         The worker name
+     * @param stepDuration The step duration
      */
-    public void addAvailableUnit(AbstractProductionUnit unit) {
-        availableUnits.computeIfAbsent(unit.getId().getShortName(), (k) -> new ArrayList<>())
-                .add(unit);
+    public void createWorker(String name, float stepDuration) {
+        addProductionUnit(
+                new Worker(identifierFactory.create(name, "W"), stepDuration)
+        );
     }
 
     /**
-     * Find available units and return sequence of units
+     * Create robot
      *
-     * @param identifiers The production unit identifiers (such as: 'R' - robot, 'M' - machine, 'W' - worker)
-     * @return Sequence of production units
-     * @throws RuntimeException If available unit was not found
+     * @param name   The robot name
+     * @param health The robot health
      */
-    public List<AbstractProductionUnit> getUnits(List<String> identifiers) throws RuntimeException {
-        // Output sequence
+    public void createRobot(String name, float health) {
+        addProductionUnit(
+                new Robot(identifierFactory.create(name, "R"), health)
+        );
+    }
+
+    /**
+     * Create machine
+     *
+     * @param name   The machine name
+     * @param health The machine health
+     */
+    public void createMachine(String name, float health) {
+        addProductionUnit(
+                new Machine(identifierFactory.create(name, "M"), health)
+        );
+    }
+
+    /**
+     * Convert string sequence to AbstractProductionUnit sequence.
+     * Remove converted sequence from available units.
+     *
+     * @param sequence The production unit sequence
+     * @throws RuntimeException if unit was not found
+     */
+    public List<AbstractProductionUnit> convertSequence(List<String> sequence) throws RuntimeException {
         List<AbstractProductionUnit> out = new ArrayList<>();
 
-        for (String disc : identifiers) {
-            AbstractProductionUnit unit = availableUnits
-                    .getOrDefault(disc, new ArrayList<>())
-                    .stream()
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("Available unit was not found"));
+        for (String shortName : sequence) {
+            List<AbstractProductionUnit> units = availableUnits.getOrDefault(shortName, new ArrayList<>());
+            Optional<AbstractProductionUnit> optionalUnit = units.stream().findFirst();
 
-            // Remove unit from available units
-            availableUnits.get(disc).remove(unit);
-            out.add(unit);
+            if (optionalUnit.isEmpty()) {
+                // Rollback
+                this.restoreSequence(out);
+                throw new RuntimeException("Unit " + shortName + " was not found");
+            }
+
+            units.remove(optionalUnit.get());
+            out.add(optionalUnit.get());
         }
 
         return out;
     }
 
     /**
-     * Remove units from busy units and add it to available units
+     * Restore sequence
      *
-     * @param units The busy units
+     * @param productionUnitList The production unit list
      */
-    public void makeUnitsAvailable(List<AbstractProductionUnit> units) {
-        for (AbstractProductionUnit unit : units) {
-            busyUnits.computeIfAbsent(
-                    unit.getId().getShortName(),
-                    k -> new ArrayList<>()
-            ).remove(unit);
-        }
-
-        for (AbstractProductionUnit unit : units) {
-            availableUnits.computeIfAbsent(
-                    unit.getId().getShortName(),
-                    k -> new ArrayList<>()
-            ).add(unit);
-        }
+    public void restoreSequence(List<AbstractProductionUnit> productionUnitList) {
+        productionUnitList.forEach(this::addProductionUnit);
     }
 }
