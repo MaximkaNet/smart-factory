@@ -97,6 +97,12 @@ public class Factory {
         // Update timer
         timer.tick();
 
+        if (timer.isNewDay()) {
+            LOGGER.info("New day " + timer.dayNumber());
+        }
+
+        LOGGER.info("Time now: " + timer.now());
+
         // Update production line pool
         productionLinePool.update(timer.getDeltaTime());
         // Update repairman pool
