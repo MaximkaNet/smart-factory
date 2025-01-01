@@ -63,6 +63,8 @@ public class Repairman {
             return false;
         }
 
+        LOGGER.info("Repairman: {} started working on: {}", this, event);
+
         outageEvent = event;
         subject = outageEvent.getSender();
         // Generate repair started event
@@ -78,7 +80,7 @@ public class Repairman {
      * Process repairing
      */
     public void process(long deltaTime) {
-        if (subject == null || outageEvent == null) {
+        if (!isRepairing()) {
             return;
         }
 
@@ -88,12 +90,28 @@ public class Repairman {
             // Generate finished event
             FactoryTimer timer = TimerManager.getTimer(Factory.TIMER_NAME);
             EventBus eventBus = EventBusManager.getEventBus(Factory.TIMER_NAME);
-            
+
             eventBus.notifyListeners(new RepairFinishedEvent(id, timer.now()));
             outageEvent.repairFinished(timer.now());
+
             // Reset subject and event
-            subject = null;
-            outageEvent = null;
+            stopRepair();
         }
+    }
+
+    public boolean isRepairing() {
+        return subject != null && outageEvent != null;
+    }
+
+    private void stopRepair() {
+        LOGGER.info("Repairman: {} stopped repairing: {}", this, outageEvent);
+        
+        subject = null;
+        outageEvent = null;
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{shortName=" + getId().getName() + "}";
     }
 }
