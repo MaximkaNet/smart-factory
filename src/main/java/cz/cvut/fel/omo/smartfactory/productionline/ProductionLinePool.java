@@ -3,6 +3,7 @@ package cz.cvut.fel.omo.smartfactory.productionline;
 import cz.cvut.fel.omo.smartfactory.factory.TickObserver;
 import cz.cvut.fel.omo.smartfactory.identifier.IdentifierFactory;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
+import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +22,7 @@ public class ProductionLinePool implements TickObserver {
     /**
      * Production line list
      */
+    @Getter
     private final List<ProductionLine> productionLineList = new ArrayList<>();
 
     /**
