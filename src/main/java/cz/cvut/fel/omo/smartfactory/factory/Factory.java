@@ -98,10 +98,10 @@ public class Factory {
         timer.tick();
 
         if (timer.isNewDay()) {
-            LOGGER.info("New day " + timer.dayNumber());
+            LOGGER.info("New day {}", timer.dayNumber());
         }
 
-        LOGGER.info("Time now: " + timer.now());
+        LOGGER.info("Time now: {}", timer.now());
 
         // Update production line pool
         productionLinePool.update(timer.getDeltaTime());
