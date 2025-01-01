@@ -20,7 +20,7 @@ public final class Machine extends AbstractEquipment {
 
     @Override
     public void process(long dt) {
-        setActualHealth(-0.2f * usageTime + getMaximumHealth());
+        setActualHealth(-0.2f * dt + getActualHealth());
         usageTime += dt;
 
         this.getUsageConsumer().accept(1.0f); // One usage per call this method
