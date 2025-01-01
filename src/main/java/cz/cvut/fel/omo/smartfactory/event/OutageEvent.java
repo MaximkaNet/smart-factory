@@ -67,4 +67,9 @@ public class OutageEvent extends AbstractEvent {
         }
         this.repairFinishedAt = time;
     }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{sender=" + sender + "}";
+    }
 }
