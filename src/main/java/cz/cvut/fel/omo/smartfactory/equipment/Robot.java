@@ -20,7 +20,7 @@ public final class Robot extends AbstractEquipment {
 
     @Override
     public void process(long dt) {
-        setActualHealth(-0.5f * usageTime + getMaximumHealth());
+        setActualHealth(-0.5f * dt + getActualHealth());
         usageTime += dt;
 
         this.getUsageConsumer().accept(1.0f); // One usage per call this method
