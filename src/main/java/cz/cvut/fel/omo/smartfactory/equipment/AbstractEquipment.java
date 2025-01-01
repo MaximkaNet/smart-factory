@@ -22,7 +22,7 @@ public abstract class AbstractEquipment extends AbstractProductionUnit {
     /**
      * Actual health
      */
-    private float actualHealth = 0;
+    private float actualHealth;
 
     /**
      * Electricity consumer
@@ -43,6 +43,7 @@ public abstract class AbstractEquipment extends AbstractProductionUnit {
     public AbstractEquipment(Identifier id, float health) {
         super(id);
         this.maximumHealth = health;
+        this.actualHealth = health;
 
         // Set initial state
         this.setState(new ReadyState(this));
@@ -68,5 +69,10 @@ public abstract class AbstractEquipment extends AbstractProductionUnit {
     @Override
     public boolean needRepair() {
         return actualHealth <= 0;
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{name=" + getId().getName() + "}";
     }
 }
