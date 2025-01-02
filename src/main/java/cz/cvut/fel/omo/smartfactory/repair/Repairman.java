@@ -105,13 +105,13 @@ public class Repairman {
 
     private void stopRepair() {
         LOGGER.info("Repairman: {} stopped repairing: {}", this, outageEvent);
-        
+
         subject = null;
         outageEvent = null;
     }
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "{shortName=" + getId().getName() + "}";
+        return this.getClass().getSimpleName() + "{id=" + getId() + "}";
     }
 }
