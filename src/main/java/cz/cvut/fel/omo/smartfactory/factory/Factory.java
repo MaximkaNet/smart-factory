@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Basic facade for factory
@@ -109,6 +110,13 @@ public class Factory {
         productionLinePool.update(timer.getDeltaTime());
         // Update repairman pool
         repairmanPool.update(timer.getDeltaTime());
+
+        Queue<ProductionLine> completedLines = productionLinePool.getCompletedLines();
+
+        if (!completedLines.isEmpty()) {
+            List<AbstractProductionUnit> chain = ProductionLine.reset(completedLines.poll());
+            productionUnitManager.restoreSequence(chain);
+        }
     }
 
     /**
