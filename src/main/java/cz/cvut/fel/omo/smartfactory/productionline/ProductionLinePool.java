@@ -8,7 +8,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class ProductionLinePool implements TickObserver {
 
@@ -24,6 +26,9 @@ public class ProductionLinePool implements TickObserver {
      */
     @Getter
     private final List<ProductionLine> productionLineList = new ArrayList<>();
+
+    @Getter
+    private final Queue<ProductionLine> completedLines = new LinkedList<>();
 
     /**
      * Create production line manager
@@ -41,6 +46,15 @@ public class ProductionLinePool implements TickObserver {
     @Override
     public void update(long deltaTime) {
         productionLineList.forEach(productionLine -> productionLine.process(deltaTime));
+
+        // Remove unused production lines
+        productionLineList.removeIf(line -> {
+            if (line.isReady()) {
+                completedLines.offer(line);
+                return true;
+            }
+            return false;
+        });
     }
 
     /**

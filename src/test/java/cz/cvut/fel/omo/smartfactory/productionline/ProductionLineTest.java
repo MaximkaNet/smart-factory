@@ -132,7 +132,7 @@ public class ProductionLineTest {
         //setting the timer length
         TimerManager.getTimer(Factory.TIMER_NAME, 1000);
 
-        factory.addOrder("Test order 1", 10, new ArrayList<>(Arrays.asList("M", "R", "W")));
+        factory.addOrder("Test order 1", 1, new ArrayList<>(Arrays.asList("M", "R", "W")));
 
         // after 100 ticks the order has to be done
         factory.simulate(100);
