@@ -3,6 +3,8 @@ package cz.cvut.fel.omo.smartfactory.factory;
 import cz.cvut.fel.omo.smartfactory.Product;
 import cz.cvut.fel.omo.smartfactory.event.EventBusManager;
 import cz.cvut.fel.omo.smartfactory.event.EventType;
+import cz.cvut.fel.omo.smartfactory.factory.iterator.TreeIterator;
+import cz.cvut.fel.omo.smartfactory.factory.iterator.UsageIterator;
 import cz.cvut.fel.omo.smartfactory.productionline.ProductionLine;
 import cz.cvut.fel.omo.smartfactory.productionline.ProductionLinePool;
 import cz.cvut.fel.omo.smartfactory.productionunit.AbstractProductionUnit;
@@ -140,6 +142,26 @@ public class Factory {
      */
     public static FactoryBuilder builder() {
         return new FactoryBuilder();
+    }
+
+    /**
+     * Get tree iterator
+     *
+     * @return Tree Iterator
+     */
+    public TreeIterator getTreeIterator() {
+        return new TreeIterator(productionLinePool.getProductionLineList());
+    }
+
+    /**
+     * Get usage iterator
+     *
+     * @return Usage Iterator
+     */
+    public UsageIterator getUsageIterator() {
+        // TODO: create usage iterator in universal way
+        // join all abstract equipment of lines
+        return new UsageIterator(new ArrayList<>());
     }
 
     /**
