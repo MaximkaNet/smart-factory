@@ -49,7 +49,9 @@ public class UsageIteratorTest {
      */
     private static Comparator<AbstractEquipment> getComparator() {
         return Comparator.comparingDouble(
-                (AbstractEquipment equipment) -> (equipment.getMaximumHealth() - equipment.getActualHealth()) / equipment.getMaximumHealth()
+                // -1 added because bigger usages comes first
+                // sort by usage descending
+                (AbstractEquipment equipment) -> -1 * (equipment.getMaximumHealth() - equipment.getActualHealth()) / equipment.getMaximumHealth()
         );
     }
 
