@@ -42,7 +42,7 @@ public class UsageIterator implements FactoryIterator {
      */
     protected static Comparator<AbstractEquipment> getComparator() {
         return Comparator.comparingDouble(
-                (AbstractEquipment unit) -> (unit.getMaximumHealth() - unit.getActualHealth()) / unit.getMaximumHealth()
+                (AbstractEquipment unit) -> -1 * (unit.getMaximumHealth() - unit.getActualHealth()) / unit.getMaximumHealth()
         );
     }
 
