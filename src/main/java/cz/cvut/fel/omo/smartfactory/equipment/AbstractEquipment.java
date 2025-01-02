@@ -73,6 +73,6 @@ public abstract class AbstractEquipment extends AbstractProductionUnit {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "{name=" + getId().getName() + "}";
+        return this.getClass().getSimpleName() + "{id=" + getId() + "}";
     }
 }
