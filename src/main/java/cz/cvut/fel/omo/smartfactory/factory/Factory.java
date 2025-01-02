@@ -1,6 +1,7 @@
 package cz.cvut.fel.omo.smartfactory.factory;
 
 import cz.cvut.fel.omo.smartfactory.Product;
+import cz.cvut.fel.omo.smartfactory.equipment.AbstractEquipment;
 import cz.cvut.fel.omo.smartfactory.event.EventBusManager;
 import cz.cvut.fel.omo.smartfactory.event.EventType;
 import cz.cvut.fel.omo.smartfactory.factory.iterator.TreeIterator;
@@ -167,9 +168,18 @@ public class Factory {
      * @return Usage Iterator
      */
     public UsageIterator getUsageIterator() {
-        // TODO: create usage iterator in universal way
-        // join all abstract equipment of lines
-        return new UsageIterator(new ArrayList<>());
+        List<AbstractEquipment> equipmentList = new ArrayList<>();
+
+        productionLinePool.getProductionLineList().forEach(line -> {
+            AbstractProductionUnit unit = line.getChain();
+            while (unit != null) {
+                if (unit instanceof AbstractEquipment) {
+                    equipmentList.add((AbstractEquipment) unit);
+                }
+                unit = unit.getNext();
+            }
+        });
+        return new UsageIterator(equipmentList);
     }
 
     /**
