@@ -57,6 +57,7 @@ public class Repairman {
      * Accept outage event
      *
      * @param event The outage event
+     * @return true if accepted
      */
     public boolean accept(OutageEvent event) {
         if (event == null || outageEvent != null || subject != null) {
@@ -76,6 +77,11 @@ public class Repairman {
         return true;
     }
 
+    /**
+     * Process the time delta
+     *
+     * @param deltaTime delta of time from factory
+     */
     public void process(long deltaTime) {
         if (!isRepairing()) {
             return;
@@ -96,10 +102,18 @@ public class Repairman {
         }
     }
 
+    /**
+     * To check if repairman is performing a repair
+     *
+     * @return true if repairs
+     */
     public boolean isRepairing() {
         return subject != null && outageEvent != null;
     }
 
+    /**
+     * stop repairing immediately
+     */
     private void stopRepair() {
         LOGGER.info("Repairman: {} stopped repairing: {}", this, outageEvent);
 

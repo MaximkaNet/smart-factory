@@ -25,7 +25,8 @@ public class TimerManager {
     /**
      * Get timer by name
      *
-     * @param name The timer name
+     * @param name       The timer name
+     * @param tickLength length of a tick
      * @return FactoryTimer or NULL if timer not found
      */
     public static FactoryTimer getTimer(String name, long tickLength) {

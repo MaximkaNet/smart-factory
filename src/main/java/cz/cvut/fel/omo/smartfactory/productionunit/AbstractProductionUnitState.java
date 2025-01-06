@@ -23,28 +23,37 @@ public abstract class AbstractProductionUnitState {
 
     /**
      * Process product production
+     *
+     * @param dt delta time from the factory
      */
     public abstract void process(long dt);
 
     /**
      * Accept product for processing
      *
+     * @param product product to accept
      * @return True if product was accepted false otherwise
      */
     public abstract boolean accept(Product product);
 
     /**
      * Get product after process
+     *
+     * @return product popped
      */
     public abstract Product pop();
 
     /**
      * Peek the product
+     *
+     * @return product peeked
      */
     public abstract Product peek();
 
     /**
      * Repair the unit
+     *
+     * @param power power of repairment
      */
     public abstract boolean repair(float power);
 }

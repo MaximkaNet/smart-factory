@@ -52,6 +52,9 @@ public class ProductionLine {
 
     /**
      * Create production line
+     *
+     * @param id    Identifier of the productionLine
+     * @param chain The Beginning unit of the chain
      */
     public ProductionLine(Identifier id, AbstractProductionUnit chain) {
         this.chain = chain;
@@ -60,6 +63,9 @@ public class ProductionLine {
 
     /**
      * Create production line
+     *
+     * @param id       Identifier of the productionLine
+     * @param sequence the sequence of units to construct chain from
      */
     public ProductionLine(Identifier id, List<AbstractProductionUnit> sequence) {
         this(id, createChain(sequence));
@@ -77,6 +83,8 @@ public class ProductionLine {
 
     /**
      * Process production
+     *
+     * @param dt delta time of the factory tick
      */
     public void process(long dt) {
         if (inProgress == 0) {
@@ -99,6 +107,8 @@ public class ProductionLine {
 
     /**
      * Returns released product
+     *
+     * @return product
      */
     public Product pop() {
         if (outputStack.empty()) {
@@ -108,7 +118,9 @@ public class ProductionLine {
     }
 
     /**
-     * Returns released product
+     * Returns released product, but does not remove it
+     *
+     * @return product
      */
     public Product peek() {
         if (outputStack.empty()) {
@@ -127,6 +139,7 @@ public class ProductionLine {
     /**
      * Create production unit
      *
+     * @param id              identifier of the productionLine
      * @param productionUnits The sequence of production units
      * @return ProductionLine or NULL if production unit list is empty
      */
@@ -141,6 +154,7 @@ public class ProductionLine {
      * Reset the chain
      *
      * @param line The production line
+     * @return list of abstractProductionUnit from the chain
      */
     public static List<AbstractProductionUnit> reset(ProductionLine line) {
         if (line == null) {

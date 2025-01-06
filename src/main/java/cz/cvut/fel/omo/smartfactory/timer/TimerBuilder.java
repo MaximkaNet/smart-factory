@@ -83,6 +83,8 @@ public class TimerBuilder {
 
     /**
      * Build the FactoryTimer
+     *
+     * @return FactoryTimer built
      */
     public FactoryTimer build() {
         return new FactoryTimer(foundationDate, tickLength, tickLengthRealtime, timezone);

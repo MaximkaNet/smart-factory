@@ -86,6 +86,7 @@ public abstract class AbstractProductionUnit implements Visitable {
     /**
      * Accept product for processing
      *
+     * @param product product to accept
      * @return True if product was accepted false otherwise
      */
     public boolean accept(Product product) {
@@ -99,6 +100,8 @@ public abstract class AbstractProductionUnit implements Visitable {
 
     /**
      * Get product after process
+     *
+     * @return product that was popped
      */
     public Product pop() {
         Product product = subject;
@@ -108,11 +111,15 @@ public abstract class AbstractProductionUnit implements Visitable {
 
     /**
      * Process product production
+     *
+     * @param dt delta time from the factory
      */
     public abstract void process(long dt);
 
     /**
      * Process chain
+     *
+     * @param dt delta time from the factory
      */
     public Product processChain(long dt) {
         this.state.process(dt);
@@ -128,6 +135,8 @@ public abstract class AbstractProductionUnit implements Visitable {
 
     /**
      * Peek the product
+     *
+     * @return subject peeked
      */
     public Product peek() {
         return subject;
@@ -148,11 +157,15 @@ public abstract class AbstractProductionUnit implements Visitable {
 
     /**
      * Repair the production unit
+     *
+     * @param power power of repairment
      */
     public abstract boolean repair(float power);
 
     /**
      * Returns true if actual health <= 0
+     *
+     * @return true if it needs repair
      */
     public abstract boolean needRepair();
 }

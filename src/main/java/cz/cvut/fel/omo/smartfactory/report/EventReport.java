@@ -30,7 +30,12 @@ public class EventReport implements Report {
     }
 
     /**
-     * Create event report in specified time range
+     * create event report in specified time range
+     *
+     * @param events events that occurred
+     * @param from   from time
+     * @param to     to time
+     * @return EventReport constructed
      */
     public static EventReport createReport(List<AbstractEvent> events, ZonedDateTime from, ZonedDateTime to) {
 

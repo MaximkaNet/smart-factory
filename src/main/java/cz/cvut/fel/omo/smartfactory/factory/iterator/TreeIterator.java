@@ -23,7 +23,9 @@ public class TreeIterator implements FactoryIterator {
     private AbstractProductionUnit currentUnit = null;
 
     /**
-     * Create tree iterator
+     * Create Tree Iterator
+     *
+     * @param productionLines List of production lines from factory
      */
     public TreeIterator(List<ProductionLine> productionLines) {
         productionLineIterator = productionLines.iterator();
