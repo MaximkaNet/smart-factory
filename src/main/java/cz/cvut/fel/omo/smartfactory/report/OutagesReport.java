@@ -55,6 +55,7 @@ public class OutagesReport implements Report {
      *
      * @param from Start point
      * @param to   End point
+     * @return the OutagesReport created
      */
     public static OutagesReport createReport(List<OutageEvent> outageEvents, Instant from, Instant to) {
         // Get outage events in specified range

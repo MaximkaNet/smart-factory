@@ -6,6 +6,8 @@ public class JobUtils {
 
     /**
      * Calculate step duration
+     *
+     * @return duration of a step
      */
     public static float stepDuration(int steps) {
         return 100.0f / steps;

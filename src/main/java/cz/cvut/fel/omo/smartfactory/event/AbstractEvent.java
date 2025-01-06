@@ -34,8 +34,10 @@ public abstract class AbstractEvent implements Comparable<AbstractEvent> {
     private final Instant generatedAt;
 
     /**
-     * Create event
+     * Create the event
      *
+     * @param type        The event type
+     * @param senderId    The sender of the Event
      * @param priority    The event priority
      * @param generatedAt The generation time
      */
@@ -55,9 +57,3 @@ public abstract class AbstractEvent implements Comparable<AbstractEvent> {
         return generatedAt.compareTo(o.getGeneratedAt());
     }
 }
-
-// functional req:
-// Komunikace mezi stroji, roboty a lidmi probíhá pomocí eventů.
-// Event může dostat 1 až N entit (člověk, stroj, robot),
-// které jsou na daný druh eventu zaregistrované.
-// Eventy je potřeba odbavit.

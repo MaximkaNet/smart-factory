@@ -43,18 +43,36 @@ public class FactoryTimer {
      */
     private boolean isNewDay;
 
+    /**
+     * @param tickLengthMilli tick length for factory
+     */
     public FactoryTimer(long tickLengthMilli) {
         this(Instant.EPOCH, tickLengthMilli);
     }
 
+    /**
+     * @param foundationDate  start date of the factory
+     * @param tickLengthMilli tick length in milliseconds
+     */
     public FactoryTimer(Instant foundationDate, long tickLengthMilli) {
         this(foundationDate, tickLengthMilli, ZoneId.systemDefault());
     }
 
+    /**
+     * @param foundationDate  start date of the factory
+     * @param tickLengthMilli tick length in milliseconds
+     * @param timezone        timezone of the factory
+     */
     public FactoryTimer(Instant foundationDate, long tickLengthMilli, ZoneId timezone) {
         this(foundationDate, tickLengthMilli, tickLengthMilli, timezone);
     }
 
+    /**
+     * @param foundationDate          start date of the factory
+     * @param tickLengthMilli         tick length in milliseconds
+     * @param timezone                timezone of the factory
+     * @param realtimeTickLengthMilli real tick length in milliseconds
+     */
     public FactoryTimer(Instant foundationDate, long tickLengthMilli, long realtimeTickLengthMilli, ZoneId timezone) {
         this.foundationDate = foundationDate;
         this.tickLength = tickLengthMilli;
@@ -66,6 +84,8 @@ public class FactoryTimer {
 
     /**
      * Returns new instance of TimerBuilder
+     *
+     * @return builder for FactoryTimer
      */
     public static TimerBuilder builder() {
         return new TimerBuilder();
@@ -89,6 +109,8 @@ public class FactoryTimer {
 
     /**
      * Returns day number from foundation day
+     *
+     * @return number of the current day
      */
     public long dayNumber() {
 
@@ -99,7 +121,7 @@ public class FactoryTimer {
     }
 
     /**
-     * Returns time inside simulation
+     * @return time inside simulation
      */
     public Instant now() {
         return now;

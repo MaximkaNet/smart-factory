@@ -11,6 +11,8 @@ public class ReversedUsageIterator extends UsageIterator {
 
     /**
      * Create usage iterator
+     *
+     * @param equipmentList Equipment list from the factory
      */
     public ReversedUsageIterator(List<AbstractEquipment> equipmentList) {
         super(equipmentList, UsageIterator.getComparator().reversed());

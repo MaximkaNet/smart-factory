@@ -20,6 +20,8 @@ public class UsageIterator implements FactoryIterator {
 
     /**
      * Create usage iterator
+     *
+     * @param equipmentList List of equipment from the factory
      */
     public UsageIterator(List<AbstractEquipment> equipmentList) {
         this(equipmentList, UsageIterator.getComparator());
@@ -27,6 +29,9 @@ public class UsageIterator implements FactoryIterator {
 
     /**
      * Create usage iterator with special comparator
+     *
+     * @param equipmentList List of equipment from the factory
+     * @param comparator    Comparator for sorting the AbstractEquipment
      */
     protected UsageIterator(List<AbstractEquipment> equipmentList, Comparator<AbstractEquipment> comparator) {
         Objects.requireNonNull(equipmentList);
@@ -39,6 +44,8 @@ public class UsageIterator implements FactoryIterator {
 
     /**
      * Get comparator for comparing equipment by usage percentage
+     *
+     * @return Comparator for the AbstractEquipment
      */
     protected static Comparator<AbstractEquipment> getComparator() {
         return Comparator.comparingDouble(

@@ -38,6 +38,8 @@ public class ProductionLinePool implements TickObserver {
 
     /**
      * Add production line
+     *
+     * @param line productionLine to add
      */
     public void addLine(ProductionLine line) {
         productionLineList.add(line);
@@ -60,6 +62,8 @@ public class ProductionLinePool implements TickObserver {
     /**
      * Create production line in pool and give unique identifier in this pool
      *
+     * @param name     name of the productionLine
+     * @param sequence sequence of AbstractProductionUnits to construct sequence from
      * @return Created production line
      */
     public ProductionLine createLine(String name, List<AbstractProductionUnit> sequence) {
