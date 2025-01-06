@@ -76,9 +76,6 @@ public class Repairman {
         return true;
     }
 
-    /**
-     * Process repairing
-     */
     public void process(long deltaTime) {
         if (!isRepairing()) {
             return;
