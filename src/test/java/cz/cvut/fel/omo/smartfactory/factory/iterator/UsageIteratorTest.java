@@ -56,7 +56,7 @@ public class UsageIteratorTest {
     }
 
     @Test
-    void test() {
+    void createUsageIteratorAssertAllItemsAndCheckException() {
         List<AbstractEquipment> equipmentList = getEquipmentList(List.of(
                 20.0f,
                 50.7f,
