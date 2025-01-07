@@ -28,7 +28,14 @@ import java.util.Queue;
 @Getter
 @Setter
 public class Factory {
+    /**
+     * The timer name constant
+     */
     public static final String TIMER_NAME = "FACTORY_TIMER";
+
+    /**
+     * The event bus name constant
+     */
     public static final String EVENTBUS_NAME = "FACTORY_EVENTBUS";
 
     private static final Logger LOGGER = LogManager.getLogger("Factory");
@@ -135,6 +142,7 @@ public class Factory {
      * Realtime simulation
      *
      * @param ticks number of simulations
+     * @throws InterruptedException if any thread has interrupted the current thread. The interrupted status of the current thread is cleared when this exception is thrown
      */
     public void simulateRealtime(int ticks) throws InterruptedException {
         FactoryTimer timer = TimerManager.getTimer(Factory.TIMER_NAME);

@@ -26,11 +26,6 @@ public class Identifier {
     /**
      * Create identifier
      *
-     * @param number The unique number
-     * @param name   The name
-     */
-
-    /**
      * @param number    The unique number
      * @param name      The name
      * @param shortName The short name of the entity

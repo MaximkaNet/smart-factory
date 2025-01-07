@@ -130,7 +130,9 @@ public class ProductionLine {
     }
 
     /**
-     * Returns true if no products in progress
+     * Returns ready status
+     *
+     * @return True if no products in progress false otherwise
      */
     public boolean isReady() {
         return inProgress == 0;

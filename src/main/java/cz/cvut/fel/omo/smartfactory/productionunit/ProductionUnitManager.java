@@ -26,7 +26,15 @@ public class ProductionUnitManager {
     private final Map<String, List<AbstractProductionUnit>> availableUnits = new HashMap<>();
 
     /**
+     * Create production unit manager
+     */
+    public ProductionUnitManager() {
+    }
+
+    /**
      * Add production unit
+     *
+     * @param unit The AbstractProductionUnit
      */
     public void addProductionUnit(AbstractProductionUnit unit) {
         availableUnits.computeIfAbsent(unit.getId().getShortName(), k -> new ArrayList<>()).add(unit);
@@ -73,6 +81,7 @@ public class ProductionUnitManager {
      * Remove converted sequence from available units.
      *
      * @param sequence The production unit sequence
+     * @return Abstract production unit list, that were removed from the available units
      * @throws RuntimeException if unit was not found
      */
     public List<AbstractProductionUnit> convertSequence(List<String> sequence) throws RuntimeException {

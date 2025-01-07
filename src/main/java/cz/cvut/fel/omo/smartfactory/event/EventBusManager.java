@@ -12,10 +12,14 @@ public class EventBusManager {
      */
     private static final Map<String, EventBus> buses = new HashMap<>();
 
+    private EventBusManager() {
+    }
+
     /**
      * Get event bus by name
      *
      * @param name The event bus name
+     * @return The event bud
      */
     public static EventBus getEventBus(String name) {
         return buses.computeIfAbsent(name, k -> new EventBus());

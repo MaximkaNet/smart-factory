@@ -13,6 +13,9 @@ public class IdentifierManager {
      */
     private static final Map<String, IdentifierFactory> factories = new HashMap<>();
 
+    private IdentifierManager() {
+    }
+
     /**
      * Get identifier factory with identity 1
      *

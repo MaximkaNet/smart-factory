@@ -9,7 +9,7 @@ public class MaterialConsumer extends AbstractConsumer<Material> {
     /**
      * Create consumer
      *
-     * @param initialValue
+     * @param initialValue The initial value
      */
     public MaterialConsumer(Material initialValue) {
         super(initialValue);

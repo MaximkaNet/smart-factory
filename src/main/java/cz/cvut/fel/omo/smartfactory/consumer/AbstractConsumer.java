@@ -5,7 +5,7 @@ import lombok.Getter;
 /**
  * Abstract consumer
  *
- * @param <T>
+ * @param <T> The generic type for consuming
  */
 @Getter
 public abstract class AbstractConsumer<T> {
@@ -15,6 +15,11 @@ public abstract class AbstractConsumer<T> {
      */
     protected T consumed;
 
+    /**
+     * Create Abstract consumer
+     *
+     * @param initialValue The initial value for consumer
+     */
     protected AbstractConsumer(T initialValue) {
         this.consumed = initialValue;
     }

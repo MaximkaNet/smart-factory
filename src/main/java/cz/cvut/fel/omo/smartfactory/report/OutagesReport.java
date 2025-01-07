@@ -53,8 +53,9 @@ public class OutagesReport implements Report {
     /**
      * Create report using event history from factory event bus
      *
-     * @param from Start point
-     * @param to   End point
+     * @param outageEvents The outage events
+     * @param from         Start point
+     * @param to           End point
      * @return the OutagesReport created
      */
     public static OutagesReport createReport(List<OutageEvent> outageEvents, Instant from, Instant to) {

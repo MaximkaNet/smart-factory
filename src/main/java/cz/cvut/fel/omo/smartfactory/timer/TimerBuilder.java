@@ -37,6 +37,7 @@ public class TimerBuilder {
      * Set foundation date
      *
      * @param date The foundation date
+     * @return Self instance
      */
     public TimerBuilder setFoundationDate(Instant date) {
         if (date != null) {
@@ -49,6 +50,7 @@ public class TimerBuilder {
      * Set tick length
      *
      * @param milli The length in milliseconds
+     * @return Self intance
      */
     public TimerBuilder setTickLength(long milli) {
         if (milli > 0) {
@@ -61,6 +63,7 @@ public class TimerBuilder {
      * Set realtime tick delay
      *
      * @param milli The length in milliseconds
+     * @return Self instance
      */
     public TimerBuilder setTickLengthRealtime(long milli) {
         if (milli > 0) {
@@ -73,6 +76,7 @@ public class TimerBuilder {
      * Set timezone
      *
      * @param zoneId Zone id
+     * @return Self instance
      */
     public TimerBuilder setTimezone(ZoneId zoneId) {
         if (zoneId != null) {

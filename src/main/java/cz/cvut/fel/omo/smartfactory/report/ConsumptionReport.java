@@ -17,12 +17,12 @@ public class ConsumptionReport implements Report {
     /**
      * Consumption report
      *
-     * @param oilConsumed
-     * @param oilTotalPrice
-     * @param electricityConsumed
-     * @param electricityTotalPrice
-     * @param materialConsumed
-     * @param materialTotalPrice
+     * @param oilConsumed           The amount of consumed oil
+     * @param oilTotalPrice         The total price of consumed oil
+     * @param electricityConsumed   The amount of consumed electricity
+     * @param electricityTotalPrice The total price of consumed electricity
+     * @param materialConsumed      The amount of consumed material
+     * @param materialTotalPrice    The total price of consumed material
      */
     public ConsumptionReport(float oilConsumed, float oilTotalPrice, float electricityConsumed, float electricityTotalPrice, long materialConsumed, float materialTotalPrice) {
         this.oilConsumed = oilConsumed;
@@ -44,7 +44,7 @@ public class ConsumptionReport implements Report {
                 "- Electricity: " + electricityConsumed + " kw" + "/" + electricityTotalPrice + "$"
                 + System.lineSeparator();
     }
-    
+
     @Override
     public String exportJson() {
         return "";

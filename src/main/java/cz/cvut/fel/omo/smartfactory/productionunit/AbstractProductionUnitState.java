@@ -54,6 +54,7 @@ public abstract class AbstractProductionUnitState {
      * Repair the unit
      *
      * @param power power of repairment
+     * @return TRUE if Production unit is repaired
      */
     public abstract boolean repair(float power);
 }
