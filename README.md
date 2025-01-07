@@ -1,125 +1,111 @@
-# Semester project Smart Factory
+# Semestrální projekt: Inteligentní továrna
 
 ## Abstrakt
 
-Vytvořit aplikaci pro virtuální simulaci inteligentní továrny, kde simulujeme chod výroby - na výrobních linkách s
-pomocí strojů a lidí vyrábíme produkty. Používáme jednotlivé stroje a vyhodnocujeme jejich využití, spotřebu a kvalitu
-výsledných výrobků. Součástí výrobního procesu jsou nejen stroje a lidé, ale i kolaborativní roboty. Základní časová
-jednotka je jeden takt (trvá jednu hodinu). Stavy továrny se mění (a vyhodnocují) po těchto taktech.
+Vytvoření aplikace pro virtuální simulaci inteligentní továrny, která simuluje chod výroby – na výrobních linkách za
+pomoci strojů a lidí jsou vyráběny produkty. Pracujeme s jednotlivými stroji a hodnotíme jejich využití, spotřebu a
+kvalitu výsledných výrobků. Součástí výrobního procesu jsou nejen stroje a lidé, ale také kolaborativní roboti. Základní
+časovou jednotkou je jeden takt (trvající jednu hodinu). Stavy továrny se mění (a vyhodnocují) po těchto taktech.
 
 ## Funkční požadavky
 
-* F1. Hlavní entity se kterými pracujeme je továrna, linka (s prioritou), stroj, člověk a výrobek, materiál plus
-  libovolné další entity. Stroje, lidé i výrobky mohou být různého druhu.
-* F2. Produkty se vyrábějí v sériích po několika stech kusů, jestliže se mění série nekompatibilních výrobků, tak je
-  potřeba výrobní linky přeskládat. Každý výrobek má definovanou sekvenci zařízení, robotů, lidí, které je potřeba za
-  sebou uspořádat na linku.
-* F3. Stroje a roboty mají svoji spotřebu; lidé, roboty, stroje i materiál stojí náklady.
-* F4. Komunikace mezi stroji, roboty a lidmi probíhá pomocí eventů. Event může dostat 1 až N entit (člověk, stroj,
-  robot), které jsou na daný druh eventu zaregistrované. Eventy je potřeba odbavit.
-* F5. Jednotlivá zařízení mají API na sběr dat o tomto zařízení. O zařízeních sbíráme data jako je spotřeba elektřiny,
-  oleje, materiálu a funkčnost (opotřebení roste s časem).
-* F6. Stroje a roboty se po určité době rozbijí. Po rozbití vygenerují event (alert) s prioritou podle důležitosti
-  linky, který odbaví člověk - opravář.
-* F7. Opravářů je omezený počet. Oprava trvá několik taktů. Při začátku opravy a konci opravy je generován event (bude
-  se hodit pro požadavek F10 :-). Vznikají situace, kdy nejsou dostupní žádní opraváři - pak se čeká dokud se některý z
-  nich neuvolní. Po uvolnění opravář nastupuje na 1. nejprioritnější, 2. nejstarší defekt.
-* F8. Návštěva ředitele a inspektora. Realizujeme návštěvu továrny, kdy ředitel prochází továrnou přesně podle stromové
-  hierarchie entit továrna ->* linka -> *(stroj|robot|člověk nebo výrobek) a inspektor prochází podle míry opotřebení.
-  Ředitel i inspektor mají na sobě definované akce, které provedou s daným typem entity. Zapište sekvenci procházení a
-  názvy provedených akcí do logu.
-* F9. Za továrnu je nutné vygenerovat následující reporty za libovolné časové období:
-    * FactoryConfigurationReport: veškerá konfigurační data továrny zachovávající hierarchii - továrna ->* linka -> *(
-      stroj|robot|člověk nebo výrobek).
-    * EventReport: jaké za jednotlivé období vznikly eventy, kde je grupujeme 1) podle typu eventu, (2) podle typu
-      zdroje eventu a (3) podle toho, kdo je odbavil.
-    * ConsumptionReport: Kolik jednotlivé zařízení, roboty spotřebovaly elektřiny, oleje, materiálu. Včetně finančního
-      vyčíslení. V reportu musí být i summární spotřeby za nadřazané entity (linka|továrna)
-    * OuttagesReport: Nejdelší výpadek, nejkratší výpadek, průměrná doba výpadku, průměrná doba čekání na opraváře a
-      typy zdrojů výpadků setříděné podle délky výpadku.
-* F10. Vraťte stavy strojů v zadaném taktu (jiném než posledním :-)). Stav zrekonstruujte z počátečního stavu a sekvence
-  eventů, které byly na stroji provedeny.
+* **F1.** Hlavní entity, se kterými pracujeme, jsou továrna, linka, stroj, člověk, výrobek a materiál, plus libovolné
+  další entity. Stroje, lidé i výrobky mohou být různého druhu.
+* **F2.** Produkty se vyrábějí v sériích po několika stech kusech. Pokud se mění série nekompatibilních výrobků, je
+  nutné výrobní linky přeorganizovat. Každý výrobek má definovanou sekvenci zařízení, robotů a lidí, které je potřeba
+  uspořádat na linku.
+* **F3.** Stroje a roboti mají svou spotřebu; lidé, roboti, stroje i materiál generují náklady.
+* **F4.** Komunikace mezi stroji, roboty a lidmi probíhá pomocí událostí (eventů). Událost může obdržet 1 až N entit (
+  člověk, stroj, robot), které jsou na daný typ události registrované. Události je třeba zpracovat.
+* **F5.** Jednotlivá zařízení mají API pro sběr dat. Data zahrnují spotřebu elektřiny, oleje, materiálu a funkčnost (
+  opotřebení roste s časem).
+* **F6.** Stroje a roboti se po určité době rozbijí. Po rozbití vygenerují událost (alert) s prioritou podle důležitosti
+  linky, kterou odbaví člověk – opravář.
+* **F7.** Opravářů je omezený počet. Oprava trvá několik taktů. Na začátku a na konci opravy je generována událost.
+  Pokud nejsou dostupní žádní opraváři, čeká se, dokud se některý neuvolní. Po uvolnění opravář nastupuje na:
+    1. Nejprioritnější defekt.
+    2. Nejstarší defekt.
+* **F8.** Návštěva ředitele a inspektora. Ředitel prochází továrnou podle hierarchie entit: továrna → linka → (stroj |
+  robot | člověk). Inspektor prochází podle míry opotřebení. Ředitel i inspektor mají definované akce, které provádějí s
+  daným typem entity. Zaznamenávejte sekvenci procházení a názvy provedených akcí do logu.
+* **F9.** Továrna musí umožnit generování následujících reportů za libovolné časové období:
+    * **EventReport**: Jaké události vznikly v jednotlivých obdobích, seskupené podle:
+        1. Typu události.
+        2. Typu zdroje události.
+        3. Subjektu, který událost zpracoval.
+    * **ConsumptionReport**: Kolik jednotlivá zařízení a roboti spotřebovali elektřiny, oleje a materiálu. Součástí
+      reportu je i finanční vyčíslení a souhrny pro nadřazené entity (linka, továrna).
+    * **OuttagesReport**: Nejdelší výpadek, nejkratší výpadek, průměrná doba výpadku, průměrná doba čekání na opraváře a
+      typy zdrojů výpadků seřazené podle délky výpadku.
 
 ## Nefunkční požadavky
 
-* Není požadována autentizace ani autorizace
-* Aplikace může běžet pouze v jedné JVM
-* Aplikaci pište tak, aby byly dobře schované metody a proměnné, které nemají být dostupné ostatním třídám. Vygenerovný
-  javadoc by měl mít co nejméně public metod a proměnných.
-* Reporty jsou generovány do textového souboru
-* Konfigurace továrny může být nahrávána přímo z třídy nebo externího souboru (preferován je json)
+* Není požadována autentizace ani autorizace.
+* Aplikace může běžet pouze v jedné JVM.
+* Aplikaci implementujte tak, aby metody a proměnné, které nemají být dostupné ostatním třídám, byly dobře zapouzdřeny.
+  Generovaný Javadoc by měl obsahovat co nejméně veřejných metod a proměnných.
 
-# Analýza
+## Analýza
 
-Táto časť dokumentácie sa zaoberá analýzou softvéru pomocou diagramov UML, ktoré poskytujú prehľad o architektúre nášho
-systému.
-Diagramy zobrazujú štruktúru hlavných komponentov, ich vzájomné vzťahy a interakcie, ktoré umožňujú splnenie požiadaviek
-na
-funkčnosť.
+Tato část dokumentace se věnuje analýze softwaru pomocí diagramů UML, které poskytují přehled o architektuře systému.
+Diagramy znázorňují strukturu hlavních komponent, jejich vzájemné vztahy a interakce, které umožňují splnění požadavků
+na funkčnost.
 
-## Use Cases
+### Use Cases
 
-Dole je náš Use Case diagram, ktorý znázorňuje hlavných aktérov a jednotlivé prípady použitia (use cases), ktoré náš
-softvér poskytuje.
-Diagram poskytuje prehľad o tom, ako používateľské role interagujú so systémom, a definuje hlavné funkcionality dostupné
-pre každého aktéra.
-Tento diagram slúži ako základ pre pochopenie používateľských požiadaviek.
+Níže je diagram případů použití (Use Case), který znázorňuje hlavní aktéry a jednotlivé případy použití. Diagram
+poskytuje přehled o interakcích uživatelských rolí se systémem a definuje hlavní funkcionality dostupné pro každého
+aktéra.
 
 ![Use case diagram](images/use-cases.png)
 
-## Architektura
+### Architektura
 
-Najobecnejším diagramom nášho projektu je overview diagram, ktorý poskytuje vysokú úroveň pohľadu na návrh nášho
-softvéru.
-Tento diagram zobrazuje základné komponenty systému a ich vzájomné prepojenia, čím poskytuje ucelený prehľad o
-architektúre a hlavných funkčných častiach softvérového riešenia.
+Hlavním diagramem projektu je přehledový diagram, který poskytuje vysokou úroveň pohledu na návrh softwaru. Tento
+diagram znázorňuje základní komponenty systému a jejich propojení.
 
 ![Overview Diagram](images/overview_diagram.png)
 
-Prvá časť systému, na ktorú sa zameriame, je Factory a jej priradené entity.
-Táto entita je stredobodom celej aplikácie a predstavuje abstraktnú reprezentáciu skutočnej továrne.
+První část systému, na kterou se zaměříme, je entita Factory a její související komponenty. Tato entita představuje
+abstraktní reprezentaci reálné továrny.
 
 ![Factory patterns](images/factory-patterns.png)
 
-Ďalšou časťou systému sú reporty, ktoré je možné generovať pre ľubovoľnú továreň a za ľubovoľné časové obdobie.
-Reporty poskytujú prehľad o výkonnosti a aktivitách systému prostredníctvom zberu a spracovania relevantných údajov.
+Další část systému se zaměřuje na reporty, které lze generovat za libovolné časové období. Reporty poskytují přehled o
+výkonnosti a aktivitách systému.
 
 ![Report diagram](images/report-diagram.png)
 
-Ďalšou časťou systému je event management. Tento modul umožňuje spravovať udalosti (events) v rámci továrne.
-Naša továreň poskytuje mechanizmus, v ktorom je možné spúšťať eventy a registrovať sa na ich počúvanie.
+Následující část se věnuje správě událostí (event management). Tento modul umožňuje zpracování událostí v továrně.
 
 ![Event system](images/event-system.png)
 
-Consumer je časť systému zodpovedná za zachytávanie spotreby v našej továrni.
-Tento modul monitoruje a spravuje procesy, ktoré súvisia s využívaním a odoberaním zdrojov generovaných systémom.
+### Spotřeba
+
+Modul Consumer monitoruje spotřebu zdrojů v továrně. Sleduje využití elektřiny, oleje a materiálů a spravuje procesy
+související s jejich spotřebou.
 
 ![Consumers](images/consumers.png)
 
-Teraz sa zameriame na časť systému, ktorá spravuje výrobné jednotky a zariadenia.
-Tento modul je zodpovedný za výrobu produktov v továrni a zabezpečuje efektívne riadenie výrobných procesov.
-Spravuje rôzne výrobné zariadenia, ktoré sú nevyhnutné na výrobu produktov, a optimalizuje ich využitie na základe
-aktuálnych požiadaviek a dostupných zdrojov.
+Další část systému je zodpovědná za správu výrobních jednotek a zařízení. Tento modul zabezpečuje efektivní řízení
+výroby.
 
 ![Production unit and production line](images/production-unit-and-line.png)
 
-V továrni sa jednotlivé objekty rozlišujú pomocou identifikátora (identifier), ktorý slúži na jednoznačnú identifikáciu
-každého objektu v systéme.
-Tento identifikátor je kľúčovým prvkom pri správe a manipulácii s objektmi v továrni, pretože zabezpečuje, že každý
-objekt je unikátny a ľahko rozpoznateľný v rámci celkového systému.
-Dole je ukázaná jeho implementácia, ktorá demonštruje spôsob, akým je identifikátor priradený a používaný v rámci
-objektov továrne.
+V továrně jsou objekty identifikovány pomocí jedinečného identifikátoru (identifier). Tento klíčový prvek zajišťuje
+správu objektů.
 
 ![Identifier](images/identifier.png)
 
-Tiky v továrni sú realizované pomocou Factory Timer.
-Tento komponent je zodpovedný za správu časových intervalov a spúšťanie rôznych akcií alebo procesov v rámci továrne na
-základe časových podmienok.
+### Factory Timer
+
+Tiky v továrně jsou řízeny komponentou Factory Timer, která spravuje časové intervaly a akce.
 
 ![Factory timer](images/timer.png)
 
-Časť systému, ktorá je zodpovedná za realizáciu opráv, je zobrazená dole.
-Tento modul sa stará o správu opravarov a priraďovanie chýb na opravu. Zabezpečuje koordináciu medzi opravármi a
-systémom.
+### Opravy
+
+Modul pro opravy zajišťuje správu opravářů a přidělování oprav. Tento modul zajišťuje koordinaci mezi opraváři a
+systémem.
 
 ![Repair](images/repair.png)
