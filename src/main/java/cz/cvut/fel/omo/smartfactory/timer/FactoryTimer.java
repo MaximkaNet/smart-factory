@@ -7,6 +7,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+/**
+ * The timer
+ */
 @Getter
 public class FactoryTimer {
 
@@ -21,13 +24,13 @@ public class FactoryTimer {
     private final Instant foundationDate;
 
     /**
-     * Tick length
+     * Tick length in milliseconds
      */
     @Setter
     private long tickLength;
 
     /**
-     * Realtime tick length
+     * Realtime tick length in milliseconds
      */
     @Setter
     private long realtimeTickDelay;
@@ -44,6 +47,8 @@ public class FactoryTimer {
     private boolean isNewDay;
 
     /**
+     * Create factory timer
+     *
      * @param tickLengthMilli tick length for factory
      */
     public FactoryTimer(long tickLengthMilli) {
@@ -51,6 +56,8 @@ public class FactoryTimer {
     }
 
     /**
+     * Create factory time
+     *
      * @param foundationDate  start date of the factory
      * @param tickLengthMilli tick length in milliseconds
      */
@@ -59,6 +66,8 @@ public class FactoryTimer {
     }
 
     /**
+     * Create factory timer
+     *
      * @param foundationDate  start date of the factory
      * @param tickLengthMilli tick length in milliseconds
      * @param timezone        timezone of the factory
@@ -68,6 +77,8 @@ public class FactoryTimer {
     }
 
     /**
+     * Create factory timer
+     *
      * @param foundationDate          start date of the factory
      * @param tickLengthMilli         tick length in milliseconds
      * @param timezone                timezone of the factory
@@ -121,12 +132,19 @@ public class FactoryTimer {
     }
 
     /**
+     * Get now time
+     *
      * @return time inside simulation
      */
     public Instant now() {
         return now;
     }
 
+    /**
+     * Get delta time
+     *
+     * @return The delta time in milliseconds
+     */
     public long getDeltaTime() {
         return tickLength;
     }

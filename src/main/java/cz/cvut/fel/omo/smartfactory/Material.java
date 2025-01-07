@@ -3,6 +3,9 @@ package cz.cvut.fel.omo.smartfactory;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The abstract material class
+ */
 @Getter
 @Setter
 public class Material implements Stackable<Material> {

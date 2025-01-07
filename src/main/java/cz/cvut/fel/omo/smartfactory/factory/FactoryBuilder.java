@@ -36,6 +36,7 @@ public class FactoryBuilder {
      * Set factory name
      *
      * @param name The factory name
+     * @return Current builder instance
      */
     public FactoryBuilder setName(String name) {
         this.name = Objects.requireNonNull(name);
@@ -46,6 +47,7 @@ public class FactoryBuilder {
      * Set production unit manager
      *
      * @param manager The production unit manager
+     * @return Current builder instance
      */
     public FactoryBuilder setProductionUnitManager(ProductionUnitManager manager) {
         this.productionUnitManager = Objects.requireNonNull(manager);
@@ -56,6 +58,7 @@ public class FactoryBuilder {
      * Set repairman pool
      *
      * @param pool The repairman pool
+     * @return Current builder instance
      */
     public FactoryBuilder setRepairmenPool(RepairmenPool pool) {
         this.repairmanPool = Objects.requireNonNull(pool);
@@ -64,6 +67,8 @@ public class FactoryBuilder {
 
     /**
      * Build the factory
+     *
+     * @return Built factory
      */
     public Factory build() {
         Factory factory = new Factory(name);

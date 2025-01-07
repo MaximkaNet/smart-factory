@@ -21,7 +21,7 @@ import org.apache.logging.log4j.Logger;
 @Getter
 @Setter
 public class Repairman {
-    public static final Logger LOGGER = LogManager.getLogger("Repairman");
+    private static final Logger LOGGER = LogManager.getLogger("Repairman");
 
     /**
      * The name
@@ -46,6 +46,7 @@ public class Repairman {
     /**
      * Create repairman
      *
+     * @param id    The repair man identifier
      * @param power The repair power per tick
      */
     public Repairman(Identifier id, float power) {

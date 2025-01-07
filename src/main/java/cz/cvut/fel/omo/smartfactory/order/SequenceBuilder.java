@@ -8,10 +8,21 @@ import java.util.List;
  */
 public class SequenceBuilder {
 
-    List<String> sequence = new ArrayList<>();
+    /**
+     * The sequence
+     */
+    private final List<String> sequence = new ArrayList<>();
+
+    /**
+     * Create sequence builder
+     */
+    public SequenceBuilder() {
+    }
 
     /**
      * Add simple worker
+     *
+     * @return Self instance
      */
     public SequenceBuilder addWorker() {
         sequence.add("W");
@@ -20,6 +31,8 @@ public class SequenceBuilder {
 
     /**
      * Add simple robot
+     *
+     * @return Self instance
      */
     public SequenceBuilder addRobot() {
         sequence.add("R");
@@ -28,6 +41,8 @@ public class SequenceBuilder {
 
     /**
      * Add simple machine
+     *
+     * @return Self instance
      */
     public SequenceBuilder addMachine() {
         sequence.add("M");
@@ -36,6 +51,8 @@ public class SequenceBuilder {
 
     /**
      * Build sequence
+     *
+     * @return The sequence as string list
      */
     public List<String> build() {
         return sequence;

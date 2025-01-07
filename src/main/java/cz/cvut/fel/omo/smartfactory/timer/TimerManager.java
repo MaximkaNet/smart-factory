@@ -8,9 +8,18 @@ import java.util.Map;
  */
 public class TimerManager {
 
+    /**
+     * The default tick length in milliseconds
+     */
     public static final long DEFAULT_TICK_LENGTH = 200;
 
+    /**
+     * The timers
+     */
     private static final Map<String, FactoryTimer> timers = new HashMap<>();
+
+    private TimerManager() {
+    }
 
     /**
      * Get timer by name

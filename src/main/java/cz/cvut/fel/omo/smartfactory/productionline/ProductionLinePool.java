@@ -12,6 +12,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * The production line pool
+ */
 public class ProductionLinePool implements TickObserver {
 
     private static final Logger LOGGER = LogManager.getLogger("Production line manager");

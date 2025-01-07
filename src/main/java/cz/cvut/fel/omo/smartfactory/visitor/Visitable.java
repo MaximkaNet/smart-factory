@@ -1,5 +1,8 @@
 package cz.cvut.fel.omo.smartfactory.visitor;
 
+/**
+ * The visitable interface
+ */
 public interface Visitable {
     /**
      * Accept the visitor

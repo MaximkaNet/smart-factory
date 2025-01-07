@@ -54,6 +54,8 @@ public class IdentifierFactory {
     }
 
     /**
+     * Create unique identifier in this factory
+     *
      * @param name      The object name
      * @param shortName Short name of the entity
      * @return Created Identifier

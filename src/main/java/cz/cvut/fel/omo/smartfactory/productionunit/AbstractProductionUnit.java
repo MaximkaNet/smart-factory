@@ -73,12 +73,20 @@ public abstract class AbstractProductionUnit implements Visitable {
 
     /**
      * Create production unit
+     *
+     * @param id           The production unit identifier
+     * @param initialState The initial state of the production unit
      */
     public AbstractProductionUnit(Identifier id, AbstractProductionUnitState initialState) {
         this.id = id;
         this.state = initialState;
     }
 
+    /**
+     * Create abstract production unit
+     *
+     * @param id The production unit identifier
+     */
     public AbstractProductionUnit(Identifier id) {
         this(id, null);
     }
@@ -120,6 +128,7 @@ public abstract class AbstractProductionUnit implements Visitable {
      * Process chain
      *
      * @param dt delta time from the factory
+     * @return Released product
      */
     public Product processChain(long dt) {
         this.state.process(dt);
@@ -159,11 +168,12 @@ public abstract class AbstractProductionUnit implements Visitable {
      * Repair the production unit
      *
      * @param power power of repairment
+     * @return TRUE if repair is completed, FALSE otherwise
      */
     public abstract boolean repair(float power);
 
     /**
-     * Returns true if actual health <= 0
+     * Returns true if actual health less or equals zero
      *
      * @return true if it needs repair
      */
