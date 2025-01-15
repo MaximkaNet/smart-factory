@@ -122,6 +122,7 @@ public class Factory {
         Queue<ProductionLine> completedLines = productionLinePool.getCompletedLines();
 
         if (!completedLines.isEmpty()) {
+            LOGGER.info("Line: " + completedLines.peek().getId() + " is completed");
             List<AbstractProductionUnit> chain = ProductionLine.reset(completedLines.poll());
             productionUnitManager.restoreSequence(chain);
         }
