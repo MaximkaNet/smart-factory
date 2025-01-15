@@ -2,12 +2,16 @@ package cz.cvut.fel.omo.smartfactory.equipment;
 
 import cz.cvut.fel.omo.smartfactory.CommonMaterial;
 import cz.cvut.fel.omo.smartfactory.identifier.Identifier;
+import cz.cvut.fel.omo.smartfactory.utils.JobUtils;
 import cz.cvut.fel.omo.smartfactory.visitor.FactoryVisitor;
 
 /**
  * The robot
  */
 public final class Robot extends AbstractEquipment {
+
+    private final float JOB_STEP = JobUtils.stepDuration(1);
+
     /**
      * Create factory equipment
      *
@@ -22,6 +26,8 @@ public final class Robot extends AbstractEquipment {
     public void process(long dt) {
         setActualHealth(-0.5f * dt + getActualHealth());
         usageTime += dt;
+
+        this.jobProgress += JOB_STEP;
 
         this.getUsageConsumer().accept(1.0f); // One usage per call this method
         this.getElectricityConsumer().accept(10.0f); // 10 kW/hour
